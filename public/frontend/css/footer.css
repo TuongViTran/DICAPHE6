@@ -1,0 +1,68 @@
+.footer {
+    background: #fff;
+    padding: 20px 40px;
+    border-top: 1px solid #ddd;
+    font-family: 'SFU Futura';
+    margin: auto;
+    max-width: 1200px;
+    justify-content: space-between;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.footer-logo img {
+    width: 120px;
+}
+
+.footer-links {
+    display: flex;
+    gap: 40px;
+    flex-grow: 1;
+}
+
+.footer-column h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.footer-column ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-column ul li a {
+    text-decoration: none;
+    color: #555;
+    font-size: 14px;
+}
+
+.update-section {
+    text-align: right;
+}
+
+.subscribe {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.subscribe input {
+    padding: 8px;
+    border: none;
+    background: #ddd;
+    width: 150px;
+}
+
+.subscribe button {
+    padding: 8px 12px;
+    background: #FDD835;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
