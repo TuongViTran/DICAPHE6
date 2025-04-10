@@ -14,6 +14,8 @@ use App\Http\Controllers\OwnerController;
 use App\Http\Middleware\RoleMiddleware;
 use App\Http\Middleware\Authenticate;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\FeedController;
+
 
 // Fontend --------------------------------------------
 Route::get('/test-session', function () {
@@ -23,7 +25,7 @@ Route::get('/test-session', function () {
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 Route::get('/', [HomeController::class, 'index'])->name('trangchu');
-Route::get('/feed', [HomeController::class, 'feed'])->name('feed');
+Route::get('/feed', [FeedController::class, 'feed'])->name('feed');
 Route::get('/tintuc', [HomeController::class, 'tintuc'])->name('tintuc');
 Route::get('/thongbao', [HomeController::class, 'thongbao'])->name('thongbao');
 // Route::get('/owner', [HomeController::class, 'owner','coffeeShop'])->name('owner');
@@ -71,7 +73,7 @@ Route::resource('cafes', CafeManagementController::class);
 Route::get('/cafes_management', [CafeManagementController::class, 'index'])->name('cafes_management');
 
 
-
+Route::post('/review/{id}/like', [ReviewController::class, 'likeReview']);
 
 // Route::middleware('auth')->group(function () {
 //     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

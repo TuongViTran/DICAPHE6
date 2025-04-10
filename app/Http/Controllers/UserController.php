@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Owner;
+use App\Models\Review;
+
 
 class UserController extends Controller
 {
@@ -142,7 +144,11 @@ class UserController extends Controller
         public function showProfile($id)
         {
             $user = \App\Models\User::findOrFail($id);
-            return view('frontend.user', compact('user'));
+            $reviews = Review::with('user')->orderBy('created_at', 'desc')->paginate(10);
+
+            return view('frontend.user', compact('user','reviews'));
         }
         
+        
+    
 }
