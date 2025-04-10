@@ -74,6 +74,12 @@ Route::get('/cafes_management', [CafeManagementController::class, 'index'])->nam
 
 
 Route::post('/review/{id}/like', [ReviewController::class, 'likeReview']);
+use App\Http\Controllers\ShopController;
+
+Route::get('/shop', [ShopController::class, 'index'])->name('shop.index');
+
+
+
 
 // Route::middleware('auth')->group(function () {
 //     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

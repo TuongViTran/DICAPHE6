@@ -81,7 +81,7 @@
     }
     .chucnang button svg{
         margin-top:-4px;
-        margin-right:4px
+        margin-left:4px
     }
   </style>
 @section('content')
@@ -175,7 +175,9 @@
             <div class="card mb-1 p-3" style=" border:none; border-right:1px" >
                 <div class="d-flex align-items-center" >
                     <!-- Avatar người dùng -->
-                    <img src="https://surl.li/qroawz" style="width:50px;height:50px; margin-top:-15px" class="rounded-circle me-2" alt="User Avatar">
+                     
+                    <img src="{{ asset('frontend/images/' . ($review->user->avatar_url ?? 'avt.png')) }}" style="width:50px;height:50px; margin-top:-15px" class="rounded-circle me-2" alt="User Avatar">
+
                     <div class="ft">
                         <strong>{{ $review->user->full_name ?? 'Người dùng ẩn danh' }}</strong>
                         <span style="max-width: 30px; "> đang ở tại <strong >{{ $review->shop->shop_name ?? 'Người dùng ẩn danh' }}</strong>

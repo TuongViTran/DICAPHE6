@@ -44,21 +44,5 @@ class ReviewController extends Controller
     return redirect()->back()->with('success', 'Đánh giá đã được gửi!');
 }
 
-public function likeReview($id)
-{
-    $review = Review::find($id);
 
-    if (!$review) {
-        return response()->json(['message' => 'Bài đánh giá không tồn tại'], 404);
-    }
-
-    // Tăng lượt thích
-    $review->likes_count += 1;
-    $review->save();
-
-    // Trả về phản hồi JSON
-    return response()->json([
-        'likes' => $review->likes_count,
-    ]);
-}
 }
