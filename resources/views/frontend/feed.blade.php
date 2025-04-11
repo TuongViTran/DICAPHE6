@@ -136,22 +136,31 @@
             <p class="" style="margin-left:50px">{{ $review->content }}</p>
 
             <!-- Hiển thị ảnh đánh giá -->
-            @if ($review->img_url)
-                <div class="row ">
-                    @foreach (explode(',', $review->img_url) as $img)
-                        <div class="col-4" style="display:flex; ">
-                            <img style="height:200px; width:200px; margin-right:15px" src="https://www.cotrang.org/tin-tuc/images/quan-cafe/da-nang/top-list/top-cafe-dep/quan-cafe-dep-da-nang-ttgt-01.jpg" class="img-fluid rounded" alt="Review Image">
-                            <img style="height:200px; width:200px; margin-right:15px" src="https://www.cotrang.org/tin-tuc/images/quan-cafe/da-nang/top-list/top-cafe-dep/quan-cafe-dep-da-nang-ttgt-01.jpg" class="img-fluid rounded" alt="Review Image">
-                           
-                            <img style="height:200px; width:200px; margin-right:15px" src="https://www.cotrang.org/tin-tuc/images/quan-cafe/da-nang/top-list/top-cafe-dep/quan-cafe-dep-da-nang-ttgt-01.jpg" class="img-fluid rounded" alt="Review Image">
-                            <!-- <img style="height:200px; width:200px; margin-right:15px" src="{{ asset($review->image_url) }}" class="img-fluid rounded" alt="Review Image"> -->
+            @php
+    $images = $review->img_url ? explode(',', $review->img_url) : [];
+@endphp
 
-                            <!-- <img src="{{asset('frontend/images/tt.svg') }}" class="img-fluid rounded" alt="Review Image"> -->
+@if (!empty($images))
+    <div class="row">
+        @foreach (array_slice($images, 0, 3) as $img)
+            @php
+                $img = trim($img);
+                if ($img === '') continue;
+                $isUrl = Str::startsWith($img, ['http://', 'https://']);
+            @endphp
 
-                        </div>
-                    @endforeach
-                </div>
-            @endif
+            <div class="col-4 d-flex mb-2">
+                <img
+                    src="{{ $isUrl ? $img : asset('storage/' . $img) }}"
+                    style="height:230px; width:190px; object-fit:cover; margin-right:15px"
+                    class="img-fluid rounded shadow"
+                    alt="Review Image"
+                    onerror="this.src='{{ asset('frontend/images/tt.svg') }}';"
+                >
+            </div>
+        @endforeach
+    </div>
+@endif
   
         
         </div>

@@ -144,7 +144,10 @@ class UserController extends Controller
         public function showProfile($id)
         {
             $user = \App\Models\User::findOrFail($id);
-            $reviews = Review::with('user')->orderBy('created_at', 'desc')->paginate(10);
+            $reviews = Review::where('user_id', $id)
+                ->with('user')
+                ->orderBy('created_at', 'desc')
+                ->paginate(10);
 
             return view('frontend.user', compact('user','reviews'));
         }

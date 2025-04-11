@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Review;
+use Illuminate\Support\Facades\Storage;
 
 class ReviewController extends Controller
 {
@@ -13,31 +14,31 @@ class ReviewController extends Controller
         'shop_id' => 'required|exists:coffeeshop,id',
         'content' => 'required|string',
         'rating' => 'required|integer|min:1|max:5',
-        'img_url' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        'img_url' => 'required|array', // bắt buộc là mảng
+        'img_url.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
     ]);
 
-   
-    // Nếu không có ảnh, lưu lỗi vào session để giữ modal mở
+    // Nếu không có ảnh thì báo lỗi (giữ nguyên chức năng cũ của bạn)
     if (!$request->hasFile('img_url')) {
         return redirect()->back()
             ->withInput()
-            ->withErrors(['img_url' => 'Bạn chưa thêm ảnh, vui lòng tải lên một ảnh!'])
-            ->with('openModal', true); // Đánh dấu mở modal
+            ->withErrors(['img_url' => 'Bạn chưa thêm ảnh, vui lòng tải lên ít nhất một ảnh!'])
+            ->with('openModal', true);
     }
+
+    $imagePaths = [];
+    foreach ($request->file('img_url') as $image) {
+        $filename = uniqid() . '.' . $image->getClientOriginalExtension();
+        $path = $image->storeAs('reviews', $filename, 'public');
+        $imagePaths[] = $path;
+    }
+
     $review = new Review();
     $review->user_id = auth()->id();
     $review->shop_id = $request->shop_id;
     $review->content = $request->content;
     $review->rating = $request->rating;
-
-  
-    
-     // Lưu ảnh nếu có
-     if ($request->hasFile('img_url')) {
-        $imagePath = $request->file('img_url')->store('reviews', 'public');
-        $review->img_url = $imagePath;
-    }
-
+    $review->img_url = implode(',', $imagePaths); // Lưu nhiều ảnh thành chuỗi
 
     $review->save();
 
@@ -45,4 +46,41 @@ class ReviewController extends Controller
 }
 
 
+    public function update(Request $request, Review $review)
+    {
+        if (auth()->id() !== $review->user_id) {
+            abort(403, 'Bạn không có quyền sửa đánh giá này.');
+        }
+
+        $request->validate([
+            'content' => 'required|string|max:1000',
+            'rating' => 'required|integer|min:1|max:5',
+        ]);
+
+        $review->update([
+            'content' => $request->content,
+            'rating' => $request->rating,
+        ]);
+
+        return redirect()->back()->with('success', 'Cập nhật đánh giá thành công.');
+    }
+
+    public function destroy(Review $review)
+    {
+        if (auth()->id() !== $review->user_id) {
+            abort(403, 'Bạn không có quyền xoá đánh giá này.');
+        }
+
+        // Xoá các ảnh nếu có
+        if ($review->img_url) {
+            $images = explode(',', $review->img_url);
+            foreach ($images as $img) {
+                Storage::disk('public')->delete($img);
+            }
+        }
+
+        $review->delete();
+
+        return redirect()->back()->with('success', 'Đánh giá đã được xoá.');
+    }
 }

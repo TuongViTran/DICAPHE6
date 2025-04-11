@@ -1,5 +1,8 @@
 @extends('frontend.layout')
 @section('title', 'User')
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 <style>
     body {
       font-family: Arial, sans-serif;
@@ -217,40 +220,115 @@
                                     @endfor
                             </p>
     
-                            <button class="like-button" data-id="{{ $review->id }}" style="border: none; background: none; cursor: pointer; margin-top:-19px;position: relative; left: 115px; top:-23px">
+                            <button class="like-button" data-id="{{ $review->id }}" style="border: none; background: none; cursor: pointer; margin-top:-19px;position: relative; left: 50px; top:-23px">
                                 ❤️ 
                             </button>
+                            
                         </div>
                     </div>           
                 </div>
                 <!-- Nội dung đánh giá -->
                 <p class="" style="margin-left:50px">{{ $review->content }}</p>
+                
     
                 <!-- Hiển thị ảnh đánh giá -->
-                @if ($review->img_url)
-                    <div class="row ">
-                        @foreach (explode(',', $review->img_url) as $img)
-                            <div class="col-4" style="display:flex; ">
-                            <img style="height:130px; width:130px; margin-right:15px" src="https://www.cotrang.org/tin-tuc/images/quan-cafe/da-nang/top-list/top-cafe-dep/quan-cafe-dep-da-nang-ttgt-01.jpg" class="img-fluid rounded" alt="Review Image">
-    
-                            <img style="height:130px; width:130px; margin-right:15px" src="https://www.cotrang.org/tin-tuc/images/quan-cafe/da-nang/top-list/top-cafe-dep/quan-cafe-dep-da-nang-ttgt-01.jpg" class="img-fluid rounded" alt="Review Image">
-                                <!-- <img style="height:130px; width:130px; margin-right:15px" src="{{ asset($review->image_url) }}" class="img-fluid rounded" alt="Review Image"> -->
-                                <img style="height:130px; width:130px; margin-right:15px" src="https://www.cotrang.org/tin-tuc/images/quan-cafe/da-nang/top-list/top-cafe-dep/quan-cafe-dep-da-nang-ttgt-01.jpg" class="img-fluid rounded" alt="Review Image">
-    
-                                <!-- <img src="{{asset('frontend/images/tt.svg') }}" class="img-fluid rounded" alt="Review Image"> -->
-    
-                            </div>
-                        @endforeach
-                    </div>
-                @endif
+                @php
+    $images = $review->img_url ? explode(',', $review->img_url) : [];
+@endphp
+
+@if (!empty($images))
+    <div class="row">
+        @foreach (array_slice($images, 0, 3) as $img)
+            @php
+                $img = trim($img);
+                if ($img === '') continue;
+                $isUrl = Str::startsWith($img, ['http://', 'https://']);
+            @endphp
+
+            <div class="col-4 d-flex mb-2">
+                <img
+                    src="{{ $isUrl ? $img : asset('storage/' . $img) }}"
+                    style="height:150px; width:130px; object-fit:cover; margin-right:15px"
+                    class="img-fluid rounded shadow"
+                    alt="Review Image"
+                    onerror="this.src='{{ asset('frontend/images/tt.svg') }}';"
+                >
+            </div>
+        @endforeach
+    </div>
+@endif
+
+
+
       
-                <div class="mt-2 d-flex chucnang">
-                    <button class="btn btn-danger btn-sm">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
-                        <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
-                        </svg>Xóa
+                <div class="mt-2 d-flex chucnang" style="margin-left:280px">
+                <form action="{{ route('reviews.destroy', $review->id) }}" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn xoá đánh giá này không?');" style="display:inline;">
+                  @csrf
+                  @method('DELETE')
+                  <button type="submit" class="btn btn-danger btn-sm" style="height:35px">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                          <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+                      </svg>
+                      Xóa
+                  </button>
+              </form>
+
+                    <!-- Nút chỉnh sửa -->
+                    <button type="button" style="height:35px" class="btn btn-warning btn-sm" width="16" height="16" data-bs-toggle="modal" data-bs-target="#editModal-{{ $review->id }}">
+                        ✏️ Chỉnh sửa
                     </button>
-                    <button class="btn btn-warning btn-sm">✏️ Chỉnh sửa</button>
+<!-- Modal Chỉnh Sửa Review -->
+<div class="modal fade" id="editModal-{{ $review->id }}" tabindex="-1" aria-labelledby="editModalLabel-{{ $review->id }}" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <!-- Tiêu đề -->
+      <div class="modal-header">
+        <h5 class="modal-title">Chỉnh sửa đánh giá tại: {{ $review->shop->shop_name ?? 'Quán không xác định' }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <!-- Form Chỉnh Sửa -->
+      <form action="{{ route('reviews.update', $review->id) }}" method="POST" enctype="multipart/form-data">
+        @csrf
+        @method('PUT')
+
+        <div class="modal-body">
+          <!-- Chọn số sao -->
+          <label class="form-label">Đánh giá sao:</label>
+          <select class="form-control" name="rating" required>
+            <option value="5" {{ $review->rating == 5 ? 'selected' : '' }}>⭐⭐⭐⭐⭐ - Xuất sắc</option>
+            <option value="4" {{ $review->rating == 4 ? 'selected' : '' }}>⭐⭐⭐⭐ - Tốt</option>
+            <option value="3" {{ $review->rating == 3 ? 'selected' : '' }}>⭐⭐⭐ - Bình thường</option>
+            <option value="2" {{ $review->rating == 2 ? 'selected' : '' }}>⭐⭐ - Tệ</option>
+            <option value="1" {{ $review->rating == 1 ? 'selected' : '' }}>⭐ - Rất tệ</option>
+          </select>
+
+          <!-- Nội dung đánh giá -->
+          <label class="form-label mt-2">Nội dung đánh giá:</label>
+          <textarea class="form-control" name="content" rows="3" required>{{ $review->content }}</textarea>
+
+          <!-- Ảnh đánh giá (nếu muốn cho phép sửa ảnh) -->
+          <label class="form-label mt-2">Thay ảnh (nếu cần):</label>
+          <input type="file" class="form-control" name="img_url" accept="image/*">
+          @error('img_url')
+            <span class="text-danger">{{ $message }}</span>
+          @enderror
+
+          <!-- Ngày đánh giá -->
+          <p class="mt-2 text-muted"><i class="bi bi-calendar"></i> Đã tạo: {{ $review->created_at->format('d/m/Y') }}</p>
+        </div>
+
+        <!-- Nút Gửi -->
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
                 </div>
             </div>
            

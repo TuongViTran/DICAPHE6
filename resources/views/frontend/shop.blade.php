@@ -154,7 +154,9 @@
          
                              <!-- Ảnh đánh giá -->
                              <label class="form-label mt-2">Hình ảnh:</label>
-                             <input type="file" class="form-control" name="img_url" accept="image/*">
+                             <input type="file" class="form-control" name="img_url[]" accept="image/*" multiple required>
+<small class="text-muted">Tối đa 4 ảnh</small>
+
                              @error('img_url')
              <span class="text-danger">{{ $message }}</span>
          @enderror
