@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\CoffeeShop;
 
 class ShopController extends Controller
 {
-    public function index()
+    public function show($id)
     {
-        // Trả về view shop.blade.php trong thư mục frontend
-        return view('frontend.shop');
+        $coffeeShop = CoffeeShop::find($id); // hoặc first()
+return view('frontend.shop', compact('coffeeShop'));
     }
 }

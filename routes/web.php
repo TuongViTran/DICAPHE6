@@ -76,7 +76,7 @@ Route::get('/cafes_management', [CafeManagementController::class, 'index'])->nam
 Route::post('/review/{id}/like', [ReviewController::class, 'likeReview']);
 use App\Http\Controllers\ShopController;
 
-Route::get('/shop', [ShopController::class, 'index'])->name('shop.index');
+Route::get('/shop/{id}', [ShopController::class, 'show']);
 
 
 
