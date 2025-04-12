@@ -28,6 +28,9 @@
     #bt button{
         border: solid 1px;
     }
+    .rounded-lg img{
+        max-height:150px;
+    }
 </style>
 @if(session('success'))
 <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -43,11 +46,11 @@
     <div class="max-w-7xl mx-auto bg-white p-6 rounded-lg ">
         <div class="flex flex-col md:flex-row">
             <div class="md:w-1/2">
-                <img alt="Front view of Ngày Bình Yên Cà Phê" class="rounded-lg mb-4" max-height="400" src="https://placehold.co/600x400" min-width="600"/>
+                <img alt="Front view of Ngày Bình Yên Cà Phê" class="rounded-lg mb-4" style="max-height: 400px; min-width: 600px;" src="{{ asset('frontend/images/' . $coffeeShop->cover_image) }}  " />
                 <div class="grid grid-cols-3 gap-2">
-                    <img alt="Food item 1" class="rounded-lg" height="150" src="https://placehold.co/150x150" width="170"/>
-                    <img alt="Food item 2" class="rounded-lg" height="150" src="https://placehold.co/150x150" width="170"/>
-                    <img alt="Food item 3" class="rounded-lg" height="150" src="https://placehold.co/150x150" width="170"/>
+                    <img alt="Food item 1" class="rounded-lg"  src="{{ asset('frontend/images/' . $coffeeShop->image_1) }}" width="170"/>
+                    <img alt="Food item 2" class="rounded-lg"  src="{{ asset('frontend/images/' . $coffeeShop->image_2) }}" width="170"/>
+                    <img alt="Food item 3" class="rounded-lg"  src="{{ asset('frontend/images/' . $coffeeShop->image_3) }}" width="170"/>
                 </div>
                
             </div>
