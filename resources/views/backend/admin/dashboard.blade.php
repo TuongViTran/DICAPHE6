@@ -139,7 +139,7 @@
             <!-- Bảng 5 sao -->
             <div class="bg-white p-3 rounded-lg shadow-md flex flex-col w-full">
                 <h3 class="text-md font-semibold mb-2 text-gray-800 flex items-center">
-                    Top quán đánh giá 5 sao  ⭐⭐⭐⭐⭐
+                    Các quán có đánh giá tốt nhất  ⭐⭐⭐⭐⭐
                 </h3>
                 <table class="w-full text-left border border-gray-200 rounded-lg overflow-hidden text-xs table-fixed">
                     <thead class="bg-gray-100 text-gray-700">
@@ -148,59 +148,117 @@
                             <th class="py-2 px-2">Tên quán</th>
                             <th class="py-2 px-2">Chủ</th>
                             <th class="py-2 px-2">Lượt</th>
+                            <th class="py-2 px-2">Sao</th>
                             <th class="py-2 px-2">Trạng thái</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200 align-top">
-                        @for ($k = 1; $k <= 5; $k++)
-                            <tr class="hover:bg-gray-50">
-                                <td class="py-2 px-2">{{ $k }}</td>
-                                <td class="py-2 px-2">Quán {{ $k }}</td>
-                                <td class="py-2 px-2">Chủ quán {{ $k }}</td>
-                                <td class="py-2 px-2">202k</td>
-                                <td class="py-2 px-2">
-                                    <span class="flex items-center gap-1 px-2 py-0.5 bg-green-100 text-green-700 text-[10px] rounded-full">
-                                        ✅ Đạt
-                                    </span>
-                                </td>
-                            </tr>
-                        @endfor
-                    </tbody>
+                    @foreach($fiveStarShops as $shop)
+        <tr class="hover:bg-gray-50">
+            <td class="py-2 px-2">{{ $loop->iteration }}</td>
+            <td class="py-2 px-2"><strong>{{ $shop->shop_name }}</strong></td>
+            <td class="py-2 px-2">{{ $shop->owner->full_name }}</td>
+            <td class="py-2 px-2">{{ number_format($shop->total_reviews_count) }}</td>
+            <td class="py-2 px-2">
+            @php
+        // Làm tròn số sao trung bình
+        $roundedRating = round($shop->reviews_avg_rating);
+    @endphp
+
+    @for($i = 0; $i < 5; $i++)
+        @if($i < $roundedRating)
+            <!-- Sao đầy -->
+            <span class="card_nearme-star" style="color: #FFC107; font-size: 1.2em;">★</span>
+        @elseif($i == $roundedRating && ($shop->reviews_avg_rating - $roundedRating) >= 0.5)
+            <!-- Sao nửa (nếu có 0.5 sao, sao nửa xám) -->
+            <span class="card_nearme-star" style="color: #e4e5e9; font-size: 1.2em;">★</span>
+        @else
+            <!-- Sao rỗng -->
+            <span class="card_nearme-star" style="color: #e4e5e9; font-size: 1.2em;">★</span>
+        @endif
+    @endfor
+<br>
+    {{ $shop->reviews_avg_rating }}
+</td>
+
+
+
+
+
+
+
+
+
+            <td class="py-2 px-2">
+                <span title="Tổng {{ $shop->five_star_reviews_count ?? 0 }} lượt đánh giá 5 sao"
+                      class="flex items-center gap-1 px-2 py-0.5 bg-green-100 text-green-700 text-[10px] rounded-full">
+                    ✅ Tốt
+                </span>
+            </td>
+        </tr>
+    @endforeach
+</tbody>
+
                 </table>
             </div>
 
-            <!-- Bảng 1 sao -->
-            <div class="bg-white p-3 rounded-lg shadow-md flex flex-col w-full">
-                <h3 class="text-md font-semibold mb-2 text-gray-800 flex items-center">
-                    Top quán đánh giá 1 sao  ⭐
-                </h3>
-                <table class="w-full text-left border border-gray-200 rounded-lg overflow-hidden text-xs table-fixed">
-                    <thead class="bg-gray-100 text-gray-700">
-                        <tr>
-                            <th class="py-2 px-2">STT</th>
-                            <th class="py-2 px-2">Tên quán</th>
-                            <th class="py-2 px-2">Chủ</th>
-                            <th class="py-2 px-2">Lượt</th>
-                            <th class="py-2 px-2">Trạng thái</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-200 align-top">
-                        @for ($l = 1; $l <= 5; $l++)
-                            <tr class="hover:bg-gray-50">
-                                <td class="py-2 px-2">{{ $l }}</td>
-                                <td class="py-2 px-2">Quán Tĩnh Lặng</td>
-                                <td class="py-2 px-2">Hoài An</td>
-                                <td class="py-2 px-2">120k</td>
-                                <td class="py-2 px-2">
-                                    <span class="flex items-center gap-1 px-2 py-0.5 bg-red-100 text-red-700 text-xs rounded-full whitespace-nowrap">
+           <!-- Bảng đánh giá thấp -->
+<div class="bg-white p-3 rounded-lg shadow-md flex flex-col w-full">
+    <h3 class="text-md font-semibold mb-2 text-gray-800 flex items-center">
+        Các quán có đánh giá thấp ⭐
+    </h3>
+    <table class="w-full text-left border border-gray-200 rounded-lg overflow-hidden text-xs table-fixed">
+        <thead class="bg-gray-100 text-gray-700">
+            <tr>
+                <th class="py-2 px-2">STT</th>
+                <th class="py-2 px-2">Tên quán</th>
+                <th class="py-2 px-2">Chủ</th>
+                <th class="py-2 px-2">Lượt</th>
+                <th class="py-2 px-2">Sao</th>
+                <th class="py-2 px-2">Trạng thái</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200 align-top">
+            @foreach($worstShops as $shop)
+                <tr class="hover:bg-gray-50">
+                    <td class="py-2 px-2">{{ $loop->iteration }}</td>
+                    <td class="py-2 px-2"><strong>{{ $shop->shop_name }}</strong></td>
+                    
+                    <td class="py-2 px-2">{{ $shop->owner->full_name }}</td>
+                    <td class="py-2 px-2">{{ number_format($shop->total_reviews_count) }}</td>
+                    <td class="py-2 px-2">
+                        @php
+                            // Làm tròn số sao trung bình
+                            $roundedRating = round($shop->reviews_avg_rating);
+                        @endphp
+
+                        @for($i = 0; $i < 5; $i++)
+                            @if($i < $roundedRating)
+                                <!-- Sao đầy -->
+                                <span class="card_nearme-star" style="color: #FFC107; font-size: 1.2em;">★</span>
+                            @elseif($i == $roundedRating && ($shop->reviews_avg_rating - $roundedRating) >= 0.5)
+                                <!-- Sao nửa (nếu có 0.5 sao, sao nửa xám) -->
+                                <span class="card_nearme-star" style="color: #e4e5e9; font-size: 1.2em;">★</span>
+                            @else
+                                <!-- Sao rỗng -->
+                                <span class="card_nearme-star" style="color: #e4e5e9; font-size: 1.2em;">★</span>
+                            @endif
+                        @endfor
+                        <br>
+                        {{ $shop->reviews_avg_rating }}
+                    </td>
+
+                    <td class="py-2 px-2">
+                    <span  class="flex items-center gap-1 px-2 py-0.5 bg-red-100 text-red-700 text-xs rounded-full whitespace-nowrap">
                                         ⚠️Chú ý
                                     </span>
-                                </td>
-                            </tr>
-                        @endfor
-                    </tbody>
-                </table>
-            </div>
+                    </td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+</div>
+
         </div>
 
         <!-- Cột bên phải (Từ khóa & Thống kê style) -->

@@ -210,7 +210,7 @@
                                     <div class="d-flex justify-content-between align-items-center mb-1">
                                         <div>
                                             @for($i = 0; $i < 5; $i++)
-                                                <span class="card_nearme-star" style="color: {{ $i < $shop->rating ? '#FFC107' : '#e4e5e9' }}; font-size: 1.2em;">★</span>
+                                                <span class="card_nearme-star" style="color: {{ $i < $shop->reviews_avg_rating ? '#FFC107' : '#e4e5e9' }}; font-size: 1.2em;">★</span>
                                             @endfor
                                         </div>
                                         <div class="d-flex align-items-center">
@@ -275,7 +275,7 @@
                                     <div class="d-flex justify-content-between align-items-center mb-1">
                                         <div>
                                             @for($i = 0; $i < 5; $i++)
-                                                <span class="card_nearme-star" style="color: {{ $i < $shop->rating ? '#FFC107' : '#e4e5e9' }}; font-size: 1.2em;">★</span>
+                                                <span class="card_nearme-star" style="color: {{ $i < $shop->reviews_avg_rating ? '#FFC107' : '#e4e5e9' }}; font-size: 1.2em;">★</span>
                                             @endfor
                                         </div>
                                         <div class="d-flex align-items-center">

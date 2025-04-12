@@ -27,7 +27,7 @@ return new class extends Migration
             $table->string('parking')->nullable();
             $table->string('wifi_password')->nullable();
             $table->string('hotline')->nullable();
-            $table->float('rating')->default(0);
+            $table->decimal('rating', 3, 2)->nullable(); // ví dụ: 4.35
             $table->decimal('min_price', 10, 2)->nullable();
             $table->decimal('max_price', 10, 2)->nullable();
 

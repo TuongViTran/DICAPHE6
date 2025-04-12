@@ -59,7 +59,7 @@
                 <div class="flex items-center mt-2">
                     <div class="flex text-yellow-500">
                     @for ($i = 1; $i <= 5; $i++)
-                                    <i class="fa{{ $i <= $coffeeShop->rating ? 's' : 'r' }} fa-star"></i>
+                                    <i class="fa{{ $i <= $coffeeShop->reviews_avg_rating? 's' : 'r' }} fa-star"></i>
                                 @endfor
                     </div>
                     <span class="badge bg-success">Open</span>

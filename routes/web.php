@@ -22,7 +22,7 @@ Route::get('/test-session', function () {
     Session::put('test_key', 'Hello Session');
     return 'Session đã được ghi!';
 });
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+// Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 Route::get('/', [HomeController::class, 'index'])->name('trangchu');
 Route::get('/feed', [FeedController::class, 'feed'])->name('feed');
@@ -49,9 +49,14 @@ Route::post('/reviews', [ReviewController::class, 'store'])->name('review.store'
 
 // Backend --------------------------------------------
 
-Route::get('/dashboard', function () {
-    return view('backend.admin.dashboard'); // Chỉ định đường dẫn đầy đủ đến view
-})->name('dashboard')->middleware('auth'); // Chỉ kiểm tra xem người dùng đã đăng nhập hay chưa
+use App\Http\Controllers\AdminController;
+
+Route::get('/dashboard', [AdminController::class, 'dashboard'])
+    ->name('dashboard')
+    ->middleware('auth');
+// Route::get('/dashboard', function () {
+//     return view('backend.admin.dashboard'); // Chỉ định đường dẫn đầy đủ đến view
+// })->name('dashboard')->middleware('auth'); // Chỉ kiểm tra xem người dùng đã đăng nhập hay chưa
 
 Route::post('/like-shop/{id}', [CoffeeShopController::class, 'like'])->name('shop.like');
 // User Management Routes
@@ -71,6 +76,7 @@ Route::get('/promotions', [PromotionController::class, 'index'])->name('promotio
 // Định nghĩa resource cho quản lý quán cà phê
 Route::resource('cafes', CafeManagementController::class);
 Route::get('/cafes_management', [CafeManagementController::class, 'index'])->name('cafes_management');
+
 
 
 Route::post('/review/{id}/like', [ReviewController::class, 'likeReview']);
