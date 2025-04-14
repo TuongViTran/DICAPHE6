@@ -70,6 +70,14 @@ Route::prefix('user-management')->name('user.')->group(function () {
     Route::get('/{user}', [UserController::class, 'show'])->name('show'); // Hiển thị thông tin người dùng
 });
 
+// quản lý feedback
+Route::prefix('feed-management')->name('feed.')->group(function () {
+    Route::get('/', [FeedController::class, 'index'])->name('index');
+    Route::delete('/{id}', [FeedController::class, 'destroy'])->name('destroy');
+});
+
+
+
 // Định nghĩa route cho trang quản lý quán cà phê
 Route::get('/coffeeshops', [CoffeeShopController::class, 'index'])->name('coffeeshops_management');
 Route::get('/promotions', [PromotionController::class, 'index'])->name('promotions_management');
@@ -89,6 +97,9 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/reviews/{review}', [ReviewController::class, 'update'])->name('reviews.update');
     Route::delete('/reviews/{review}', [ReviewController::class, 'destroy'])->name('reviews.destroy');
 });
+
+
+
 
 
 
