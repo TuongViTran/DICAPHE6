@@ -73,7 +73,7 @@
                         </a>
                     </li>
                     <li class="mb-4">
-                        <a href="#" class="flex items-center text-gray-600 p-3 rounded-lg hover:bg-gray-200 transition">
+                        <a href="{{ route('feed.index') }}" class="flex items-center text-gray-600 p-3 rounded-lg hover:bg-gray-200 transition">
                             <i class="fas fa-rss mr-3"></i> Quản lý feed
                         </a>
                     </li>

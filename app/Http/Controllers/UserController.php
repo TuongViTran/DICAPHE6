@@ -6,6 +6,12 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+<<<<<<< HEAD
+=======
+use App\Models\Owner;
+use App\Models\Review;
+
+>>>>>>> 3d75ae53fdadd370c08c1ad73d8d9c740002a634
 
 class UserController extends Controller
 {
@@ -154,6 +160,7 @@ public function update(Request $request, User $user)
 
         return redirect()->route('profile.edit')->with('success', 'Cập nhật hồ sơ thành công.');
     }
+<<<<<<< HEAD
 
     // Hiển thị thông tin người dùng trên frontend
     public function showProfile($id)
@@ -161,4 +168,20 @@ public function update(Request $request, User $user)
         $user = User::findOrFail($id);
         return view('frontend.user', compact('user'));
     }
+=======
+    // User frontend function
+        public function showProfile($id)
+        {
+            $user = \App\Models\User::findOrFail($id);
+            $reviews = Review::where('user_id', $id)
+                ->with('user')
+                ->orderBy('created_at', 'desc')
+                ->paginate(10);
+
+            return view('frontend.user', compact('user','reviews'));
+        }
+        
+        
+    
+>>>>>>> 3d75ae53fdadd370c08c1ad73d8d9c740002a634
 }

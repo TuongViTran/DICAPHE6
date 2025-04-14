@@ -1,21 +1,7 @@
 @extends('frontend.layout')
 @section('title','Owner')
 @section('content')
-@if(session('success'))
-<div class="alert alert-success alert-dismissible fade show" role="alert">
-    {{ session('success') }}
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
-@endif
-@if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
+
 <div class="container mt-4">
         <div class="p-4 rounded shadow-sm mb-4 d-flex align-items-center justify-content-around" style="background: linear-gradient(to bottom,rgb(241, 215, 180), #fbc2eb00);">
             <!-- Cột bên trái: Ảnh đại diện + Thông tin quán -->
@@ -331,96 +317,7 @@
 
 
 
-   <!-- Nút Đánh giá -->
-   <div class="mt-3 d-flex gap-3">
-            
-   <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#reviewModal">
-                Đánh giá quán
-            </button> -->
-            @if(Auth::check())
-    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#reviewModal">Viết đánh giá</button>
-@else
-    <a href="{{ route('login', ['redirect' => url()->current()]) }}" class="btn btn-primary">Đăng nhập để đánh giá</a>
-@endif
-        </div>
-    </div>
-
-
-
-<!-- Modal Đánh Giá -->
-
-
-<div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <!-- Tiêu đề -->
-            <div class="modal-header">
-                <h5 class="modal-title">Đánh giá quán: {{ $coffeeShop->shop_name }}</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-
-            <!-- Form Đánh Giá -->
-            <form action="{{ route('review.store') }}" method="POST" enctype="multipart/form-data">
-            @csrf
-            <input type="hidden" name="shop_id" value="{{ $coffeeShop->id }}">
-
-                <div class="modal-body">
-                    <!-- Tên quán -->
-                    <p><strong>Quán:</strong> {{ $coffeeShop->shop_name }}</p>
-
-                    <!-- Chọn số sao -->
-                    <label class="form-label">Đánh giá sao:</label>
-                    <select class="form-control" name="rating" required>
-                        <option value="5">⭐⭐⭐⭐⭐ - Xuất sắc</option>
-                        <option value="4">⭐⭐⭐⭐ - Tốt</option>
-                        <option value="3">⭐⭐⭐ - Bình thường</option>
-                        <option value="2">⭐⭐ - Tệ</option>
-                        <option value="1">⭐ - Rất tệ</option>
-                    </select>
-
-                    <!-- Nội dung đánh giá -->
-                    <label class="form-label mt-2">Nội dung đánh giá:</label>
-                    <textarea class="form-control" name="content" rows="3" placeholder="Viết cảm nhận của bạn..." required></textarea>
-
-                    <!-- Ảnh đánh giá -->
-                    <label class="form-label mt-2">Hình ảnh:</label>
-                    <input type="file" class="form-control" name="img_url" accept="image/*">
-                    @error('img_url')
-    <span class="text-danger">{{ $message }}</span>
-@enderror
-
-                    <!-- Ngày đánh giá (hiển thị nhưng không chỉnh sửa) -->
-                    <p class="mt-2 text-muted"><i class="bi bi-calendar"></i> Ngày đánh giá: {{ now()->format('d/m/Y') }}</p>
-                </div>
-
-                <!-- Nút Gửi -->
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-success">Gửi đánh giá</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                </div>
-      
-
-
-            </form>
-        </div>
-    </div>
-</div>
-
-
-@if(session('openModal'))
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            var myModal = new bootstrap.Modal(document.getElementById('reviewModal'));
-            myModal.show();
-        });
-    </script>
-@endif
-
-
-
-
-
-<!-- -->
+   
 
                     </div>
 

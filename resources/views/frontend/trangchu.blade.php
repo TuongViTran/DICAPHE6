@@ -210,7 +210,7 @@
                                     <div class="d-flex justify-content-between align-items-center mb-1">
                                         <div>
                                             @for($i = 0; $i < 5; $i++)
-                                                <span class="card_nearme-star" style="color: {{ $i < $shop->rating ? '#FFC107' : '#e4e5e9' }}; font-size: 1.2em;">★</span>
+                                                <span class="card_nearme-star" style="color: {{ $i < $shop->reviews_avg_rating ? '#FFC107' : '#e4e5e9' }}; font-size: 1.2em;">★</span>
                                             @endfor
                                         </div>
                                         <div class="d-flex align-items-center">
@@ -259,15 +259,15 @@
    <div class="container_nearmes">
     <div class="content_nearme" >
           <img src="{{ asset('frontend/images/icon_ganday.svg') }}" alt="icon" class="icon">
-          <h2>Gợi ý các quán gần đây</h2>
+          <h2>Các quán có lượt đánh giá 5 sao</h2>
         </div>
           <div class="row">
-                  @foreach($shops as $shop)
+          @foreach($fiveStarShops as $shop)
                       <div class="col-md-3 mb-4">
                           <div class="card_nearme shadow-sm">
                               <!-- Ảnh quán cafe -->
                               <div class="position-relative">
-                              <img src="{{ $shop->cover_image }}" class="card_nearme-img" alt="Coffee Shop">
+                              <img src="{{ asset('frontend/images/' . $shop->cover_image) }}" class="card_nearme-img" alt="Coffee Shop">
                               </div>
                               <!-- Nội dung quán -->
                                 <div class="card_nearme-body p-2">
@@ -275,7 +275,7 @@
                                     <div class="d-flex justify-content-between align-items-center mb-1">
                                         <div>
                                             @for($i = 0; $i < 5; $i++)
-                                                <span class="card_nearme-star" style="color: {{ $i < $shop->rating ? '#FFC107' : '#e4e5e9' }}; font-size: 1.2em;">★</span>
+                                                <span class="card_nearme-star" style="color: {{ $i < $shop->reviews_avg_rating ? '#FFC107' : '#e4e5e9' }}; font-size: 1.2em;">★</span>
                                             @endfor
                                         </div>
                                         <div class="d-flex align-items-center">

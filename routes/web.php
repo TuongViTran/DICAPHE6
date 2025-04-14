@@ -14,15 +14,21 @@ use App\Http\Controllers\OwnerController;
 use App\Http\Middleware\RoleMiddleware;
 use App\Http\Middleware\Authenticate;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\FeedController;
+
 
 // Fontend --------------------------------------------
 Route::get('/test-session', function () {
     Session::put('test_key', 'Hello Session');
     return 'Session đã được ghi!';
 });
+<<<<<<< HEAD
+=======
+// Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+>>>>>>> 3d75ae53fdadd370c08c1ad73d8d9c740002a634
 
 Route::get('/', [HomeController::class, 'index'])->name('trangchu');
-Route::get('/feed', [HomeController::class, 'feed'])->name('feed');
+Route::get('/feed', [FeedController::class, 'feed'])->name('feed');
 Route::get('/tintuc', [HomeController::class, 'tintuc'])->name('tintuc');
 Route::get('/thongbao', [HomeController::class, 'thongbao'])->name('thongbao');
 
@@ -47,9 +53,21 @@ Route::put('/owner/update/{id}', [OwnerController::class, 'updateinfor'])->name(
 Route::post('/reviews', [ReviewController::class, 'store'])->name('review.store');
 
 // Backend --------------------------------------------
+<<<<<<< HEAD
 Route::get('/dashboard', function () {
     return view('backend.admin.dashboard'); // Chỉ định đường dẫn đầy đủ đến view
 })->name('dashboard')->middleware('auth'); // Chỉ kiểm tra xem người dùng đã đăng nhập hay chưa
+=======
+
+use App\Http\Controllers\AdminController;
+
+Route::get('/dashboard', [AdminController::class, 'dashboard'])
+    ->name('dashboard')
+    ->middleware('auth');
+// Route::get('/dashboard', function () {
+//     return view('backend.admin.dashboard'); // Chỉ định đường dẫn đầy đủ đến view
+// })->name('dashboard')->middleware('auth'); // Chỉ kiểm tra xem người dùng đã đăng nhập hay chưa
+>>>>>>> 3d75ae53fdadd370c08c1ad73d8d9c740002a634
 
 Route::post('/like-shop/{id}', [CoffeeShopController::class, 'like'])->name('shop.like');
 
@@ -64,8 +82,24 @@ Route::prefix('user-management')->name('user.')->group(function () {
     Route::get('/{user}', [UserController::class, 'show'])->name('show'); // Hiển thị thông tin người dùng
 });
 
+<<<<<<< HEAD
 Route::get('/coffeeshops', [CoffeeShopController::class, 'index'])->name('coffeeshops_management');// Định nghĩa route cho trang quản lý quán cà phê
 Route::resource('cafes', CafeManagementController::class);// Định nghĩa resource cho quản lý quán cà phê
+=======
+// quản lý feedback
+Route::prefix('feed-management')->name('feed.')->group(function () {
+    Route::get('/', [FeedController::class, 'index'])->name('index');
+    Route::delete('/{id}', [FeedController::class, 'destroy'])->name('destroy');
+});
+
+
+
+// Định nghĩa route cho trang quản lý quán cà phê
+Route::get('/coffeeshops', [CoffeeShopController::class, 'index'])->name('coffeeshops_management');
+Route::get('/promotions', [PromotionController::class, 'index'])->name('promotions_management');
+// Định nghĩa resource cho quản lý quán cà phê
+Route::resource('cafes', CafeManagementController::class);
+>>>>>>> 3d75ae53fdadd370c08c1ad73d8d9c740002a634
 Route::get('/cafes_management', [CafeManagementController::class, 'index'])->name('cafes_management');
 Route::get('/coffeeshops/create', [CoffeeShopController::class, 'create'])->name('coffeeshop.create');// Route cho form thêm mới quán cà phê
 Route::post('/coffeeshops', [CoffeeShopController::class, 'store'])->name('coffeeshop.store');// Route cho lưu quán cà phê mới
@@ -83,4 +117,30 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+<<<<<<< HEAD
 // require __DIR__.'/auth.php'; // Nếu bạn có file auth.php, hãy giữ lại dòng này
+=======
+Route::post('/review/{id}/like', [ReviewController::class, 'likeReview']);
+use App\Http\Controllers\ShopController;
+
+Route::get('/shop/{id}', [ShopController::class, 'show']);
+
+
+Route::middleware(['auth'])->group(function () {
+    Route::put('/reviews/{review}', [ReviewController::class, 'update'])->name('reviews.update');
+    Route::delete('/reviews/{review}', [ReviewController::class, 'destroy'])->name('reviews.destroy');
+});
+
+
+
+
+
+
+// Route::middleware('auth')->group(function () {
+//     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+//     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+//     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+// });
+
+// require __DIR__.'/auth.php';
+>>>>>>> 3d75ae53fdadd370c08c1ad73d8d9c740002a634

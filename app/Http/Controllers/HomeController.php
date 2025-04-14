@@ -49,8 +49,15 @@ class HomeController extends Controller
         ->each(function ($shop) {
             $shop->liked = auth()->check() && $shop->likes()->where('user_id', auth()->id())->exists();
         });
-    
+        
+        // Lấy danh sách các quán có rating 5 sao
+        $fiveStarShops = CoffeeShop::with('address')
+        ->where('reviews_avg_rating', 5)
+        ->get()
+        ->each(function ($shop) {
+            $shop->liked = auth()->check() && $shop->likes()->where('user_id', auth()->id())->exists();
+        });
         // Trả về view và truyền dữ liệu
-        return view('frontend.trangchu', compact('sliderPosts', 'shops', 'posts'));
+        return view('frontend.trangchu', compact('sliderPosts', 'shops', 'posts', 'fiveStarShops'));
     }
 }

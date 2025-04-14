@@ -16,5 +16,11 @@ class Review extends Model
     {
         return $this->belongsTo(CoffeeShop::class, 'shop_id');
     }
+     // Định nghĩa quan hệ với bảng users
+     public function user()
+     {
+         return $this->belongsTo(User::class, 'user_id');
+     }
+     
 }
 

@@ -44,4 +44,11 @@ class User extends Authenticatable
     {
         return $this->hasMany(Post::class); // nhớ use App\Models\Post;
     }
+      
+  
+      // Phương thức để lấy URL của ảnh đại diện
+      public function getAvatarUrlAttribute()
+      {
+          return $this->attributes['avatar_url'] ? asset('storage/' . $this->attributes['avatar_url']) : asset('default-avatar.png');
+      }
 }
