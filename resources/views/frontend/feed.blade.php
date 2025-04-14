@@ -111,7 +111,14 @@
         <div class="card mb-1 p-3" style="border:none">
             <div class="d-flex align-items-center">
                 <!-- Avatar người dùng -->
-                <img src="https://surl.li/qroawz" style="width:50px;height:50px; margin-top:-15px" class="rounded-circle me-2" alt="User Avatar">
+                <img src="{{ asset('frontend/images/' . basename($review->user->avatar_url)) }}" 
+     onerror="this.onerror=null; this.src='{{ asset('frontend/images/avt.png') }}';"
+     width="50" height="50" alt="Avatar">
+
+
+
+
+
                 <div>
                     <strong>{{ $review->user->full_name ?? 'Người dùng ẩn danh' }}</strong>
                     <span style="max-width: 30px; "> đang ở tại <strong >{{ $review->shop->shop_name ?? 'Người dùng ẩn danh' }}</strong>

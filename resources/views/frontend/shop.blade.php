@@ -32,12 +32,7 @@
         max-height:150px;
     }
 </style>
-@if(session('success'))
-<div class="alert alert-success alert-dismissible fade show" role="alert">
-    {{ session('success') }}
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
-@endif
+
 @section('content')
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
 <script src="https://cdn.tailwindcss.com"></script>
@@ -278,3 +273,8 @@
     </div>
 
 @endsection
+@if(session('jsAlert'))
+    <script>
+        alert('{{ session('jsAlert') }}');
+    </script>
+@endif

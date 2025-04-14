@@ -42,7 +42,7 @@ class ReviewController extends Controller
 
     $review->save();
 
-    return redirect()->back()->with('success', 'Đánh giá đã được gửi!');
+    return redirect()->back()->with('jsAlert', 'Đánh giá đã được gửi!');
 }
 
 
@@ -62,7 +62,7 @@ class ReviewController extends Controller
             'rating' => $request->rating,
         ]);
 
-        return redirect()->back()->with('success', 'Cập nhật đánh giá thành công.');
+        return redirect()->back()->with('jsAlert', 'Cập nhật đánh giá thành công.');
     }
 
     public function destroy(Review $review)
@@ -81,6 +81,6 @@ class ReviewController extends Controller
 
         $review->delete();
 
-        return redirect()->back()->with('success', 'Đánh giá đã được xoá.');
+        return redirect()->back()->with('jsAlert', 'Đánh giá đã được xoá.');
     }
 }
