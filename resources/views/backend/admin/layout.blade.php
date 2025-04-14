@@ -54,7 +54,7 @@
                     </li>
                     <li class="mb-4">
                     <a href="{{ route('coffeeshops_management') }}" class="flex items-center text-gray-600 p-3 rounded-lg hover:bg-gray-200 transition">
-                            <i class="fas fa-file-alt mr-3"></i> Quản lý bài viết
+                            <i class="fas fa-file-alt mr-3"></i> Quản lý quán 
                         </a>
                     </li>
                     <li class="mb-4">
@@ -118,7 +118,7 @@
                         <div class="flex items-center space-x-2">
     <!-- Avatar -->
     <div class="w-10 h-10 rounded-full border-2 border-yellow-400 shadow-md cursor-pointer overflow-hidden">
-        <img src="{{ asset('backend/img/Icon (admin)/admin.jpg') }}" alt="Avatar" class="w-full h-full object-cover">
+        <img src="{{ asset('frontend/images/c4.jpg') }}" alt="Avatar" class="w-full h-full object-cover">
     </div>
     <span class="text-lg font-bold text-black-600 mt-1 ">Tường vi</span> 
 </div>

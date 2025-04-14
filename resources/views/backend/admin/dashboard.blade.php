@@ -106,31 +106,43 @@
         <a href="#" class="text-blue-500 text-sm font-semibold hover:underline">Xem thêm</a>
     </div>
     <ul>
-        @php
-            $users = [
-                ['name' => 'Hoàng Long', 'role' => 'Khách hàng', 'time' => '24/11/2025 - 08:56'],
-                ['name' => 'Nguyễn Văn An', 'role' => 'Chủ quán', 'time' => '24/11/2025 - 09:00'],
-                ['name' => 'Trần Thị Thúy ', 'role' => 'Khách hàng', 'time' => '24/11/2025 - 09:15'],
-                ['name' => 'Lê Thảo ', 'role' => 'Chủ quán', 'time' => '24/11/2025 - 09:30'],
-            ];
-        @endphp
-        @foreach ($users as $user)
-            <li class="flex items-center justify-between mb-4">
-                <div class="flex items-center flex-grow">
-                    <div>
-                        <img src="https://i.pravatar.cc/40?u={{ $loop->index }}" alt="Avatar" class="w-10 h-10 rounded-full mr-3 border border-gray-300 shadow-sm">
-                    </div>
-                    <div>
-                        <p class="font-bold">{{ $user['name'] }}</p>
-                        <p class="text-sm text-gray-600">đã đăng kí thành công</p>
-                        <p class="text-xs text-gray-500">{{ $user['time'] }}</p>
-                    </div>
+    @php
+    $users = [
+        ['name' => 'Hoàng Long', 'role' => 'Khách hàng', 'time' => '24/11/2025 - 08:56'],
+        ['name' => 'Nguyễn Văn An', 'role' => 'Chủ quán', 'time' => '24/11/2025 - 09:00'],
+        ['name' => 'Trần Thị Thúy', 'role' => 'Khách hàng', 'time' => '24/11/2025 - 09:15'],
+        ['name' => 'Lê Thảo', 'role' => 'Chủ quán', 'time' => '24/11/2025 - 09:30'],
+    ];
+@endphp
+
+@php
+    $users = [
+        ['name' => 'owner1', 'role' => 'Khách hàng', 'time' => '24/11/2025 - 08:56', 'avatar' => 'frontend/images/c1.jpg'],
+        ['name' => 'owner1', 'role' => 'Khách hàng', 'time' => '24/11/2025 - 09:00', 'avatar' => 'frontend/images/c2.jpg'],
+        ['name' => 'owner1', 'role' => 'Khách hàng', 'time' => '24/11/2025 - 09:15', 'avatar' => 'frontend/images/c3.jpg'],
+        ['name' => 'user1', 'role' => 'Chủ quán', 'time' => '24/11/2025 - 09:30', 'avatar' => 'frontend/images/c4.jpg'],
+    ];
+@endphp
+
+<ul>
+    @foreach ($users as $user)
+        <li class="flex items-center justify-between mb-4">
+            <div class="flex items-center flex-grow">
+                <div>
+                    <img src="{{ asset($user['avatar']) }}" alt="Avatar" class="w-10 h-10 rounded-full mr-3 border border-gray-300 shadow-sm">
                 </div>
-                <span class="bg-{{ $user['role'] == 'Khách hàng' ? 'green-100' : 'orange-100' }} text-{{ $user['role'] == 'Khách hàng' ? 'green-700' : 'red-700' }} text-xs font-semibold px-3 py-1 rounded-2xl shadow-sm">
-                    {{ $user['role'] }}
-                </span>
-            </li>
-        @endforeach
+                <div>
+                    <p class="font-bold">{{ $user['name'] }}</p>
+                    <p class="text-sm text-gray-600">đã đăng kí thành công</p>
+                    <p class="text-xs text-gray-500">{{ $user['time'] }}</p>
+                </div>
+            </div>
+            <span class="bg-{{ $user['role'] == 'Khách hàng' ? 'green-100' : 'orange-100' }} text-{{ $user['role'] == 'Khách hàng' ? 'green-700' : 'red-700' }} text-xs font-semibold px-3 py-1 rounded-2xl shadow-sm">
+                {{ $user['role'] }}
+            </span>
+        </li>
+    @endforeach
+</ul>
     </ul>
 </div>
 </div>

@@ -20,14 +20,13 @@ Route::get('/test-session', function () {
     Session::put('test_key', 'Hello Session');
     return 'Session đã được ghi!';
 });
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 Route::get('/', [HomeController::class, 'index'])->name('trangchu');
 Route::get('/feed', [HomeController::class, 'feed'])->name('feed');
 Route::get('/tintuc', [HomeController::class, 'tintuc'])->name('tintuc');
 Route::get('/thongbao', [HomeController::class, 'thongbao'])->name('thongbao');
-// Route::get('/owner', [HomeController::class, 'owner','coffeeShop'])->name('owner');
-//Auth
+
+// Auth
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
 Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
@@ -35,9 +34,11 @@ Route::post('/register', [AuthController::class, 'register'])->name('register.su
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // User
+
 Route::get('/user/{id}', [UserController::class, 'showProfile'])->name('user');
 
-//owner
+
+// Owner
 Route::get('/owner/{id}', [OwnerController::class, 'owner'])->name('owner'); 
 Route::get('/owner/{id}/coffeeshops', [OwnerController::class, 'showByOwner'])->name('owner.coffeeshop'); 
 Route::put('/menu/update/{id}', [OwnerController::class, 'update'])->name('menu.update'); 
@@ -46,12 +47,12 @@ Route::put('/owner/update/{id}', [OwnerController::class, 'updateinfor'])->name(
 Route::post('/reviews', [ReviewController::class, 'store'])->name('review.store');
 
 // Backend --------------------------------------------
-
 Route::get('/dashboard', function () {
     return view('backend.admin.dashboard'); // Chỉ định đường dẫn đầy đủ đến view
 })->name('dashboard')->middleware('auth'); // Chỉ kiểm tra xem người dùng đã đăng nhập hay chưa
 
 Route::post('/like-shop/{id}', [CoffeeShopController::class, 'like'])->name('shop.like');
+
 // User Management Routes
 Route::prefix('user-management')->name('user.')->group(function () {
     Route::get('/', [UserController::class, 'index'])->name('management'); // Hiển thị danh sách người dùng
@@ -63,20 +64,23 @@ Route::prefix('user-management')->name('user.')->group(function () {
     Route::get('/{user}', [UserController::class, 'show'])->name('show'); // Hiển thị thông tin người dùng
 });
 
-// Định nghĩa route cho trang quản lý quán cà phê
-Route::get('/coffeeshops', [CoffeeShopController::class, 'index'])->name('coffeeshops_management');
-Route::get('/promotions', [PromotionController::class, 'index'])->name('promotions_management');
-// Định nghĩa resource cho quản lý quán cà phê
-Route::resource('cafes', CafeManagementController::class);
+Route::get('/coffeeshops', [CoffeeShopController::class, 'index'])->name('coffeeshops_management');// Định nghĩa route cho trang quản lý quán cà phê
+Route::resource('cafes', CafeManagementController::class);// Định nghĩa resource cho quản lý quán cà phê
 Route::get('/cafes_management', [CafeManagementController::class, 'index'])->name('cafes_management');
+Route::get('/coffeeshops/create', [CoffeeShopController::class, 'create'])->name('coffeeshop.create');// Route cho form thêm mới quán cà phê
+Route::post('/coffeeshops', [CoffeeShopController::class, 'store'])->name('coffeeshop.store');// Route cho lưu quán cà phê mới
+Route::get('/coffeeshops/{coffeeshop}/edit', [CoffeeShopController::class, 'edit'])->name('coffeeshop.edit');// Route cho form chỉnh sửa quán cà phê
+Route::put('/coffeeshops/{coffeeshop}', [CoffeeShopController::class, 'update'])->name('coffeeshop.update');// Route cho cập nhật quán cà phê
+Route::delete('/coffeeshops/{coffeeshop}', [CoffeeShopController::class, 'destroy'])->name('coffeeshop.destroy');// Route cho xóa quán cà phê
 
+// Route cho trang quản lý khuyến mãi
+Route::get('/promotions', [PromotionController::class, 'index'])->name('promotions_management');
 
+// Route cho profile (nếu cần)
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
 
-
-// Route::middleware('auth')->group(function () {
-//     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-//     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-//     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-// });
-
-// require __DIR__.'/auth.php';
+// require __DIR__.'/auth.php'; // Nếu bạn có file auth.php, hãy giữ lại dòng này

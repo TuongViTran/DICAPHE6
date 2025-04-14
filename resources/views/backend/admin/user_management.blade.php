@@ -22,6 +22,7 @@
                     <th class="py-2 px-4 border-b text-center">Họ và tên</th>
                     <th class="py-2 px-4 border-b text-center">Email</th>
                     <th class="py-2 px-4 border-b text-center">Số điện thoại</th>
+                    <th class="py-2 px-4 border-b text-center">Giới tính</th>
                     <th class="py-2 px-4 border-b text-center">Vai trò</th>
                     <th class="py-2 px-4 border-b text-center">Hành động</th>
                 </tr>
@@ -31,11 +32,18 @@
                     <tr class="hover:bg-gray-50 transition duration-200 ease-in-out">
                         <td class="py-2 px-4 border-b text-center">{{ $k + 1 }}</td>
                         <td class="py-2 px-4 border-b text-center">
-    <img src="{{ $user->avatar_url }}" alt="User  Avatar" class="mt-2 rounded-full w-10 h-10">
+    @if ($user->avatar_url)
+    <img src="{{ asset('frontend/images/' . $user->avatar_url) }}" alt="User  Avatar" class="mt-2 rounded-full w-10 h-10">
+    @else
+        <span>Chưa có ảnh đại diện</span>
+    @endif
 </td>
                         <td class="py-2 px-4 border-b text-center">{{ $user->full_name }}</td>
                         <td class="py-2 px-4 border-b text-center">{{ $user->email }}</td>
                         <td class="py-2 px-4 border-b text-center">{{ $user->phone }}</td>
+                        <td class="py-2 px-4 border-b text-center">
+                            {{ $user->gender == 'male' ? 'Nam' : ($user->gender == 'female' ? 'Nữ' : 'Khác') }}
+                        </td>
                         <td class="py-2 px-4 border-b text-center">
                             @if ($user->role == 'admin')
                                 <span class="bg-blue-200 text-blue-800 py-1 px-3 rounded-full text-xs">Admin</span>
@@ -45,7 +53,6 @@
                                 <span class="bg-green-200 text-green-800 py-1 px-3 rounded-full text-xs">Khách hàng</span>
                             @endif
                         </td>
-
                         <td class="py-2 px-4 border-b text-center">
                             <div class="flex justify-center items-center space-x-2">
                                 <a href="{{ route('user.edit', $user) }}" class="text-yellow-500 flex items-center">
@@ -59,14 +66,14 @@
                                     </button>
                                 </form>
                                 <a href="{{ route('user.show', $user) }}" class="text-blue-500 flex items-center">
-                                    <img src="{{ asset('backend/img/Icon (admin)/Mở rộng.svg') }}" alt="View" class="w-7 h-7">
+                                <img src="{{ asset('backend/img/Icon (admin)/Mở rộng.svg') }}" alt="View" class="w-7 h-7">
                                 </a>
                             </div>
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" class="py-2 px-4 border-b text-center">Không có người dùng nào.</td>
+                        <td colspan="8" class="py-2 px-4 border-b text-center">Không có người dùng nào.</td>
                     </tr>
                 @endforelse
             </tbody>
