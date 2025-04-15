@@ -73,6 +73,8 @@ Route::prefix('user-management')->name('user.')->group(function () {
 // quản lý feedback
 Route::prefix('feed-management')->name('feed.')->group(function () {
     Route::get('/', [FeedController::class, 'index'])->name('index');
+    Route::get('/{id}', [FeedController::class, 'show'])->name('show');
+
     Route::delete('/{id}', [FeedController::class, 'destroy'])->name('destroy');
 });
 

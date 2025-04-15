@@ -24,6 +24,18 @@ class FeedController extends Controller
             $query->where('rating', $request->rating);
         }
     
+        // Tìm kiếm theo tên người dùng hoặc tên quán
+    if ($request->filled('keyword')) {
+        $keyword = $request->keyword;
+        $query->where(function ($q) use ($keyword) {
+            $q->whereHas('user', function ($q1) use ($keyword) {
+                $q1->where('full_name', 'like', '%' . $keyword . '%');
+            })->orWhereHas('shop', function ($q2) use ($keyword) {
+                $q2->where('shop_name', 'like', '%' . $keyword . '%');
+            });
+        });
+    }
+        
         $feeds = $query->paginate(10)->withQueryString();
     
         return view('backend.admin.feedback_management', compact('feeds'));
@@ -34,6 +46,11 @@ class FeedController extends Controller
     $feed->delete(); // Xóa khỏi database
 
     return redirect()->route('feed.index')->with('success', 'Đã xóa feedback thành công!');
+}
+public function show($id)
+{
+    $feed = \App\Models\Review::with('user', 'shop')->findOrFail($id);
+    return response()->json($feed);
 }
 
 }

@@ -31,7 +31,9 @@
                     <tr class="hover:bg-gray-50 transition duration-200 ease-in-out">
                         <td class="py-2 px-4 border-b text-center">{{ $k + 1 }}</td>
                         <td class="py-2 px-4 border-b text-center">
-    <img src="{{ $user->avatar_url }}" alt="User  Avatar" class="mt-2 rounded-full w-10 h-10">
+                        <img src="{{ asset('frontend/images/' . basename($user->avatar_url)) }}" 
+     onerror="this.onerror=null; this.src='{{ asset('frontend/images/avt.png') }}';"
+     width="50" height="50" alt="Avatar">
 </td>
                         <td class="py-2 px-4 border-b text-center">{{ $user->full_name }}</td>
                         <td class="py-2 px-4 border-b text-center">{{ $user->email }}</td>
