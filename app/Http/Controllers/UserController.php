@@ -6,12 +6,10 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
-<<<<<<< HEAD
-=======
 use App\Models\Owner;
 use App\Models\Review;
 
->>>>>>> 3d75ae53fdadd370c08c1ad73d8d9c740002a634
+
 
 class UserController extends Controller
 {
@@ -57,7 +55,6 @@ class UserController extends Controller
     
         return redirect()->route('user.management')->with('success', 'Người dùng đã được thêm thành công.');
     }
-
     // Hiển thị form chỉnh sửa người dùng
     public function edit(User $user)
     {
@@ -66,41 +63,40 @@ class UserController extends Controller
 
     // Cập nhật thông tin người dùng
    // Cập nhật thông tin người dùng
-public function update(Request $request, User $user)
-{
-    // Xác thực dữ liệu
-    $request->validate([
-        'full_name' => 'required|string|max:255',
-        'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
-        'phone' => 'nullable|string|max:15',
-        'avatar' => 'nullable|string', // Chỉ cần xác thực là chuỗi
-        'gender' => 'nullable|in:male,female,other',
-        'role' => 'required|in:admin,owner,user',
-    ]);
-
-    // Cập nhật thông tin người dùng
-    $user->full_name = $request->full_name;
-    $user->email = $request->email;
-    $user->phone = $request->phone;
-    $user->gender = $request->gender;
-    $user->role = $request->role;
-
-    // Xử lý ảnh đại diện nếu có
-    if ($request->has('avatar') && $request->avatar) {
-        // Xóa ảnh cũ nếu có
-        if ($user->avatar_url) {
-            Storage::disk('public')->delete($user->avatar_url);
-        }
-        // Cập nhật tên file ảnh đại diện mới
-        $user->avatar_url = $request->avatar; // Lưu tên file ảnh mới
-    }
-
-    // Lưu thay đổi vào cơ sở dữ liệu
-    $user->save();
-
-    return redirect()->route('user.management')->with('success', 'Người dùng đã được cập nhật thành công.');
-}
-
+   public function update(Request $request, User $user)
+   {
+       // Xác thực dữ liệu
+       $request->validate([
+           'full_name' => 'required|string|max:255',
+           'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+           'phone' => 'nullable|string|max:15',
+           'avatar' => 'nullable|string', // Chỉ cần xác thực là chuỗi
+           'gender' => 'nullable|in:male,female,other',
+           'role' => 'required|in:admin,owner,user',
+       ]);
+   
+       // Cập nhật thông tin người dùng
+       $user->full_name = $request->full_name;
+       $user->email = $request->email;
+       $user->phone = $request->phone;
+       $user->gender = $request->gender;
+       $user->role = $request->role;
+   
+       // Xử lý ảnh đại diện nếu có
+       if ($request->has('avatar') && $request->avatar) {
+           // Xóa ảnh cũ nếu có
+           if ($user->avatar_url) {
+               Storage::disk('public')->delete($user->avatar_url);
+           }
+           // Cập nhật tên file ảnh đại diện mới
+           $user->avatar_url = $request->avatar; // Lưu tên file ảnh mới
+       }
+   
+       // Lưu thay đổi vào cơ sở dữ liệu
+       $user->save();
+   
+       return redirect()->route('user.management')->with('success', 'Người dùng đã được cập nhật thành công.');
+   }
     // Xóa người dùng
     public function destroy(User $user)
     {
@@ -160,28 +156,17 @@ public function update(Request $request, User $user)
 
         return redirect()->route('profile.edit')->with('success', 'Cập nhật hồ sơ thành công.');
     }
-<<<<<<< HEAD
 
-    // Hiển thị thông tin người dùng trên frontend
-    public function showProfile($id)
-    {
-        $user = User::findOrFail($id);
-        return view('frontend.user', compact('user'));
-    }
-=======
-    // User frontend function
-        public function showProfile($id)
-        {
-            $user = \App\Models\User::findOrFail($id);
-            $reviews = Review::where('user_id', $id)
-                ->with('user')
-                ->orderBy('created_at', 'desc')
-                ->paginate(10);
 
-            return view('frontend.user', compact('user','reviews'));
-        }
-        
-        
-    
->>>>>>> 3d75ae53fdadd370c08c1ad73d8d9c740002a634
+   // Hiển thị thông tin người dùng trên frontend
+public function showProfile($id)
+{
+    $user = User::findOrFail($id);
+    $reviews = Review::where('user_id', $id)
+        ->with('user')
+        ->orderBy('created_at', 'desc')
+        ->paginate(10);
+
+    return view('frontend.user', compact('user', 'reviews'));
+}
 }

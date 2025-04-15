@@ -45,7 +45,10 @@
         <div class="mb-4">
             <label class="block text-sm font-bold mb-2">Ảnh đại diện hiện tại</label>
             @if ($user->avatar_url)
-                <img src="{{ asset('frontend/images/' . $user->avatar_url) }}" alt="User  Avatar" class="mt-2 rounded-full w-20 h-20 current-avatar">
+            <img src="{{ asset('frontend/images/' . basename($user->avatar_url)) }}" 
+     onerror="this.onerror=null; this.src='{{ asset('frontend/images/avt.png') }}';"
+     width="50" height="50" alt="Avatar">
+</td>
             @else
                 <p class="mt-2">Chưa có ảnh đại diện.</p>
             @endif
