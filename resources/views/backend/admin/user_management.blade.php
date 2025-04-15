@@ -32,8 +32,10 @@
                     <tr class="hover:bg-gray-50 transition duration-200 ease-in-out">
                         <td class="py-2 px-4 border-b text-center">{{ $k + 1 }}</td>
                         <td class="py-2 px-4 border-b text-center">
-  
+
+                
     <img src="{{ asset('frontend/images/' . basename($user->avatar_url)) }}" 
+
      onerror="this.onerror=null; this.src='{{ asset('frontend/images/avt.png') }}';"
      width="50" height="50" alt="Avatar">
 </td>

@@ -105,6 +105,15 @@
     background: #ccc;
     border-radius: 10px;
 }
+.review-content {
+  margin-left: 50px;
+  white-space: nowrap;        /* Không cho xuống dòng */
+  overflow: hidden;           /* Ẩn phần dư */
+  text-overflow: ellipsis;    /* Hiện dấu ... */
+  max-width: 400px;           /* Giới hạn chiều ngang */
+  display: block;             /* Đảm bảo nó hoạt động đúng */
+  margin-bottom:10px
+}
 
   </style>
 @section('content')
@@ -230,7 +239,8 @@
                     </div>           
                 </div>
                 <!-- Nội dung đánh giá -->
-                <p class="" style="margin-left:50px">{{ $review->content }}</p>
+                <div class="review-content">{{ $review->content }}</div>
+
                 
     
                 <!-- Hiển thị ảnh đánh giá -->
@@ -285,7 +295,7 @@
     <div class="modal-content">
       <!-- Tiêu đề -->
       <div class="modal-header">
-        <h5 class="modal-title">Chỉnh sửa đánh giá tại: {{ $review->shop->shop_name ?? 'Quán không xác định' }}</h5>
+        <h5  class="modal-title">Chỉnh sửa đánh giá tại: {{ $review->shop->shop_name ?? 'Quán không xác định' }}</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
 
@@ -307,7 +317,7 @@
 
           <!-- Nội dung đánh giá -->
           <label class="form-label mt-2">Nội dung đánh giá:</label>
-          <textarea class="form-control" name="content" rows="3" required>{{ $review->content }}</textarea>
+          <textarea class="form-control"  name="content" rows="6" required>{{ $review->content }}</textarea>
 
           <!-- Ảnh đánh giá (nếu muốn cho phép sửa ảnh) -->
           <label class="form-label mt-2">Thay ảnh (nếu cần):</label>

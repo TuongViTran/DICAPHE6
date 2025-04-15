@@ -9,7 +9,7 @@ class ShopController extends Controller
 {
     public function show($id)
     {
-        $coffeeShop = CoffeeShop::find($id); // hoặc first()
-return view('frontend.shop', compact('coffeeShop'));
+        $coffeeShop = CoffeeShop::with(['reviews.user'])->findOrFail($id); // dùng with() để eager load
+    return view('frontend.shop', compact('coffeeShop'));
     }
 }
