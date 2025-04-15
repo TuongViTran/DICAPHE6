@@ -33,10 +33,11 @@
                         <td class="py-2 px-4 border-b text-center">{{ $k + 1 }}</td>
                         <td class="py-2 px-4 border-b text-center">
 
-                        <img src="{{ asset('frontend/images/' . basename($user->avatar_url)) }}" 
+                
+    <img src="{{ asset('frontend/images/' . basename($user->avatar_url)) }}" 
 
-  
-  
+     onerror="this.onerror=null; this.src='{{ asset('frontend/images/avt.png') }}';"
+     width="50" height="50" alt="Avatar">
 </td>
                         <td class="py-2 px-4 border-b text-center">{{ $user->full_name }}</td>
                         <td class="py-2 px-4 border-b text-center">{{ $user->email }}</td>
