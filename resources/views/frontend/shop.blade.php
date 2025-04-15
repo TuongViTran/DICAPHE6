@@ -31,6 +31,13 @@
     .rounded-lg img{
         max-height:150px;
     }
+    .hide-scrollbar {
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* Internet Explorer 10+ */
+    }
+    .hide-scrollbar::-webkit-scrollbar {
+        display: none; /* Chrome, Safari and Opera */
+    }
 </style>
 
 @section('content')
@@ -213,50 +220,104 @@
 
             <p class="text-gray-500">{{ $coffeeShop->description }}</p>
         </div>
-        <div class="mt-6">
+        <div class="mt-6 max-h-[500px] overflow-y-auto pr-2 scroll-smooth hide-scrollbar">
             <h2 class="text-2xl font-bold">Đánh giá</h2>
-            <div class="mt-2">
-                <div class="flex items-center">
-                    <img alt="Reviewer 1" class="rounded-full" height="40" src="https://placehold.co/40x40" width="40"/>
-                    <div class="ml-5">
-                        <p class="font-semibold">Hoàng Long</p>
-                        <p class="text-gray-500">Quán có đồ ăn nhẹ rất ngon</p>
-                    </div>
+            @foreach($coffeeShop->reviews as $review)
+    <div class=" pt-2" x-data="{ expanded: false }">
+       
+        <div class="flex justify-between relative">
+            <div class="flex items-center">
+                <img src="{{ asset('frontend/images/' . basename($review->user->avatar_url)) }}"
+                    class="rounded-full object-cover" width="48" height="48" alt="Avatar">
+                <div class="ml-3">
+                <div class="flex justify-between items-start">
+                    <p class="font-semibold">
+                        <span>{{ $review->user->full_name ?? 'Người dùng' }}</span>
+                    </p>
                 </div>
-                <div class="flex items-center mt-3">
-                    <img alt="Reviewer 2" class="rounded-full" height="40" src="https://placehold.co/40x40" width="40"/>
-                    <div class="ml-5">
-                        <p class="font-semibold">Tuyết</p>
-                        <p class="text-gray-500">Không gian yên tĩnh, nước ngon và nhân viên phục vụ nhiệt tình!</p>
-                    </div>
-                </div>
-                <div class="flex items-center mt-3">
-                    <img alt="Reviewer 2" class="rounded-full" height="40" src="https://placehold.co/40x40" width="40"/>
-                    <div class="ml-5">
-                        <p class="font-semibold">Tuyết</p>
-                        <p class="text-gray-500">Không gian yên tĩnh, nước ngon và nhân viên phục vụ nhiệt tình!</p>
-                    </div>
-                </div>
-                <div class="flex items-center mt-3">
-                    <img alt="Reviewer 2" class="rounded-full" height="40" src="https://placehold.co/40x40" width="40"/>
-                    <div class="ml-5">
-                        <p class="font-semibold">Tuyết</p>
-                        <p class="text-gray-500">Không gian yên tĩnh, nước ngon và nhân viên phục vụ nhiệt tình!</p>
-                    </div>
-                </div>
-                <div class="flex items-center mt-3">
-                    <img alt="Reviewer 2" class="rounded-full" height="40" src="https://placehold.co/40x40" width="40"/>
-                    <div class="ml-5">
-                        <p class="font-semibold">Tuyết</p>
-                        <p class="text-gray-500">Không gian yên tĩnh, nước ngon và nhân viên phục vụ nhiệt tình!</p>
+
+
+
+
+                    <div style="display:flex">
+                        <p class="text-sm text-gray-500">{{ $review->created_at->format('d/m/Y') }}</p>
+                        <p class="text-warning" style="margin-left:25px;">    
+                                @for ($i = 1; $i <= 5; $i++)
+                                    <i class="fa{{ $i <= $review->rating ? 's' : 'r' }} fa-star" style="font-size: 0.75rem;margin-right: -5px;"></i>
+                                @endfor
+                        </p>
                     </div>
                 </div>
             </div>
-            <div class="mt-4">
-                <input class="w-full p-2 border  rounded-lg" placeholder="Thêm nhận xét của bạn" type="text"/>
+            
+
+            <div>
+            <p class="text-sm font-normal text-gray-500">Đã thích ({{ $review->likes_count ?? 0 }})</p>
+            <br>
+                <button @click="expanded = !expanded" class="text-blue-500 text-sm hover:underline">
+                    <span x-text="expanded ? 'Ẩn bớt' : 'Xem thêm'"></span>
+                </button>
             </div>
         </div>
+
+        <!-- Nội dung đánh giá -->
+        <div class="mt-2 text-gray-700 text-sm relative">
+            <p
+                x-show="!expanded"
+                class="line-clamp-2"
+                style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;"
+            >
+                {{ $review->content }}
+            </p>
+            <p x-show="expanded" x-cloak>
+                {{ $review->content }}
+            </p>
+        </div>
+
+        <!-- Hình ảnh (ẩn khi chưa mở) -->
+        <div x-show="expanded" x-cloak class="mt-3 flex flex-wrap gap-4">
+            @php
+                    $images = $review->img_url ? explode(',', $review->img_url) : [];
+                @endphp
+
+                @if (!empty($images))
+                <div class="col flex gap-3 mt-2">
+                        @foreach (array_slice($images, 0, 3) as $img)
+                            @php
+                                $img = trim($img);
+                                if ($img === '') continue;
+                                $isUrl = Str::startsWith($img, ['http://', 'https://']);
+                            @endphp
+
+                            
+                            <div class="flex-none">
+                <img
+                    src="{{ $isUrl ? $img : asset('storage/' . $img) }}"
+                    alt="Ảnh đánh giá"
+                    class="w-[190px] h-[230px] object-cover rounded"
+                    onerror="this.src='{{ asset('frontend/images/tt.svg') }}';"
+                >
             </div>
+                        @endforeach
+                        
+                    </div>
+                @endif
+            </div>
+        </div>
+
+
+
+
+@endforeach
+           
+        </div>
+        <div class="mt-4">
+                <input class="w-full p-2 border  rounded-lg" placeholder="Thêm nhận xét của bạn" type="text"/>
+            </div>
+            </div>
+
+
+            
             <div class="col-md-6">
             <div class="mt-6">
             <h2 class="text-2xl font-bold">Vị trí</h2>
@@ -278,3 +339,4 @@
         alert('{{ session('jsAlert') }}');
     </script>
 @endif
+<script src="//unpkg.com/alpinejs" defer></script>
