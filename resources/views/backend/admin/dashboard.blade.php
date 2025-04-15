@@ -57,12 +57,26 @@
         <div class="col-span-2 bg-white p-4 rounded-lg shadow">
             <h3 class="text-lg font-bold mb-4">Lượng người dùng :</h3>
             <div class="flex space-x-6 mb-4">
-                <div class="flex items-center">
-                    <span class="w-4 h-4 bg-green-500 rounded-full inline-block mr-2 shadow-md"></span> Khách hàng
-                </div>
-                <div class="flex items-center">
-                    <span class="w-4 h-4 bg-yellow-500 rounded-full inline-block mr-2 shadow-md"></span> Chủ quán
-                </div>
+               <div class="flex items-center space-x-6">
+  <!-- Khách hàng -->
+  <div class="flex items-center space-x-2">
+    <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+      <div class="w-10 h-5 bg-[#4ec7a7] rounded-full shadow-inner"></div>
+      <div class="dot absolute left-[2px] top-[2px] bg-white w-4 h-4 rounded-full shadow transition transform translate-x-5"></div>
+    </div>
+    <span class="text-gray-800 font-medium">Khách hàng</span>
+  </div>
+
+  <!-- Chủ quán -->
+  <div class="flex items-center space-x-2">
+    <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+      <div class="w-10 h-5 bg-[#f5c41d] rounded-full shadow-inner"></div>
+      <div class="dot absolute left-[2px] top-[2px] bg-white w-4 h-4 rounded-full shadow transition transform translate-x-5"></div>
+    </div>
+    <span class="text-gray-800 font-medium">Chủ quán</span>
+  </div>
+</div>
+
             </div>
             <div class="bg-white p-6 rounded-lg shadow-md">
                 <canvas id="userChart" height="110"></canvas> <!-- Thay đổi chiều cao -->
@@ -78,15 +92,15 @@
                 {
                     label: 'Khách hàng',
                     data: [120, 150, 100, 130, 160, 140, 180], // Dữ liệu cho khách hàng
-                    backgroundColor: 'rgba(144, 238, 144, 0.6)', // Màu xanh lá cây nhẹ
-                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: '#4ec7a7', // Màu xanh lá cây nhẹ
+                    
                     borderWidth: 1
                 },
                 {
                     label: 'Chủ quán',
                     data: [30, 40, 35, 50, 45, 60, 55], // Dữ liệu cho chủ quán
-                    backgroundColor: 'rgba(255, 255, 224, 0.6)', // Màu vàng nhẹ
-                    borderColor: 'rgba(255, 99, 132, 1)',
+                    backgroundColor: '#f5c41d', // Màu vàng nhẹ
+                    
                     borderWidth: 1
                 }
             ]
