@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained('users');
             $table->string('title')->nullable();
+            $table->text('description')->nullable();
             $table->text('content');
             $table->string('image_url')->nullable();
             $table->integer('likes_count')->default(0);

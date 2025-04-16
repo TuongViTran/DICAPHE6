@@ -12,11 +12,15 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" />
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+<script src="https://kit.fontawesome.com/24875ac8f5.js" crossorigin="anonymous"></script>
 <!-- Thêm Google Places API -->
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDfOjgSqISKR-JKrx5BeJim8bKFFMt9yIU=places&callback=initAutocomplete" async defer></script>
+
+
 
 </head>
 <body>
@@ -44,7 +48,7 @@
             <li class="{{ request()->routeIs('tintuc') ? 'active' : '' }}">
                 <a href="{{ route('tintuc') }}">
                     <span class="icon"><img src="{{ asset('frontend/images/icon_tintuc.svg') }}" alt="Tin tức"></span>
-                    <span>Tin tức</span>
+                    <span>Blog</span>
                 </a>
             </li>
             <li class="{{ request()->routeIs('thongbao') ? 'active' : '' }}">
@@ -290,6 +294,63 @@
         </div>
     </footer>
 </body>
+<!-- Thêm CK EDITOR-->
+
+<script src="https://cdn.ckeditor.com/ckeditor5/41.2.1/classic/ckeditor.js"></script>
+
+<script>
+    class MyUploadAdapter {
+        constructor(loader) {
+            this.loader = loader;
+        }
+
+        upload() {
+            return this.loader.file.then(file => {
+                return new Promise((resolve, reject) => {
+                    const data = new FormData();
+                    data.append('upload', file);
+                    data.append('_token', '{{ csrf_token() }}');
+
+                    fetch("{{ route('ckeditor.upload') }}", {
+                        method: "POST",
+                        body: data
+                    })
+                    .then(response => response.json())
+                    .then(result => {
+                        if (result.url) {
+                            resolve({ default: result.url });
+                        } else {
+                            reject(result.error.message);
+                        }
+                    })
+                    .catch(error => {
+                        reject('Upload failed');
+                        console.error(error);
+                    });
+                });
+            });
+        }
+
+        abort() {
+            // Xử lý khi cần hủy upload (không bắt buộc)
+        }
+    }
+
+    function MyCustomUploadAdapterPlugin(editor) {
+        editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
+            return new MyUploadAdapter(loader);
+        };
+    }
+
+    document.querySelectorAll('.ckeditor').forEach(el => {
+    ClassicEditor
+        .create(el, {
+            extraPlugins: [MyCustomUploadAdapterPlugin]
+        })
+        .catch(err => console.error(err));
+});
+
+</script>
 <script src="{{ asset('frontend/js/seacher.js') }}"></script>
 <script src="{{ asset('frontend/js/date_weather.js') }}"></script>
 <script>

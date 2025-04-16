@@ -10,16 +10,21 @@ use App\Models\SocialNetwork;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Address;
 use App\Models\Shop;
-
+use App\Models\Post;
 
 class OwnerController extends Controller
 {  public function owner($id)
     {
         // Lấy coffeeShop của chủ quán có ID = $id
         $coffeeShop = CoffeeShop::where('user_id', $id)->first();
-
+        $posts = Post::with('user') // Lấy bài viết cùng user tạo bài viết đó
+            // ->where('status', 'Published')
+            ->where('user_id', $id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+        $userId = auth()->id();
     
-        return view('frontend.owner', compact('coffeeShop'));
+        return view('frontend.owner', compact('coffeeShop','posts'));
     }
     
     public function update(Request $request, $id)
@@ -129,8 +134,12 @@ class OwnerController extends Controller
     
             return redirect()->back()->with('success', 'Cập nhật thông tin quán thành công!');
         }
-     
 
+        
+        
+       
+     
+    
 
 }
 

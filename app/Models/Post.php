@@ -15,6 +15,7 @@ class Post extends Model
     protected $fillable = [
         'user_id',
         'title',
+        'description',
         'content',
         'image_url',
         'likes_count',
@@ -26,5 +27,11 @@ class Post extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
 }
 ?>
