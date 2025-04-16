@@ -98,7 +98,15 @@
       font-size: 14px;
       color: #4b5563;
     }
-
+    .review-scroll-container {
+    max-height: 2000px;
+    overflow-y: auto;
+    scrollbar-width: none; /* Firefox */
+    margin-bottom: 50px
+}
+.review-scroll-container::-webkit-scrollbar {
+    display: none; /* Chrome, Safari */
+}
 </style>
 <hr>
 <div class="container mt-4">
@@ -106,72 +114,82 @@
         <!-- Danh sách review -->
         <div class="col-md-7">
             <h4 style="margin-bottom:20px"><strong>Xem review để chọn quán nè</strong></h4>
+            <div class="review-scroll-container">
             @foreach ($reviews->items() as $review)
             
-        <div class="card mb-1 p-3" style="border:none">
-            <div class="d-flex align-items-center">
-                <!-- Avatar người dùng -->
-                <img src="{{ asset('frontend/images/' . basename($review->user->avatar_url)) }}" 
-     onerror="this.onerror=null; this.src='{{ asset('frontend/images/avt.png') }}';"
-     width="50" height="50" alt="Avatar">
-
-
-
-
-
-                <div>
-                    <strong>{{ $review->user->full_name ?? 'Người dùng ẩn danh' }}</strong>
-                    <span style="max-width: 30px; "> đang ở tại <strong >{{ $review->shop->shop_name ?? 'Người dùng ẩn danh' }}</strong>
-                    </span>
-
-                    <div style="display:flex">
-                    <p class="text-muted small">{{ $review->created_at ? $review->created_at->format('d/m/Y') : 'Không có ngày' }}</p>&ensp;
-                        <span style="margin-right:5px;margin-left:0px;" class="like-count ">{{ $review->likes_count }} </span>  lượt thích   <!-- Hiển thị số sao -->
-                        <p class="text-warning" style="margin-left:25px;">    
-                                @for ($i = 1; $i <= 5; $i++)
-                                    <i class="fa{{ $i <= $review->rating ? 's' : 'r' }} fa-star"></i>
-                                @endfor
-                        </p>
-
-                        <button class="like-button" data-id="{{ $review->id }}" style="border: none; background: none; cursor: pointer; margin-top:-19px;position: relative; left: 200px; top:-23px">
-                            ❤️ 
-                        </button>
-                    </div>
-                </div>           
-            </div>
-            <!-- Nội dung đánh giá -->
-            <p class="" style="margin-left:50px">{{ $review->content }}</p>
-
-            <!-- Hiển thị ảnh đánh giá -->
-            @php
-    $images = $review->img_url ? explode(',', $review->img_url) : [];
-@endphp
-
-@if (!empty($images))
-    <div class="row">
-        @foreach (array_slice($images, 0, 3) as $img)
-            @php
-                $img = trim($img);
-                if ($img === '') continue;
-                $isUrl = Str::startsWith($img, ['http://', 'https://']);
-            @endphp
-
-            <div class="col-4 d-flex mb-2">
-                <img
-                    src="{{ $isUrl ? $img : asset('storage/' . $img) }}"
-                    style="height:230px; width:190px; object-fit:cover; margin-right:15px"
-                    class="img-fluid rounded shadow"
-                    alt="Review Image"
-                    onerror="this.src='{{ asset('frontend/images/tt.svg') }}';"
-                >
+            <div class="card mb-1 p-3" style="border:none">
+                <div class="d-flex align-items-center">
+                    <!-- Avatar người dùng -->
+                    <img src="{{ asset('frontend/images/' . basename($review->user->avatar_url)) }}"
+         onerror="this.onerror=null; this.src='{{ asset('frontend/images/avt.png') }}';"
+         width="60" height="60" alt="Avatar"
+         style="border-radius: 50%; box-shadow: 0 2px 8px rgba(0,0,0,0.15); object-fit: cover; margin-right:15px">
+    
+    
+    
+    
+    
+                    <div style="margin-top:15px">
+                        <strong>{{ $review->user->full_name ?? 'Người dùng ẩn danh' }}</strong>
+                        <span style="max-width: 30px; "> đang ở tại <strong >{{ $review->shop->shop_name ?? 'Người dùng ẩn danh' }}</strong>
+                        </span>
+    
+                        <div style="display:flex">
+                        <p class="text-muted small">{{ $review->created_at ? $review->created_at->format('d/m/Y') : 'Không có ngày' }}</p>&ensp;
+                            <span style="margin-right:5px;margin-left:0px;" class="like-count ">{{ $review->likes_count }} </span>  lượt thích   <!-- Hiển thị số sao -->
+                            <p class="text-warning" style="margin-left:25px;">    
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        <i class="fa{{ $i <= $review->rating ? 's' : 'r' }} fa-star"></i>
+                                    @endfor
+                            </p>
+    
+                            <button class="like-button" data-id="{{ $review->id }}" style="border: none; background: none; cursor: pointer; margin-top:-19px;position: relative; left: 200px; top:-23px">
+                                ❤️ 
+                            </button>
+                        </div>
+                    </div>           
+                </div>
+                <!-- Nội dung đánh giá -->
+                <p class="" style="margin-left:50px">{{ $review->content }}</p>
+    
+                <!-- Hiển thị ảnh đánh giá -->
+                @php
+        $images = $review->img_url ? explode(',', $review->img_url) : [];
+    @endphp
+    
+    @if (!empty($images))
+        <div class="row">
+            @for ($i = 0; $i < 3; $i++)
+                @php
+                    $img = isset($images[$i]) ? trim($images[$i]) : '';
+                    $isUrl = Str::startsWith($img, ['http://', 'https://']);
+                @endphp
+    
+                <div class="col-4 d-flex mb-2">
+                    @if ($img !== '')
+                        <img
+                            src="{{ $isUrl ? $img : asset('storage/' . $img) }}"
+                            style="height:280px; width:250px; object-fit:cover; margin-right:10px"
+                            class="img-fluid rounded shadow"
+                            alt="Review Image"
+                            onerror="this.src='{{ asset('frontend/images/tt.svg') }}';"
+                        >
+                    @else
+                        <div style="height:280px; width:250px; margin-right:10px; background-color:#f0f0f0;"
+                             class="d-flex align-items-center justify-content-center rounded shadow text-muted flex-column">
+                            <i class="fas fa-image fa-2x mb-2"></i>
+                            <small>Chưa có ảnh</small>
+                        </div>
+                    @endif
+                </div>
+            @endfor
+        </div>
+    @endif
+      
+            
             </div>
         @endforeach
-    </div>
-@endif
-  
-        
-        </div>
-    @endforeach
+            </div>
 
 
 
@@ -254,6 +272,13 @@
 
                 </div>
             </div>
+            
+            <img src="{{ asset('frontend/images/anhdep.jpg') }}" alt="">
+
+            <div class="mt-6">
+            <img alt="" class="rounded-lg" style="height:100px;width:400px; margin-left:60px"  src="{{ asset('frontend/images/quangcao.jpg' ) }}" />
+        </div>
+
         </div>
     </div>
 </div>

@@ -9,7 +9,11 @@ class ShopController extends Controller
 {
     public function show($id)
     {
-        $coffeeShop = CoffeeShop::with(['reviews.user'])->findOrFail($id); // dùng with() để eager load
-    return view('frontend.shop', compact('coffeeShop'));
+        $coffeeShop = CoffeeShop::with(['reviews' => function($query) {
+            $query->with('user')->orderBy('created_at', 'desc');
+        }])->findOrFail($id);
+        
+        return view('frontend.shop', compact('coffeeShop'));
+        
     }
 }

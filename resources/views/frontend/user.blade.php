@@ -201,23 +201,28 @@
   <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
 </svg> Feedback của bạn</h5>
 
-<div style="display:flex; width:;">
+<div style="display:flex; width:; ">
 @if ($reviews->count() > 3)
     <div class="review-carousel">
 @else
-    <div style="display:flex; flex-wrap: wrap;">
+    <div style="display:flex; flex-wrap: wrap; ">
 @endif
 @foreach ($reviews->items() as $review)
             
-            <div class="card mb-1 p-3" style=" border:none; border-right:1px" >
-                <div class="d-flex align-items-center" >
+<div class="card mb-1 p-3" style="border: none; position: relative; border-top-right-radius: 0; border-bottom-right-radius: 0;">
+    <!-- Border phải giả, chiều cao giới hạn -->
+    <div style="position: absolute; top: 15px; right: 0; height: 100%; max-height: 310px; width: 1px; background-color: #ccc;"></div>
+
+
+                <div class="d-flex align-items-center">
                     <!-- Avatar người dùng -->
                      
-                    <img src="{{ asset('frontend/images/' . basename($review->user->avatar_url)) }}" 
-     onerror="this.onerror=null; this.src='{{ asset('frontend/images/avt.png') }}';"
-     width="50" height="50" alt="Avatar">
+                    <img src="{{ asset('frontend/images/' . basename($review->user->avatar_url)) }}"
+         onerror="this.onerror=null; this.src='{{ asset('frontend/images/avt.png') }}';"
+         width="60" height="60" alt="Avatar"
+         style="border-radius: 50%; box-shadow: 0 2px 8px rgba(0,0,0,0.15); object-fit: cover; margin-right:15px">
 
-                    <div class="ft">
+                    <div class="ft" style="margin-top:15px">
                         <strong>{{ $review->user->full_name ?? 'Người dùng ẩn danh' }}</strong>
                         <span style="max-width: 30px; "> đang ở tại <strong >{{ $review->shop->shop_name ?? 'Người dùng ẩn danh' }}</strong>
                         </span>
@@ -260,7 +265,7 @@
             <div class="col-4 d-flex mb-2">
                 <img
                     src="{{ $isUrl ? $img : asset('storage/' . $img) }}"
-                    style="height:150px; width:130px; object-fit:cover; margin-right:15px"
+                    style="height:180px; width:140px; object-fit:cover; margin-right:0px"
                     class="img-fluid rounded shadow"
                     alt="Review Image"
                     onerror="this.src='{{ asset('frontend/images/tt.svg') }}';"
