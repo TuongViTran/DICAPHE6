@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     const slider = document.getElementById("auto-slider");
     const slides = slider.querySelectorAll(".slide");
     const dots = document.querySelectorAll(".dot");
@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function() {
     function showSlide(index) {
         slider.style.transform = `translateX(-${index * 100}%)`;
 
-        dots.forEach(dot => dot.classList.remove("active"));
+        dots.forEach((dot) => dot.classList.remove("active"));
         dots[index].classList.add("active");
     }
 
@@ -21,8 +21,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
     let autoSlide = setInterval(nextSlide, slideIntervalTime);
 
-    dots.forEach(dot => {
-        dot.addEventListener("click", function() {
+    dots.forEach((dot) => {
+        dot.addEventListener("click", function () {
             clearInterval(autoSlide);
             currentSlide = parseInt(this.getAttribute("data-slide"));
             showSlide(currentSlide);

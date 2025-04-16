@@ -107,9 +107,9 @@
             <h2>{{ $post->title }}</h2>
             <p>{{ Str::limit(strip_tags($post->content), 150) }}</p>
             <p class="tacgia">
-              <img src="{{ asset('frontend/images/author.svg') }}" alt="Tác giả">
+              <img src="{{ asset('storage/uploads/posts/' . $post->image_url) }}" alt="Tác giả">
               {{ \Carbon\Carbon::parse($post->created_at)->format('d/m/Y') }} |
-              Tác giả: {{ $post->user->name ?? 'Ẩn danh' }}
+              Tác giả: {{ $post->user->full_name ?? 'Ẩn danh' }}
             </p>
           </div>
         @endforeach
@@ -119,7 +119,7 @@
         @foreach($posts->skip(1)->take(3) as $post)
           <div class="col-md-4 mb-4">
             <div class="custom-card">
-              <div class="card-image" style="background-image: url('{{ asset($post->image_url) }}');">
+              <div class="card-image" style="background-image: url('{{ asset('storage/uploads/posts/' . $post->image_url) }}');">
                 <div class="overlay"></div>
                 <div class="card-content">
                   <h5 class="card-title">{{ $post->title }}</h5>
@@ -138,7 +138,7 @@
         <div class="slider" id="auto-slider">
           @foreach($sliderPosts as $slide)
             <div class="slide">
-              <img src="{{ asset($slide->image_url) }}" alt="{{ $slide->title }}">
+              <img src="{{ asset('storage/uploads/posts/' . $slide->image_url) }}" alt="{{ $slide->title }}" style="object-fit: cover;">
             </div>
           @endforeach
         </div>

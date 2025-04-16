@@ -1,5 +1,5 @@
 @extends('frontend.layout')
-
+@section('title', 'Shop')
 <style>
     #tt1 {
         display:flex;
@@ -220,62 +220,76 @@
 
             <p class="text-gray-500">{{ $coffeeShop->description }}</p>
         </div>
-        <div class="mt-6 max-h-[500px] overflow-y-auto pr-2 scroll-smooth hide-scrollbar">
-            <h2 class="text-2xl font-bold">Đánh giá</h2>
+        <br>
+        <h2 class="text-2xl font-bold">Đánh giá</h2>
+        <div class="mt-6 max-h-[400px] overflow-y-auto pr-2 scroll-smooth hide-scrollbar">
+            
             @foreach($coffeeShop->reviews as $review)
-    <div class=" pt-2" x-data="{ expanded: false }">
+    <div class=" pt-2" x-data="{ expanded: false }" style="margin-bottom:10px">
        
         <div class="flex justify-between relative">
             <div class="flex items-center">
                 <img src="{{ asset('frontend/images/' . basename($review->user->avatar_url)) }}"
-                    class="rounded-full object-cover" width="48" height="48" alt="Avatar">
-                <div class="ml-3">
-                <div class="flex justify-between items-start">
-                    <p class="font-semibold">
+                  class="rounded-full object-cover shadow-md" width="60" height="60" alt="Avatar">
+                <div class="ml-3" style="margin-left:30px">
+                <div class="flex justify-between items-start" >
+                    <p class="font-semi text-gray-500">
                         <span>{{ $review->user->full_name ?? 'Người dùng' }}</span>
+                    </p>
+                    
+                </div>
+
+                    <!-- Nội dung đánh giá -->
+                <div class="text-gray-700 text-sm relative font-semibold transition-all duration-300 ease-in-out">
+                    <p
+                        x-show="!expanded"
+                        class="line-clamp-2 max-w-xs break-words"
+                        style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; 
+                         font-family: 'Nunito', sans-serif;font-weight: 500;font-size: 0.9rem; color: #111;"
+                    >
+                        {{ $review->content }}
+                    </p>
+                    <p
+                        x-show="expanded"
+                        x-cloak
+                        class="max-w-xs break-words" style="font-family: 'Poppins', sans-serif;font-weight: 500; font-size: 0.9rem;"
+                    >
+                        {{ $review->content }}
                     </p>
                 </div>
 
 
 
 
-                    <div style="display:flex">
-                        <p class="text-sm text-gray-500">{{ $review->created_at->format('d/m/Y') }}</p>
-                        <p class="text-warning" style="margin-left:25px;">    
-                                @for ($i = 1; $i <= 5; $i++)
-                                    <i class="fa{{ $i <= $review->rating ? 's' : 'r' }} fa-star" style="font-size: 0.75rem;margin-right: -5px;"></i>
-                                @endfor
-                        </p>
-                    </div>
                 </div>
             </div>
             
 
             <div>
-            <p class="text-sm font-normal text-gray-500">Đã thích ({{ $review->likes_count ?? 0 }})</p>
-            <br>
+            <!-- <p class="text-sm font-normal text-gray-500">Đã thích ({{ $review->likes_count ?? 0 }})</p> -->
+            
                 <button @click="expanded = !expanded" class="text-blue-500 text-sm hover:underline">
                     <span x-text="expanded ? 'Ẩn bớt' : 'Xem thêm'"></span>
                 </button>
             </div>
         </div>
 
-        <!-- Nội dung đánh giá -->
-        <div class="mt-2 text-gray-700 text-sm relative">
-            <p
-                x-show="!expanded"
-                class="line-clamp-2"
-                style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;"
-            >
-                {{ $review->content }}
-            </p>
-            <p x-show="expanded" x-cloak>
-                {{ $review->content }}
-            </p>
-        </div>
+     
 
         <!-- Hình ảnh (ẩn khi chưa mở) -->
-        <div x-show="expanded" x-cloak class="mt-3 flex flex-wrap gap-4">
+        
+        <div  x-show="expanded" x-cloak >
+              <div style="display:flex;margin-left:90px">
+              <p class="text-sm text-gray-500">{{ $review->created_at->format('d/m/Y') }}</p>
+                <p class="text-warning" style="margin-left:25px; margin-top:-3">    
+                @for ($i = 1; $i <= 5; $i++)
+                    <i class="fa{{ $i <= $review->rating ? 's' : 'r' }} fa-star" style="font-size: 0.75rem;margin-right: 3px;"></i>
+                @endfor
+             </p>
+              </div>
+        </div>
+
+        <div x-show="expanded" x-cloak class="mt-2 flex flex-wrap gap-4">
             @php
                     $images = $review->img_url ? explode(',', $review->img_url) : [];
                 @endphp
@@ -294,7 +308,7 @@
                 <img
                     src="{{ $isUrl ? $img : asset('storage/' . $img) }}"
                     alt="Ảnh đánh giá"
-                    class="w-[190px] h-[230px] object-cover rounded"
+                    class="w-[190px] h-[360px] object-cover rounded"
                     onerror="this.src='{{ asset('frontend/images/tt.svg') }}';"
                 >
             </div>

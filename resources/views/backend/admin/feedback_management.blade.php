@@ -132,6 +132,7 @@
         </div>
 
         <p id="modalContent" class="ms-5"></p>
+        <br>
 
         <div class="row" id="modalImages"></div>
 
@@ -185,7 +186,7 @@ $(document).ready(function() {
                         const fullPath = isUrl ? img : `/storage/${img}`;
                         imagesHtml += `
                           <div class="col-4 d-flex mb-2">
-                            <img src="${fullPath}" style="height:230px; width:190px; object-fit:cover;" class="img-fluid rounded shadow" alt="Review Image"
+                            <img src="${fullPath}" style="height:280px; width:250px; object-fit:cover;" class="img-fluid rounded shadow" alt="Review Image"
                                  onerror="this.src='{{ asset('frontend/images/tt.svg') }}';">
                           </div>`;
                     });
