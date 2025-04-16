@@ -28,7 +28,7 @@ Route::get('/test-session', function () {
 
 Route::get('/', [HomeController::class, 'index'])->name('trangchu');
 Route::get('/feed', [FeedController::class, 'feed'])->name('feed');
-Route::get('/tintuc', [HomeController::class, 'tintuc'])->name('tintuc');
+Route::get('/blog', [PostController::class, 'Blog_Post'])->name('tintuc');
 Route::get('/thongbao', [HomeController::class, 'thongbao'])->name('thongbao');
 
 // Auth
@@ -47,7 +47,32 @@ Route::get('/owner/{id}/coffeeshops', [OwnerController::class, 'showByOwner'])->
 Route::put('/menu/update/{id}', [OwnerController::class, 'update'])->name('menu.update'); 
 Route::get('/owner/{id}/info', [OwnerController::class, 'infor'])->name('coffeeshop.owner'); 
 Route::put('/owner/update/{id}', [OwnerController::class, 'updateinfor'])->name('owner.updateinfor'); 
-Route::post('/reviews', [ReviewController::class, 'store'])->name('review.store');
+// Route::post('/reviews', [ReviewControllesr::class, 'store'])->name('review.store');
+
+// Post Management Routes
+Route::post('/ckeditor/upload', function (Request $request) {
+    if ($request->hasFile('upload')) {
+        $file = $request->file('upload');
+        $filename = time() . '.' . $file->getClientOriginalExtension();
+        $file->move(public_path('uploads'), $filename);
+        $url = asset('uploads/' . $filename);
+
+        return response()->json(['url' => $url]);
+    }
+
+    return response()->json(['error' => ['message' => 'Upload failed']], 400);
+})->name('ckeditor.upload');
+
+Route::get('/owner/{id}/posts', [PostController::class, 'index'])->name('posts.index'); // Hiển thị danh sách bài viết
+Route::post('/owner/{id}/posts', [PostController::class, 'store'])->name('posts.store'); // Lưu bài viết mới
+Route::delete('/posts/{postId}', [PostController::class, 'destroy'])->name('posts.destroy'); // Xóa bài viết
+Route::put('/posts/{post}', [PostController::class, 'update'])->name('posts.update'); // Cập nhật bài viết
+Route::post('/ckeditor/upload', [PostController::class, 'upload'])->name('ckeditor.upload'); // Upload ảnh cho CKEditor
+Route::get('/posts/{id}', [PostController::class, 'show'])->name('posts.show'); // Hiển thị chi tiết bài viết
+Route::post('/posts/{id}/comment', [PostController::class, 'storeComment'])->name('posts.comment'); // Lưu bình luận
+Route::delete('/comments/{id}', [PostController::class, 'destroyComment'])->middleware('auth')->name('comments.destroy'); // Xóa bình luận
+Route::put('/comments/{id}', [PostController::class, 'updateComment'])->middleware('auth')->name('comments.update');// Sửa bình luận
+
 
 // Backend --------------------------------------------
 // Route /dashboard gọi AdminController@dashboard, truyền biến đầy đủ cho view

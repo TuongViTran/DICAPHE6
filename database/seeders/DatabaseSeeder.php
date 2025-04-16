@@ -302,8 +302,12 @@ class DatabaseSeeder extends Seeder
         
 
         DB::table('menu')->insert([
-            ['shop_id' => 1, 'item_name' => 'Cà phê đen', 'image_url' => null, 'price' => 25000, 'description' => 'Cà phê nguyên chất, đậm đà hương vị.', 'status' => 'Available', 'created_at' => now(), 'updated_at' => now()],
-            ['shop_id' => 2, 'item_name' => 'Trà sữa truyền thống', 'image_url' => null, 'price' => 35000, 'description' => 'Trà sữa thơm ngon, kết hợp trân châu dai giòn.', 'status' => 'Available', 'created_at' => now(), 'updated_at' => now()],
+            ['shop_id' => 1, 'item_name' => 'Menu1', 'image_url' => 'menu1.jpg', 'price' => 25000, 'description' => 'Cà phê nguyên chất, đậm đà hương vị.', 'status' => 'Available', 'created_at' => now(), 'updated_at' => now()],
+            ['shop_id' => 2, 'item_name' => 'Menu2', 'image_url' => 'menu2.jpg', 'price' => 35000, 'description' => 'Trà sữa thơm ngon, kết hợp trân châu dai giòn.', 'status' => 'Available', 'created_at' => now(), 'updated_at' => now()],
+            ['shop_id' => 3, 'item_name' => 'Menu3', 'image_url' => 'menu3.jpg', 'price' => 30000, 'description' => 'Nước ép trái cây tươi mát, bổ dưỡng.', 'status' => 'Available', 'created_at' => now(), 'updated_at' => now()],
+            ['shop_id' => 4, 'item_name' => 'Menu4', 'image_url' => 'menu4.jpg', 'price' => 40000, 'description' => 'Bánh ngọt thơm ngon, hấp dẫn.', 'status' => 'Available', 'created_at' => now(), 'updated_at' => now()],
+            ['shop_id' => 5, 'item_name' => 'Menu5', 'image_url' => 'menu5.jpg', 'price' => 45000, 'description' => 'Sinh tố trái cây tươi ngon, bổ dưỡng.', 'status' => 'Available', 'created_at' => now(), 'updated_at' => now()],
+            ['shop_id' => 6, 'item_name' => 'Menu6', 'image_url' => 'menu6.jpg', 'price' => 50000, 'description' => 'Bánh mì kẹp thịt thơm ngon, hấp dẫn.', 'status' => 'Available', 'created_at' => now(), 'updated_at' => now()],
         ]);
 
         DB::table('event')->insert([
@@ -329,9 +333,10 @@ class DatabaseSeeder extends Seeder
             [
                 'user_id' => 1,
                 'title' => '31 quán cà phê đẹp ở Sài Gòn “đi một lần post ảnh một tuần”',
+                'description' => '31 quán cà phê đẹp ở Sài Gòn có đủ mọi phong cách từ hiện đại, phóng khoáng cho đến vintage, để bạn lựa chọn cho một buổi chiều không biết “đi đâu về đâu”.',
                 'content' => '31 quán cà phê đẹp ở Sài Gòn có đủ mọi phong cách từ hiện đại, phóng khoáng cho đến vintage,
                  để bạn lựa chọn cho một buổi chiều không biết “đi đâu về đâu”.',
-                'image_url' => 'https://cdn3.ivivu.com/2019/06/quan-cafe-sai-gon-ivivu-12.jpg',
+                'image_url' => 'post1.jpg',
                 'status' => 'Published',
                 'created_at' => now(),
                 'updated_at' => now()
@@ -339,9 +344,11 @@ class DatabaseSeeder extends Seeder
             [
                 'user_id' => 2,
                 'title' => 'Bật mí top 17 quán cafe ĐẸP ở Sài Gòn nên ghé ít nhất một lần',
-                'content' => 'CQuán cafe đẹp ở Sài Gòn là từ khóa được nhiều du khách tìm kiếm nhất mỗi khi ghé thăm Sài thành. Bên cạnh cảnh đẹp và nền ẩm thực phong phú, 
+                'description' => 'Quán cafe đẹp ở Sài Gòn là từ khóa được nhiều du khách tìm kiếm nhất mỗi khi ghé thăm Sài thành. Bên cạnh cảnh đẹp và nền ẩm thực phong phú,
                 có lẽ những quán cafe “chất” đã trở thành một phần không thể thiếu của nơi đây.',
-                'image_url' => 'https://statics.vinwonders.com/quan-cafe-dep-o-sai-gon-anh-11_1633055492.jpg',
+                'content' => 'Quán cafe đẹp ở Sài Gòn là từ khóa được nhiều du khách tìm kiếm nhất mỗi khi ghé thăm Sài thành. Bên cạnh cảnh đẹp và nền ẩm thực phong phú, 
+                có lẽ những quán cafe “chất” đã trở thành một phần không thể thiếu của nơi đây.',
+                'image_url' => 'post2.jpg',
                 'status' => 'Published',
                 'created_at' => now(),
                 'updated_at' => now()
@@ -349,8 +356,9 @@ class DatabaseSeeder extends Seeder
             [
                 'user_id' => 1,
                 'title' => 'Top 20 quán cafe đẹp ở Sài Gòn đẹp say đắm lòng người',
+                'description' => 'Sài Gòn thành phố nhộn nhịp tấp nập có nhiều địa điểm vui chơi, giải trí, thư giãn. Nơi đây nổi tiếng với nhiều quán cà phê nổi tiếng ngon, view sống ảo cực đỉnh, sau đây hãy cùng Reviewvilla.vn tìm hiểu các quán cafe đẹp ở Sài Gòn nhé!',
                 'content' => 'Sài Gòn thành phố nhộn nhịp tấp nập có nhiều địa điểm vui chơi, giải trí, thư giãn. Nơi đây nổi tiếng với nhiều quán cà phê nổi tiếng ngon, view sống ảo cực đỉnh, sau đây hãy cùng Reviewvilla.vn tìm hiểu các quán cafe đẹp ở Sài Gòn nhé!',
-                'image_url' => 'https://reviewvilla.vn/wp-content/uploads/2022/07/quan-cafe-dep-o-sai-gon-6.jpg',
+                'image_url' => 'post3.jpg',
                 'status' => 'Published',
                 'created_at' => now(),
                 'updated_at' => now()
@@ -358,9 +366,10 @@ class DatabaseSeeder extends Seeder
             [
                 'user_id' => 1,
                 'title' => 'Ghé 9 quán cà phê vintage ở Sài Gòn',
+                'description' => 'Những quán cà phê vintage luôn có sức hút riêng không thể cưỡng lại. Đó là sự pha trộn giữa cổ điển và phong cách đương đại, tạo nên một không gian tràn đầy cảm xúc cho những coffee-holic Sài Thành.',
                 'content' => 'Những quán cà phê vintage luôn có sức hút riêng không thể cưỡng lại. Đó là sự pha trộn giữa cổ điển và phong cách đương đại, tạo nên một không gian tràn đầy cảm xúc cho những coffee-holic Sài Thành.
                  Hãy theo chân Traveloka tìm đến 9 quán cà phê vintage Sài Gòn đẹp và cực đậm chất retro nhé!',
-                'image_url' => 'https://ik.imagekit.io/tvlk/blog/2022/08/ca-phe-vintage-sai-gon-53.jpeg?tr=q-70,c-at_max,w-500,h-250,dpr-2',
+                'image_url' => 'post4.webp',
                 'status' => 'Published',
                 'created_at' => now(),
                 'updated_at' => now()
