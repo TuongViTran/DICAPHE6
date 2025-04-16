@@ -32,6 +32,10 @@
                     <option value="closed" {{ $coffeeshop->status == 'closed' ? 'selected' : '' }}>Đóng cửa</option>
                 </select>
             </div>
+            <div class="mb-4">
+    <label for="reviews_avg_rating" class="block text-gray-700">Đánh giá trung bình</label>
+    <input type="number" id="reviews_avg_rating" name="reviews_avg_rating" value="{{ old('reviews_avg_rating', $coffeeshop->reviews_avg_rating) }}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200" min="0" max="5" step="0.1" required>
+</div>
 
             <div class="mb-4">
                 <label for="cover_image" class="block text-gray-700">Ảnh bìa</label>

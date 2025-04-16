@@ -62,6 +62,8 @@ class Coffeeshop extends Model
         return $this->hasMany(SocialNetwork::class, 'coffeeshop_id');
     }
   
-
+    public function style() {
+        return $this->belongsTo(Style::class);
+    }
 }
 ?>

@@ -12,7 +12,17 @@
             </a>
         </div>
     </div>
+    @if (session('success'))
+    <div class="bg-green-500 text-white p-4 rounded-lg mb-4">
+        {{ session('success') }}
+    </div>
+@endif
 
+@if (session('error'))
+    <div class="bg-red-500 text-white p-4 rounded-lg mb-4">
+        {{ session('error') }}
+    </div>
+@endif
     <div class="bg-white p-4 rounded-lg shadow-md">
         <table class="min-w-full bg-white">
             <thead>
@@ -23,7 +33,7 @@
                     <th class="py-2 px-4 border-b text-center">Người quản lý</th>
                     <th class="py-2 px-4 border-b text-center">Địa chỉ</th>
                     <th class="py-2 px-4 border-b text-center">Trạng thái</th>
-                    <th class="py-2 px-4 border-b text-center">Đánh giá</th>
+                    <th class="py-2 px-4 border-b text-center">Đánh giá trung bình</th> 
                     <th class="py-2 px-4 border-b text-center">Ảnh bìa</th>
                     <th class="py-2 px-4 border-b text-center">Hành động</th>
                 </tr>
@@ -37,7 +47,7 @@
                         <td class="py-2 px-4 border-b text-center">{{ $coffeeshop->user->full_name ?? 'Chưa có người quản lý' }}</td>
                         <td class="py-2 px-4 border-b text-center">{{ $coffeeshop->address->street ?? 'Chưa có địa chỉ' }}</td>
                         <td class="py-2 px-4 border-b text-center">{{ ucfirst($coffeeshop->status) }}</td>
-                        <td class="py-2 px-4 border-b text-center">{{ $coffeeshop->rating ?? 'Chưa có đánh giá' }}</td>
+                        <td class="py-2 px-4 border-b text-center">{{ $coffeeshop->reviews_avg_rating ?? 'Chưa có đánh giá' }}</td> 
                         <td class="py-2 px-4 border-b text-center">
                             @if($coffeeshop->cover_image)
                                 <img src="{{ asset('frontend/images/' . $coffeeshop->cover_image) }}" alt="Ảnh bìa" class="w-16 h-16 object-cover rounded">

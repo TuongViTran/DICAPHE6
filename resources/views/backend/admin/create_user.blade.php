@@ -19,7 +19,26 @@
                     </ul>
                 </div>
             @endif
+            <div class="mb-4 flex items-center">
+                <label class="block text-sm font-bold mb-2 mr-4">Ảnh đại diện</label>
+                <button type="button" id="edit-avatar" class="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition duration-200">Chọn ảnh đại diện</button>
+                <img id="selected-avatar" src="" alt="Selected Avatar" class="ml-4 w-20 h-20 rounded-full hidden" />
+            </div>
 
+            <div id="avatar-selection" class="hidden mb-4">
+                <label class="block text-sm font-bold mb-2">Chọn ảnh đại diện mới</label>
+                <div class="flex flex-wrap">
+                    @php
+                        $images = ['c1.jpg', 'c2.jpg', 'c3.jpg', 'c4.jpg', 'c5.jpg', 'c6.jpg']; // Thay thế bằng danh sách ảnh thực tế trong thư mục
+                    @endphp
+                    @foreach ($images as $image)
+                        <div class="relative mr-2 mb-2">
+                            <img src="{{ asset('frontend/images/' . $image) }}" alt="Avatar" class="w-20 h-20 rounded-full cursor-pointer select-avatar transition-transform duration-200 transform hover:scale-110" data-image="{{ $image }}">
+                        </div>
+                    @endforeach
+                </div>
+                <input type="hidden" name="avatar" id="selected_avatar" value="{{ old('avatar') }}">
+            </div>
             <div class="mb-4">
                 <label for="full_name" class="block text-sm font-bold mb-2">Họ và tên</label>
                 <input type="text" name="full_name" id="full_name" value="{{ old('full_name') }}" class="border border-gray-300 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Nhập họ và tên" required>
@@ -45,26 +64,7 @@
                 <input type="text" name="phone" id="phone" value="{{ old('phone') }}" class="border border-gray-300 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Nhập số điện thoại">
             </div>
 
-            <div class="mb-4 flex items-center">
-                <label class="block text-sm font-bold mb-2 mr-4">Ảnh đại diện</label>
-                <button type="button" id="edit-avatar" class="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition duration-200">Chọn ảnh đại diện</button>
-                <img id="selected-avatar" src="" alt="Selected Avatar" class="ml-4 w-20 h-20 rounded-full hidden" />
-            </div>
-
-            <div id="avatar-selection" class="hidden mb-4">
-                <label class="block text-sm font-bold mb-2">Chọn ảnh đại diện mới</label>
-                <div class="flex flex-wrap">
-                    @php
-                        $images = ['c1.jpg', 'c2.jpg', 'c3.jpg', 'c4.jpg', 'c5.jpg', 'c6.jpg']; // Thay thế bằng danh sách ảnh thực tế trong thư mục
-                    @endphp
-                    @foreach ($images as $image)
-                        <div class="relative mr-2 mb-2">
-                            <img src="{{ asset('frontend/images/' . $image) }}" alt="Avatar" class="w-20 h-20 rounded-full cursor-pointer select-avatar transition-transform duration-200 transform hover:scale-110" data-image="{{ $image }}">
-                        </div>
-                    @endforeach
-                </div>
-                <input type="hidden" name="avatar" id="selected_avatar" value="{{ old('avatar') }}">
-            </div>
+           
             <div class="mb-4">
                 <label for="account_type" class="block text-sm font-bold mb-2">Vai trò</label>
                 <select name="account_type" id="account_type" class="border border-gray-300 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500" required>
