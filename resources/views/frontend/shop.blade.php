@@ -1,5 +1,5 @@
 @extends('frontend.layout')
-
+@section('title', 'Shop')
 <style>
     #tt1 {
         display:flex;
