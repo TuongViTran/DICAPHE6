@@ -388,18 +388,22 @@
 
 
         @foreach($posts as $post)
-        <a href="{{ route('posts.show', $post->id) }}" class="text-decoration-none text-dark">
+        
             <div class="border p-3 rounded mb-3 ">
                 <div class="d-flex gap-3">
+                    <a href="{{ route('posts.show', $post->id) }}" class="text-decoration-none text-dark">
                     <div style="width: 240px; height: 160px; flex-shrink: 0;">
                         <img src="{{ asset('storage/uploads/posts/' . $post->image_url) }}"
                             alt="{{ $post->image_url }}"
                             class="rounded"
                             style="width: 100%; height: 100%; object-fit: cover;">
                     </div>
+                    </a>
 
                     <div class="flex-grow-1">
+                    <a href="{{ route('posts.show', $post->id) }}" class="text-decoration-none text-dark">
                         <h3 class="fs-5 fw-bold">{{ $post->title }}</h3>
+                        </a>
                         <span class="badge bg-success">{{ $post->status }}</span>
                         <p class="text-secondary mt-2">
                         {{ $post->description }}
@@ -460,7 +464,7 @@
                     </div>
                 </div>
             </div>
-            </a>
+           
         @endforeach
       
 </div>

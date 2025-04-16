@@ -104,6 +104,7 @@ class PostController extends Controller
         if ($post->image_url && \Storage::disk('public')->exists('uploads/posts/' . $post->image_url)) {
             \Storage::disk('public')->delete('uploads/posts/' . $post->image_url);
         }
+        $post->comments()->delete(); // Xóa bình luận liên quan đến bài viết
 
         $post->delete();
 
