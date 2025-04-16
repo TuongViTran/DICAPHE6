@@ -47,7 +47,7 @@ Route::get('/owner/{id}/coffeeshops', [OwnerController::class, 'showByOwner'])->
 Route::put('/menu/update/{id}', [OwnerController::class, 'update'])->name('menu.update'); 
 Route::get('/owner/{id}/info', [OwnerController::class, 'infor'])->name('coffeeshop.owner'); 
 Route::put('/owner/update/{id}', [OwnerController::class, 'updateinfor'])->name('owner.updateinfor'); 
-// Route::post('/reviews', [ReviewControllesr::class, 'store'])->name('review.store');
+Route::post('/reviews', [ReviewController::class, 'store'])->name('review.store');
 
 // Post Management Routes
 Route::post('/ckeditor/upload', function (Request $request) {
