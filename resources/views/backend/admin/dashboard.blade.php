@@ -4,6 +4,7 @@
 @section('title', 'Dashboard')
 
 @section('header', 'Dashboard')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
 @section('content')
     <div class="grid grid-cols-3 gap-4 mb-6">
@@ -186,26 +187,10 @@
             <td class="py-2 px-2">{{ $shop->owner->full_name }}</td>
             <td class="py-2 px-2">{{ number_format($shop->total_reviews_count) }}</td>
             <td class="py-2 px-2">
-            @php
-        // Làm tròn số sao trung bình
-        $roundedRating = round($shop->reviews_avg_rating);
-    @endphp
-
-    @for($i = 0; $i < 5; $i++)
-        @if($i < $roundedRating)
-            <!-- Sao đầy -->
-            <span class="card_nearme-star" style="color: #FFC107; font-size: 1.2em;">★</span>
-        @elseif($i == $roundedRating && ($shop->reviews_avg_rating - $roundedRating) >= 0.5)
-            <!-- Sao nửa (nếu có 0.5 sao, sao nửa xám) -->
-            <span class="card_nearme-star" style="color: #e4e5e9; font-size: 1.2em;">★</span>
-        @else
-            <!-- Sao rỗng -->
-            <span class="card_nearme-star" style="color: #e4e5e9; font-size: 1.2em;">★</span>
-        @endif
-    @endfor
-<br>
-    {{ $shop->reviews_avg_rating }}
-</td>
+                <x-rating :score="$shop->reviews_avg_rating" />
+                  <br>
+                {{ $shop->reviews_avg_rating }}
+            </td>
 
 
 
@@ -253,23 +238,8 @@
                     <td class="py-2 px-2">{{ $shop->owner->full_name }}</td>
                     <td class="py-2 px-2">{{ number_format($shop->total_reviews_count) }}</td>
                     <td class="py-2 px-2">
-                        @php
-                            // Làm tròn số sao trung bình
-                            $roundedRating = round($shop->reviews_avg_rating);
-                        @endphp
+                    <x-rating :score="$shop->reviews_avg_rating" />
 
-                        @for($i = 0; $i < 5; $i++)
-                            @if($i < $roundedRating)
-                                <!-- Sao đầy -->
-                                <span class="card_nearme-star" style="color: #FFC107; font-size: 1.2em;">★</span>
-                            @elseif($i == $roundedRating && ($shop->reviews_avg_rating - $roundedRating) >= 0.5)
-                                <!-- Sao nửa (nếu có 0.5 sao, sao nửa xám) -->
-                                <span class="card_nearme-star" style="color: #e4e5e9; font-size: 1.2em;">★</span>
-                            @else
-                                <!-- Sao rỗng -->
-                                <span class="card_nearme-star" style="color: #e4e5e9; font-size: 1.2em;">★</span>
-                            @endif
-                        @endfor
                         <br>
                         {{ $shop->reviews_avg_rating }}
                     </td>

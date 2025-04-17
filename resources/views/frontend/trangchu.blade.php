@@ -227,7 +227,11 @@
                                         </div>
                                     </div>
                                     <!-- Tên quán -->
-                                    <h5 class="card_nearme-title fw-bold">{{ $shop->shop_name }}</h5>
+                                    <h5 class="card_nearme-title fw-bold">
+                                        <a href="{{ url('/shop/' . $shop->id) }}" class="text-dark text-decoration-none">
+                                            {{ $shop->shop_name }}
+                                        </a>
+                                    </h5>
 
                                     <!-- Thông tin chi tiết -->
                                     <div class="row">
@@ -292,8 +296,11 @@
                                         </div>
                                     </div>
                                     <!-- Tên quán -->
-                                    <h5 class="card_nearme-title fw-bold">{{ $shop->shop_name }}</h5>
-
+                                    <h5 class="card_nearme-title fw-bold">
+                                        <a href="{{ url('/shop/' . $shop->id) }}" class="text-dark text-decoration-none">
+                                            {{ $shop->shop_name }}
+                                        </a>
+                                    </h5>
                                     <!-- Thông tin chi tiết -->
                                     <div class="row">
                                           <div class="col-md-3">

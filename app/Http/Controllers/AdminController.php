@@ -13,7 +13,7 @@ class AdminController extends Controller
 {
       // Quán có sao 5 sao
         $fiveStarShops = CoffeeShop::with('address')
-        ->withCount('reviews as total_reviews_count') // Đếm tất cả các đánh giá
+        ->withCount('reviews as total_reviews_count') // Đếm tổng các đánh giá
             ->withAvg('reviews', 'rating') // Tính điểm đánh giá trung bình
             ->orderByDesc('reviews_avg_rating') // Sắp xếp theo điểm trung bình giảm dần
             ->limit(5)

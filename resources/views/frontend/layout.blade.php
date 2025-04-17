@@ -92,7 +92,7 @@
                     : asset('frontend/images/default_avatar1.jpg');
 
                 $avatarPath = $avatarFile 
-                    ? asset('frontend/images/' . $avatarFile) 
+                    ? asset('frontend/images/' . basename($avatarFile)) 
                     : $defaultAvatar;
             @endphp
 

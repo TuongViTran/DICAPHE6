@@ -121,7 +121,7 @@
         <div class="p-4 rounded shadow-sm mb-4 d-flex align-items-center justify-content-around" style="background: linear-gradient(to bottom, rgb(180, 241, 200), #c2ebfb00);">
             <!-- Cột bên trái: Ảnh đại diện + Thông tin quán -->
             <div class="d-flex flex-column align-items-center">
-                <img src="{{ asset('frontend/images/' . ($user->avatar_url ?? 'avt.png')) }}" alt="User profile picture" class="rounded-circle mb-2" width="90" height="90" style="box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+                <img src="{{ asset('frontend/images/' . basename($user->avatar_url ?? 'avt.png')) }}" alt="User profile picture" class="rounded-circle mb-2" width="90" height="90" style="box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
                 <div class="text-left">
                 <h4 class="text-center fw-bold mb-1">{{ $user->full_name ?? 'Khách hàng' }}</h4>
                 </div>
@@ -152,15 +152,24 @@
   <path fill-rule="evenodd" d="M1.5 7a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H2a.5.5 0 0 1-.5-.5zM2 7h1v1H2zm0 3.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm1 .5H2v1h1z"/>
 </svg> Danh sách quán café đang hot:</h5></div>
   <div class="hot-cafes-container">
-    <div class="hot-cafes-left">
-      <img src="" alt="Cafe Image">
-      <div class="indicator">
-        <span class="active"></span>
-        <span></span>
-        <span></span>
-        <span></span>
+
+  <div class="col-md-6">
+      <div class="slider-wrapper">
+        <div class="slider" id="auto-slider">
+          @foreach($sliderPosts as $slide)
+            <div class="slide">
+              <img src="{{ asset($slide->image_url) }}" alt="{{ $slide->title }}">
+            </div>
+          @endforeach
+        </div>
+        <div class="slider-indicators">
+          @foreach($sliderPosts as $index => $slide)
+            <span class="dot" data-slide="{{ $index }}"></span>
+          @endforeach
+        </div>
       </div>
     </div>
+
     <div class="hot-cafes-right">
       <div class="cafe-card">
         <h4>01 : Thong Thả</h4>

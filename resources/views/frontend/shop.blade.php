@@ -60,9 +60,20 @@
                 <h1 class="text-4xl font-bold">{{ $coffeeShop->shop_name }}</h1>
                 <div class="flex items-center mt-2">
                     <div class="flex text-yellow-500">
+                    @php
+                        $rating = $coffeeShop->reviews_avg_rating;
+                    @endphp
+
                     @for ($i = 1; $i <= 5; $i++)
-                                    <i class="fa{{ $i <= $coffeeShop->reviews_avg_rating? 's' : 'r' }} fa-star"></i>
-                                @endfor
+                        @if ($rating >= $i)
+                            <i class="fas fa-star" style="color: #FFC107;"></i> <!-- sao đầy -->
+                        @elseif ($rating >= ($i - 0.5))
+                            <i class="fas fa-star-half-alt" style="color: #FFC107;"></i> <!-- sao nửa -->
+                        @else
+                            <i class="far fa-star" style="color: #e4e5e9;"></i> <!-- sao rỗng -->
+                        @endif
+                    @endfor
+                  
                     </div>
                     <span class="badge bg-success">Open</span>
 

@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Owner;
 use App\Models\Review;
+use App\Models\Post;
+use App\Models\CoffeeShop;
 
 
 
@@ -16,6 +18,8 @@ class UserController extends Controller
     // Hiển thị danh sách người dùng
     public function index()
     {
+         
+
         $users = User::withCount('posts')->get(); // Lấy tất cả người dùng cùng với số bài viết
         return view('backend.admin.user_management', compact('users'));
     }
@@ -111,6 +115,7 @@ class UserController extends Controller
     // Hiển thị thông tin người dùng
     public function show(User $user)
     {
+        
         return view('backend.admin.show_user', compact('user')); // Tạo view cho thông tin người dùng
     }
 
@@ -161,12 +166,20 @@ class UserController extends Controller
    // Hiển thị thông tin người dùng trên frontend
 public function showProfile($id)
 {
+     // Lấy bài viết cho slider và bài viết thường
+     $posts = Post::with('user')
+     ->where('status', 'Published')
+     ->orderBy('created_at', 'desc')
+     ->get();
+
+ // Lấy bài viết cho slider (5 bài gần đây nhất)
+ $sliderPosts = $posts->take(5);
     $user = User::findOrFail($id);
     $reviews = Review::where('user_id', $id)
         ->with('user')
         ->orderBy('created_at', 'desc')
         ->paginate(10);
 
-    return view('frontend.user', compact('user', 'reviews'));
+    return view('frontend.user', compact('user', 'reviews','posts','sliderPosts'));
 }
 }
