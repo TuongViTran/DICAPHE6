@@ -134,6 +134,8 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/reviews/{review}', [ReviewController::class, 'update'])->name('reviews.update');
     Route::delete('/reviews/{review}', [ReviewController::class, 'destroy'])->name('reviews.destroy');
 });
+// thong bao
+Route::get('/thongbao', [NotificationController::class, 'index'])->name('thongbao');
 
 // Nếu bạn có file auth.php, có thể require ở đây
 // require __DIR__.'/auth.php';
