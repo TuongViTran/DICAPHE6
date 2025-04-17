@@ -216,46 +216,19 @@
     </div> -->
 
     <!-- Post item -->
-    <div class="post">
-      <img src="" alt="cafe">
-      <div class="post-content">
-        <h4>Quán cà phê ngõ nhỏ Đà Nẵng</h4>
-        <p>Trước khi bạn bắt đầu chuyến phiêu lưu cà phê Hà Nội của riêng mình, hãy để vietcetera gợi ý cho bạn những nhà cà phê đậm chất tỉnh lẻ và sáng tạo nhé.</p>
-      </div>
-    </div>
+     @foreach ($posts as $post)
+     <a href="{{ route('posts.show', $post->id) }}" class="text-decoration-none text-dark">
+        <div class="post">
+        <img src="{{ asset('storage/uploads/posts/' . $post->image_url) }}" alt="cafe">
+        <div class="post-content">
+            <h4>{{ $post->title }}</h4>
+            <p>{{ Str::limit(strip_tags($post->content), 50) }}</p>
+        </div>
+        </div>
+    </a>
+        @endforeach
 
-    <!-- Lặp lại post -->
-    <div class="post">
-      <img src="" alt="cafe">
-      <div class="post-content">
-        <h4>Quán cà phê ngõ nhỏ Đà Nẵng</h4>
-        <p>Trước khi bạn bắt đầu chuyến phiêu lưu cà phê Hà Nội của riêng mình, hãy để vietcetera gợi ý cho bạn những nhà cà phê đậm chất tỉnh lẻ và sáng tạo nhé.</p>
-      </div>
-    </div>
-
-    <div class="post">
-      <img src="" alt="cafe">
-      <div class="post-content">
-        <h4>Quán cà phê ngõ nhỏ Đà Nẵng</h4>
-        <p>Trước khi bạn bắt đầu chuyến phiêu lưu cà phê Hà Nội của riêng mình, hãy để vietcetera gợi ý cho bạn những nhà cà phê đậm chất tỉnh lẻ và sáng tạo nhé.</p>
-      </div>
-    </div>
-
-    <div class="post">
-      <img src="" alt="cafe">
-      <div class="post-content">
-        <h4>Quán cà phê ngõ nhỏ Đà Nẵng</h4>
-        <p>Trước khi bạn bắt đầu chuyến phiêu lưu cà phê Hà Nội của riêng mình, hãy để vietcetera gợi ý cho bạn những nhà cà phê đậm chất tỉnh lẻ và sáng tạo nhé.</p>
-      </div>
-    </div>
-
-    <div class="post">
-      <img src="" alt="cafe">
-      <div class="post-content">
-        <h4>Quán cà phê ngõ nhỏ Đà Nẵng</h4>
-        <p>Trước khi bạn bắt đầu chuyến phiêu lưu cà phê Hà Nội của riêng mình, hãy để vietcetera gợi ý cho bạn những nhà cà phê đậm chất tỉnh lẻ và sáng tạo nhé.</p>
-      </div>
-    </div>
+    
   </div>
                     
                     </ul>

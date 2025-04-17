@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Review;
 use App\Models\User;
 use App\Models\Feed;
+use App\Models\Post;
 
 use Illuminate\Http\Request;
 
@@ -13,8 +14,13 @@ class FeedController extends Controller
     {
         // Lấy danh sách review kèm thông tin user và sắp xếp theo thời gian mới nhất
         $reviews = Review::with('user')->orderBy('created_at', 'desc')->paginate(10);
+        $posts = Post::where('status', 'Published') // Lấy bài viết cùng user tạo bài viết đó
+        ->orderBy('created_at', 'desc')
+        ->take(5)
+        ->get();
+        return view('frontend.feed', compact('reviews', 'posts'));
 
-        return view('frontend.feed', compact('reviews'));
+        
     }
     public function index(Request $request)
     {
