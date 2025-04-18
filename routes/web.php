@@ -17,6 +17,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FeedController;
 use App\Http\Controllers\AdminController; // Import AdminController
 use App\Http\Controllers\ShopController;
+use App\Http\Controllers\NotificationController;
 
 // Frontend --------------------------------------------
 Route::get('/test-session', function () {
