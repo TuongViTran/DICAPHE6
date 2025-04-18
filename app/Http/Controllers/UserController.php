@@ -172,14 +172,23 @@ public function showProfile($id)
      ->orderBy('created_at', 'desc')
      ->get();
 
- // Lấy bài viết cho slider (5 bài gần đây nhất)
- $sliderPosts = $posts->take(5);
+ 
     $user = User::findOrFail($id);
     $reviews = Review::where('user_id', $id)
         ->with('user')
         ->orderBy('created_at', 'desc')
         ->paginate(10);
 
-    return view('frontend.user', compact('user', 'reviews','posts','sliderPosts'));
+     // Lấy top 4 quán café hot nhất dựa theo rating trung bình
+    $hotCafes = CoffeeShop::with('address')
+    ->orderByDesc('reviews_avg_rating')
+    ->take(4)
+    ->get();
+
+// Từ danh sách hotCafes, chọn ra các quán có ảnh cover để hiển thị slider
+$sliderPosts = $hotCafes->filter(function ($cafe) {
+    return !empty($cafe->cover_image);
+})->values();
+    return view('frontend.user', compact('user', 'reviews','posts','sliderPosts', 'hotCafes'));
 }
 }

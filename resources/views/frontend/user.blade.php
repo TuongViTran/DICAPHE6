@@ -115,7 +115,133 @@
   margin-bottom:10px
 }
 
+
+.hot-cafes-right {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  
+  gap: 0;
+}
+
+/* Tạo đường kẻ dọc ở giữa 2 cột */
+.hot-cafes-right .cafe-card:nth-child(odd) {
+  border-right: 1px solid #ccc;
+  padding: 12px 15px 12px 15px;
+}
+
+.hot-cafes-right .cafe-card:nth-child(even) {
+  padding: 12px 15px 12px 15px;
+}
+
+
+
+
+.slider-wrapper {
+  flex: 1;
+  position: relative;
+  width: 60%;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.slider {
+  display: flex;
+  height: 100%;
+  transition: transform 0.5s ease;
+}
+
+.slide {
+  min-width: 100%;
+  display: none;
+}
+
+.slide:first-child {
+  display: block;
+}
+
+.slide img {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.slider-indicators {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  margin-top: 10px;
+}
+
+.dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin: 5px;
+  background-color: #bbb;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.dot.active {
+  background-color: #333;
+}
+
+/* Right side: Cafe list */
+.hot-cafes-right {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  width: 40%;
+}
+
+.cafe-card {
+  padding: 12px;
+  border-radius: 0; /* Xóa bo góc */
+  background-color: white;
+  border: none; /* Bỏ viền xám */
+}
+
+
+.cafe-card.active {
+  background-color: #fefebf;
+}
+
+.cafe-card h4 {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.cafe-info {
+  margin-bottom: 7px;
+  font-size: 14px;
+}
+
+.stars {
+  color: gold;
+  font-size: 14px;
+}
+
+.cafe-card {
+    background-color: white;
+    transition: background-color 0.3s ease;
+}
+
+.cafe-card.active {
+    background-color: #fdfdbc; /* nền vàng */
+}
+
+
+
+  
   </style>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
 @section('content')
 <div class="container mt-4">
         <div class="p-4 rounded shadow-sm mb-4 d-flex align-items-center justify-content-around" style="background: linear-gradient(to bottom, rgb(180, 241, 200), #c2ebfb00);">
@@ -146,66 +272,65 @@
 
 
         <body>
-  <div class="section-title"><h5 style="font-weight:700"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-list-task" viewBox="0 0 16 16">
+  <div class="section-title"><p style="font-weight:700;font-size: 22px;"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-list-task" viewBox="0 0 16 16">
   <path fill-rule="evenodd" d="M2 2.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5V3a.5.5 0 0 0-.5-.5zM3 3H2v1h1z"/>
   <path d="M5 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5M5.5 7a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1zm0 4a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1z"/>
   <path fill-rule="evenodd" d="M1.5 7a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H2a.5.5 0 0 1-.5-.5zM2 7h1v1H2zm0 3.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm1 .5H2v1h1z"/>
-</svg> Danh sách quán café đang hot:</h5></div>
-  <div class="hot-cafes-container">
-
-  <div class="col-md-6">
-      <div class="slider-wrapper">
+</svg> Danh sách quán café đang hot:</p></div>
+<div class="hot-cafes-container">
+    <div class="slider-wrapper ">
         <div class="slider" id="auto-slider">
-          @foreach($sliderPosts as $slide)
-            <div class="slide">
-              <img src="{{ asset($slide->image_url) }}" alt="{{ $slide->title }}">
-            </div>
-          @endforeach
+            @foreach($sliderPosts as $index => $slide)
+                <div class="slide">
+                <img src="{{ asset('frontend/images/' . $slide->cover_image) }}" alt="{{ $slide->title }}">
+                </div>
+            @endforeach
         </div>
         <div class="slider-indicators">
-          @foreach($sliderPosts as $index => $slide)
-            <span class="dot" data-slide="{{ $index }}"></span>
-          @endforeach
+            @foreach($sliderPosts as $index => $slide)
+                <span class="dot" data-slide="{{ $index }}"></span>
+            @endforeach
         </div>
-      </div>
     </div>
 
-    <div class="hot-cafes-right">
-      <div class="cafe-card">
-        <h4>01 : Thong Thả</h4>
-        <div class="cafe-info">🕒 Open daily: 7:00 - 22:00</div>
-        <div class="cafe-info">💸 Price: 25k - 65k</div>
-        <div class="cafe-info">📍 Address: 75 Bùi Thị Xuân</div>
-        <div class="stars">★★★★★</div>
-      </div>
-      <div class="cafe-card">
-        <h4>02 : Ngày Bình Yên</h4>
-        <div class="cafe-info">🕒 Open daily: 7:00 - 22:00</div>
-        <div class="cafe-info">💸 Price: 35k - 65k</div>
-        <div class="cafe-info">📍 Address: 75 Bùi Thị Xuân</div>
-        <div class="stars">★★★★★</div>
-      </div>
-      <div class="cafe-card">
-        <h4>03 : Ngày Bình Yên</h4>
-        <div class="cafe-info">🕒 Open daily: 7:00 - 22:00</div>
-        <div class="cafe-info">💸 Price: 35k - 65k</div>
-        <div class="cafe-info">📍 Address: 75 Bùi Thị Xuân</div>
-        <div class="stars">★★★★★</div>
-      </div>
-      <div class="cafe-card">
-        <h4>04 : Ngày Bình Yên</h4>
-        <div class="cafe-info">🕒 Open daily: 7:00 - 22:00</div>
-        <div class="cafe-info">💸 Price: 35k - 65k</div>
-        <div class="cafe-info">📍 Address: 75 Bùi Thị Xuân</div>
-        <div class="stars">★★★★★</div>
-      </div>
+    <div class="hot-cafes-right" id="cafe-list">
+        @foreach($hotCafes as $index => $cafe)
+            <div class="cafe-card" data-index="{{ $index }}">
+                <p style="font-size: 22px; font-weight:bold">{{ sprintf('%02d', $index + 1) }} : {{ $cafe->shop_name }}</p >
+                <div class="cafe-info"> <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" class="bi bi-door-open-fill" viewBox="0 0 16 16">
+                            <path d="M1.5 15a.5.5 0 0 0 0 1h13a.5.5 0 0 0 0-1H13V2.5A1.5 1.5 0 0 0 11.5 1H11V.5a.5.5 0 0 0-.57-.495l-7 1A.5.5 0 0 0 3 1.5V15zM11 2h.5a.5.5 0 0 1 .5.5V15h-1zm-2.5 8c-.276 0-.5-.448-.5-1s.224-1 .5-1 .5.448.5 1-.224 1-.5 1"/>
+                            </svg> Giờ mở cửa: {{ $cafe->opening_time }} - {{ $cafe->closing_time }}</div>
+                <div class="cafe-info"><svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" class="bi bi-tags-fill" viewBox="0 0 16 16">
+                            <path d="M2 2a1 1 0 0 1 1-1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 2 6.586zm3.5 4a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+                            <path d="M1.293 7.793A1 1 0 0 1 1 7.086V2a1 1 0 0 0-1 1v4.586a1 1 0 0 0 .293.707l7 7a1 1 0 0 0 1.414 0l.043-.043z"/>
+                            </svg> Price: {{ $cafe->min_price }} - {{ $cafe->max_price }}</div>
+                <div class="cafe-info">   <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
+                            <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
+                            </svg> Address: {{ $cafe->address->street}}, {{ $cafe->address->district}}, {{ $cafe->address->city}}</div>
+                <div class="cafe-info"> 
+                @php
+                        $rating = $cafe->reviews_avg_rating;
+                    @endphp
+
+                    @for ($i = 1; $i <= 5; $i++)
+                        @if ($rating >= $i)
+                            <i class="fas fa-star" style="color: #FFC107;"></i> <!-- sao đầy -->
+                        @elseif ($rating >= ($i - 0.5))
+                            <i class="fas fa-star-half-alt" style="color: #FFC107;"></i> <!-- sao nửa -->
+                        @else
+                           <i class="far fa-star " style="color: #FFC107;"></i>  <!-- sao rỗng -->
+                        @endif
+                    @endfor
+                </div>
+            </div>
+        @endforeach
     </div>
-  </div>
+</div>
   <br>
 <!-- <hr style="margin:30px"> -->
 
   <div class="row">
-  <h5 style="font-weight:700"><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+  <h5 style="font-weight:700;font-size: 22px;"><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
   <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
   <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
 </svg> Feedback của bạn</h5>
@@ -372,3 +497,56 @@
         alert('{{ session('jsAlert') }}');
     </script>
 @endif
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const slides = document.querySelectorAll(".slide");
+        const dots = document.querySelectorAll(".dot");
+        const cards = document.querySelectorAll(".cafe-card");
+
+        let currentIndex = 0;
+        let slideInterval = null;
+
+        function showSlide(index) {
+            // Ẩn tất cả slide
+            slides.forEach((slide, i) => {
+                slide.style.display = i === index ? "block" : "none";
+            });
+
+            // Cập nhật dot
+            dots.forEach(dot => dot.classList.remove("active"));
+            if (dots[index]) dots[index].classList.add("active");
+
+            // Cập nhật quán đang hot
+            cards.forEach(card => card.classList.remove("active"));
+            if (cards[index]) cards[index].classList.add("active");
+
+            currentIndex = index;
+        }
+
+        function startAutoSlide() {
+            slideInterval = setInterval(() => {
+                currentIndex = (currentIndex + 1) % slides.length;
+                showSlide(currentIndex);
+            }, 6000); // thời gian mỗi slide (ms)
+        }
+
+        function stopAutoSlide() {
+            clearInterval(slideInterval);
+        }
+
+        // Click vào dot
+        dots.forEach(dot => {
+            dot.addEventListener("click", function () {
+                const index = parseInt(this.getAttribute("data-slide"));
+                stopAutoSlide();
+                showSlide(index);
+                startAutoSlide();
+            });
+        });
+
+        // Khởi động
+        showSlide(0);
+        startAutoSlide();
+    });
+</script>

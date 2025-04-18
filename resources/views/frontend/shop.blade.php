@@ -70,7 +70,7 @@
                         @elseif ($rating >= ($i - 0.5))
                             <i class="fas fa-star-half-alt" style="color: #FFC107;"></i> <!-- sao nửa -->
                         @else
-                            <i class="far fa-star" style="color: #e4e5e9;"></i> <!-- sao rỗng -->
+                        <i class="far fa-star text-yellow-400"></i>  <!-- sao rỗng -->
                         @endif
                     @endfor
                   
@@ -95,7 +95,7 @@
                             <path d="M2 2a1 1 0 0 1 1-1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 2 6.586zm3.5 4a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
                             <path d="M1.293 7.793A1 1 0 0 1 1 7.086V2a1 1 0 0 0-1 1v4.586a1 1 0 0 0 .293.707l7 7a1 1 0 0 0 1.414 0l.043-.043z"/>
                             </svg>
-                             <p class="text-gray-500">Price: {{ $coffeeShop->min_price }} - {{ $coffeeShop->max_price }}</</p>
+                             <p class="text-gray-500">Price: {{ $coffeeShop->min_price }} - {{ $coffeeShop->max_price }}</p>
                         </div>
                         <div>
                             <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
@@ -232,8 +232,14 @@
             <p class="text-gray-500">{{ $coffeeShop->description }}</p>
         </div>
         <br>
-        <h2 class="text-2xl font-bold">Đánh giá</h2>
-        <div class="mt-6 max-h-[400px] overflow-y-auto pr-2 scroll-smooth hide-scrollbar">
+        <div style="display:flex">
+            <h2 class="text-2xl font-bold">Đánh giá</h2> 
+            <p class="text-gray-600 mb-4" style="margin:8px 0 0 5px">
+            ({{ $coffeeShop->reviews->count() }} lượt)
+            </p>
+        </div>
+      
+        <div class="mt-1 max-h-[400px] overflow-y-auto pr-2 scroll-smooth hide-scrollbar">
             
             @foreach($coffeeShop->reviews as $review)
     <div class=" pt-2" x-data="{ expanded: false }" style="margin-bottom:10px">
