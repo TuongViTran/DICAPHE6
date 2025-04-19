@@ -107,7 +107,7 @@
                         {{ $style->style_name }}
                     </span>
                     <span class="badge" style="background-color: #DFFEF2; color: #00B140; font-size: 1rem; font-weight: 500; padding: 6px 16px; border-radius: 999px;">
-                        Đang mở cửa
+                        {{$coffeeShop->status}}
                     </span>
 
                 </div>

@@ -336,7 +336,7 @@
 </svg> Feedback của bạn</h5>
 
 <div style="display:flex; width:; ">
-@if ($reviews->count() > 3)
+@if ($reviews->count() > 2)
     <div class="review-carousel">
 @else
     <div style="display:flex; flex-wrap: wrap; ">
