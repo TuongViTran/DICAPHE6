@@ -6,7 +6,7 @@
     }
    
     #tt1 div p{
-        font-size:large;
+        font-size:22px;
         
     }
     .flex i{
@@ -14,13 +14,14 @@
         margin:5px
     }
     .tt2 div{
-        display:flex
+        display:flex;
+        margin-bottom:5px;
     }
     .tt2 div svg{
         margin: 5px 15px 0 10px
     }
     #tt3{
-        font-size:large;
+        font-size:20px;
     }
     #tt3 p{
         margin: 10px 0 5px 25px;
@@ -29,8 +30,14 @@
         border: solid 1px;
     }
     .rounded-lg img{
-        max-height:150px;
+        max-height:180px;
     }
+    .grid-cols-3 img {
+    width: 100%;
+    height: 200px; /* hoặc 220px tùy bạn */
+    object-fit: cover;
+}
+ 
     .hide-scrollbar {
         scrollbar-width: none; /* Firefox */
         -ms-overflow-style: none; /* Internet Explorer 10+ */
@@ -48,16 +55,22 @@
     <div class="max-w-7xl mx-auto bg-white p-6 rounded-lg ">
         <div class="flex flex-col md:flex-row">
             <div class="md:w-1/2">
-                <img alt="Front view of Ngày Bình Yên Cà Phê" class="rounded-lg mb-4" style="max-height: 400px; min-width: 600px;" src="{{ asset('frontend/images/' . $coffeeShop->cover_image) }}  " />
-                <div class="grid grid-cols-3 gap-2">
-                    <img alt="Food item 1" class="rounded-lg"  src="{{ asset('frontend/images/' . $coffeeShop->image_1) }}" width="170"/>
-                    <img alt="Food item 2" class="rounded-lg"  src="{{ asset('frontend/images/' . $coffeeShop->image_2) }}" width="170"/>
-                    <img alt="Food item 3" class="rounded-lg"  src="{{ asset('frontend/images/' . $coffeeShop->image_3) }}" width="170"/>
+            <img 
+    alt="Front view of Ngày Bình Yên Cà Phê" 
+    class="rounded-2xl mb-4" 
+    style="max-height: 400px; min-width: 615px; object-fit: cover;" 
+    src="{{ asset('frontend/images/' . $coffeeShop->cover_image) }}" 
+/>                <div class="grid grid-cols-3 gap-x-4 mt-4">
+                    <img alt="Food item 1" class="rounded-2xl w-full aspect-[3/2] object-cover" src="{{ asset('frontend/images/' . $coffeeShop->image_1) }}" />
+                    <img alt="Food item 2" class="rounded-2xl w-full aspect-[3/2] object-cover" src="{{ asset('frontend/images/' . $coffeeShop->image_2) }}" />
+                    <img alt="Food item 3" class="rounded-2xl w-full aspect-[3/2] object-cover" src="{{ asset('frontend/images/' . $coffeeShop->image_3) }}" />
                 </div>
+
                
             </div>
+            &emsp;&emsp;
             <div class="md:w-1/2 md:pl-6">
-                <h1 class="text-4xl font-bold">{{ $coffeeShop->shop_name }}</h1>
+                <h1 class="text-5xl font-bold" style="font-family:Futura">{{ $coffeeShop->shop_name }}</h1>
                 <div class="flex items-center mt-2">
                     <div class="flex text-yellow-500">
                     @php
@@ -75,7 +88,27 @@
                     @endfor
                   
                     </div>
-                    <span class="badge bg-success">Open</span>
+                        @php
+                        $style = $coffeeShop->style;
+                        $bgColor = '#DFFEF2';
+                        $textColor = '#00B140';
+
+                        if ($style->id == 1) {
+                            $bgColor = '#EBF6F4'; $textColor = '#0F4C3A'; // Truyền thống
+                        } elseif ($style->id == 2) {
+                            $bgColor = '#F1E8F8'; $textColor = '#5F276D'; // Hiện đại
+                        } elseif ($style->id == 3) {
+                            $bgColor = '#FBF5E6'; $textColor = '#6F4E28'; // Công sở
+                        } elseif ($style->id == 4) {
+                            $bgColor = '#F7E7E7'; $textColor = '#76333C'; // Nhà máy
+                        }
+                        @endphp
+                    <span class="badge" style="background-color: {{ $bgColor }}; color: {{ $textColor }}; font-size: 1rem; font-weight: 500; padding: 6px 16px; border-radius: 999px; margin:0 5px 0 5px ">
+                        {{ $style->style_name }}
+                    </span>
+                    <span class="badge" style="background-color: #DFFEF2; color: #00B140; font-size: 1rem; font-weight: 500; padding: 6px 16px; border-radius: 999px;">
+                        Đang mở cửa
+                    </span>
 
                 </div>
                 <br>
@@ -83,29 +116,29 @@
                     <div>
                          <img src="{{ asset('frontend/images/c1.jpg') }}" style="width:80px; height:80px; border-radius:50%;margin-top:5px;margin-left:20px" class="shadow-lg"alt="">
                     </div>
-                    <div class="tt2" style="margin-left:20px">
+                    <div class="tt2" >
                         <div>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" class="bi bi-door-open-fill" viewBox="0 0 16 16">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-door-open-fill" viewBox="0 0 16 16">
                             <path d="M1.5 15a.5.5 0 0 0 0 1h13a.5.5 0 0 0 0-1H13V2.5A1.5 1.5 0 0 0 11.5 1H11V.5a.5.5 0 0 0-.57-.495l-7 1A.5.5 0 0 0 3 1.5V15zM11 2h.5a.5.5 0 0 1 .5.5V15h-1zm-2.5 8c-.276 0-.5-.448-.5-1s.224-1 .5-1 .5.448.5 1-.224 1-.5 1"/>
                             </svg>
                             <p class="text-gray-500">Open daily: {{ $coffeeShop->opening_time }} - {{ $coffeeShop->closing_time }}</p>
                         </div>
                         <div>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" class="bi bi-tags-fill" viewBox="0 0 16 16">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-tags-fill" viewBox="0 0 16 16">
                             <path d="M2 2a1 1 0 0 1 1-1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 2 6.586zm3.5 4a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
                             <path d="M1.293 7.793A1 1 0 0 1 1 7.086V2a1 1 0 0 0-1 1v4.586a1 1 0 0 0 .293.707l7 7a1 1 0 0 0 1.414 0l.043-.043z"/>
                             </svg>
                              <p class="text-gray-500">Price: {{ $coffeeShop->min_price }} - {{ $coffeeShop->max_price }}</p>
                         </div>
                         <div>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
                             <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
                             </svg>
                             <p class="text-gray-500">Address: {{ $coffeeShop->address->street}}, {{ $coffeeShop->address->district}}, {{ $coffeeShop->address->city}}</p>
                         </div>
                     </div>
                 </div>
-                <br>
+                
                 <div class="mt-4" id="tt3">
                     <h2 class="text-3xl font-bold">Thông tin</h2>
                     <p class="text-gray-500">IG: @Ngaybinhyen_Giaolộ8</p>
@@ -115,8 +148,7 @@
                 </div>
                 
                 <div class="mt-4  flex space-x-2" id="bt">
-                    <button class="bg-yellow-900 text-white px-4 py-2 rounded-lg">Đi thôi</button>
-                    <button class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg">Chia sẻ</button>
+                    <button class="bg-yellow-900 text-white px-4 py-2 rounded-lg">Menu</button>
                     <button class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg">Lưu nè</button>
                     <!-- Nút Đánh giá -->
    
@@ -216,9 +248,15 @@
                 </div>
                 <br>
                 <br>
-                <div class="text-gray-500 text-sm mt-4">
-                    Đã thích(3,3k)
+                <div class="flex items-center mt-1 text-black text-base">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" 
+                        stroke-width="1.5" stroke="red" class="w-5 h-5 mr-1">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M21.752 6.744a5.754 5.754 0 00-9.01-1.308L12 6.34l-.742-.904a5.754 5.754 0 00-9.01 1.308 6.196 6.196 0 001.282 7.684l7.042 6.442a1.5 1.5 0 002.036 0l7.042-6.442a6.196 6.196 0 001.282-7.684z" />
+                    </svg>
+                    <span>Đã thích (3,3K)</span>
                 </div>
+
                 
             </div>
         </div>
@@ -239,11 +277,9 @@
             </p>
         </div>
       
-        <div class="mt-1 max-h-[400px] overflow-y-auto pr-2 scroll-smooth hide-scrollbar">
-            
+        <div class="mt-1 max-h-[400px] overflow-y-auto pr-2 scroll-smooth hide-scrollbar">       
             @foreach($coffeeShop->reviews as $review)
     <div class=" pt-2" x-data="{ expanded: false }" style="margin-bottom:10px">
-       
         <div class="flex justify-between relative">
             <div class="flex items-center">
                 <img src="{{ asset('frontend/images/' . basename($review->user->avatar_url)) }}"
@@ -252,10 +288,8 @@
                 <div class="flex justify-between items-start" >
                     <p class="font-semi text-gray-500">
                         <span>{{ $review->user->full_name ?? 'Người dùng' }}</span>
-                    </p>
-                    
+                    </p>        
                 </div>
-
                     <!-- Nội dung đánh giá -->
                 <div class="text-gray-700 text-sm relative font-semibold transition-all duration-300 ease-in-out">
                     <p
@@ -274,14 +308,8 @@
                         {{ $review->content }}
                     </p>
                 </div>
-
-
-
-
                 </div>
             </div>
-            
-
             <div>
             <!-- <p class="text-sm font-normal text-gray-500">Đã thích ({{ $review->likes_count ?? 0 }})</p> -->
             
@@ -290,11 +318,7 @@
                 </button>
             </div>
         </div>
-
-     
-
         <!-- Hình ảnh (ẩn khi chưa mở) -->
-        
         <div  x-show="expanded" x-cloak >
               <div style="display:flex;margin-left:90px">
               <p class="text-sm text-gray-500">{{ $review->created_at->format('d/m/Y') }}</p>
@@ -335,24 +359,25 @@
                 @endif
             </div>
         </div>
-
-
-
-
 @endforeach
            
         </div>
-        <div class="mt-4">
-                <input class="w-full p-2 border  rounded-lg" placeholder="Thêm nhận xét của bạn" type="text"/>
+            <div class="mt-4">
+                <input 
+                    type="text"
+                    placeholder="Thêm nhận xét của bạn !"
+                    class="w-full px-5 py-3 bg-gray-100 border border-black rounded-xl placeholder-gray-500 text-base"
+                />
             </div>
-            </div>
+        </div>
 
 
             
             <div class="col-md-6">
             <div class="mt-6">
             <h2 class="text-2xl font-bold">Vị trí</h2>
-            <iframe style="border-radius:30px" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3834.2547299694816!2d108.16610517459974!3d16.052265939892848!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3142196d9a203685%3A0x4e8027fe58d65525!2zQ2FvIMSR4bqzbmcgRlBUIEPGoSBT4bufIDI!5e0!3m2!1svi!2s!4v1744278102972!5m2!1svi!2s" width="600" height="400" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            <iframe style="border-radius:30px" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3834.2547299694816!2d108.16610517459974!3d16.052265939892848!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3142196d9a203685%3A0x4e8027fe58d65525!2zQ2FvIMSR4bqzbmcgRlBUIEPGoSB
+                T4bufIDI!5e0!3m2!1svi!2s!4v1744278102972!5m2!1svi!2s" width="650" height="530" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
         </div>
         <div class="mt-6">
             <img alt="" class="rounded-lg" style="height:100px;width:400px; margin-left:60px"  src="{{ asset('frontend/images/quangcao.jpg' ) }}" />
