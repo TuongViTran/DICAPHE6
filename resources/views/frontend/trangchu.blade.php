@@ -7,102 +7,98 @@
     <meta name="csrf-token" content="{{ csrf_token() }}"> <!-- CSRF Token -->
     <title>Trang Chủ</title>
 </head>
- <!-- Thanh tìm kiếm -------------------->
- <section class="search-section">
-            <div class="search-box">
-            <span class="icon"><img src="{{ asset('frontend/images/Search.svg') }}" alt="Trang chủ"></span><input type="text" placeholder="Hôm nay bạn muốn đi đâu?" />
-                <button class="btn-location">Tìm kiếm </button>
-            </div>
-            <div class="filters">
-            <div class="filter-container">
-                    <button class="dropdown-btn">
-                    <img src="{{ asset('frontend/images/icon_khoangcach.svg') }}" alt="icon" class="icon"> Khoảng cách ▾
-                    </button>
-                <div class="dropdown-content">
-                    <div class="slider-container">
-                        <span>0km</span>
-                        <input type="range" min="0" max="15" class="slider" oninput="updateSliderValue(this)">
-                        <span class="slider-value">0km</span>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="walkable">
-                        <label for="walkable">Có thể đi bộ</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="distance2">
-                        <label for="distance2">2 km</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="distance5">
-                        <label for="distance5">&lt; 5km</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="distance7">
-                        <label for="distance7">5-7km</label>
-                    </div>
-                </div>
-            </div>
-            <div class="filter-container">
-                    <button class="dropdown-btn">
-                    <img src="{{ asset('frontend/images/icon_stylequan.svg') }}" alt="icon" class="icon"> Style quán ▾
-                    </button>
-                <div class="dropdown-content">
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="work">
-                        <label for="work">Work Coffee</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="vintage">
-                        <label for="vintage">Vintage Coffee</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="modern">
-                        <label for="modern">Modern Coffee</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="traditional">
-                        <label for="traditional">Traditional Coffee</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="concept">
-                        <label for="concept">Concept Coffee</label>
-                    </div>
-                </div>
-            </div>
-            <div class="filter-container">
-                    <button class="dropdown-btn">
-                    <img src="{{ asset('frontend/images/icon_gia.svg') }}" alt="icon" class="icon"> Khoảng giá ▾
-                    </button>
-                <div class="dropdown-content">
-                    <div class="slider-container">
-                        <span>0k</span>
-                        <input type="range" min="0" max="50" class="slider" oninput="updateSliderValue(this)">
-                        <span class="slider-value">0k</span>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="price50">
-                        <label for="price50">&lt; 50k</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="price50_70">
-                        <label for="price50_70">50k - 70k</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="price70">
-                        <label for="price70">&gt; 70k</label>
-                    </div>
-                </div>
-            </div>
-        </div>
-        </div>
-        
-        <div class="hello">
-        <h2>Xin chào! Chúng tôi hỗ trợ<br> tìm kiếm quán cà phê</h2> 
-      
-        </div> 
-       
-    </section>
+ <!--------------------Thanh tìm kiếm -------------------->
+    <section class="search-section">
+        <form method="GET" action="{{ route('search.result') }}" class="search-form" style="text-align: center;">
+            {{-- Thanh tìm kiếm --}}
+            <div class="position-relative search-box" style="display: flex; justify-content: center; align-items: center; gap: 10px;">
+                <span class="icon">
+                    <img src="{{ asset('frontend/images/Search.svg') }}" alt="Tìm kiếm">
+                </span>
+                <input type="text" id="searchInput" name="keyword" class="form-control" style="width: 400px; padding: 10px;"
+                    placeholder="Hôm nay bạn muốn đi đâu?" value="{{ request('keyword') }}" autocomplete="off">
+                <button type="submit" class="btn btn-warning">Tìm kiếm</button>
 
+                <ul id="suggestionList" class="list-group position-absolute w-100" style="z-index: 1000; top: 100%; display: none;"></ul>
+            </div>
+
+            <div style="margin-top: 20px; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+                {{-- Khoảng cách --}}
+                <div class="filter-container">
+                    <button type="button" class="dropdown-btn">
+                        <img src="{{ asset('frontend/images/icon_khoangcach.svg') }}" alt="icon" class="icon"> Khoảng cách ▾
+                    </button>
+                    <div class="dropdown-content">
+                        <div class="form-check">
+                            <input type="checkbox" name="distance[]" value="1"
+                                {{ is_array(request('distance')) && in_array("1", request('distance')) ? 'checked' : '' }}>
+                            <label>< 1km</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" name="distance[]" value="3"
+                                {{ is_array(request('distance')) && in_array("3", request('distance')) ? 'checked' : '' }}>
+                            <label>< 3km</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" name="distance[]" value="5"
+                                {{ is_array(request('distance')) && in_array("5", request('distance')) ? 'checked' : '' }}>
+                            <label>< 5km</label>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Style quán --}}
+                <div class="filter-container">
+                    <button type="button" class="dropdown-btn">
+                        <img src="{{ asset('frontend/images/icon_stylequan.svg') }}" alt="icon" class="icon"> Style quán ▾
+                    </button>
+                    <div class="dropdown-content">
+                        @foreach($styles as $style)
+                            <div class="form-check">
+                                <input type="checkbox" name="style[]" value="{{ $style->id }}"
+                                    {{ is_array(request('style')) && in_array($style->id, request('style')) ? 'checked' : '' }}>
+                                <label>{{ $style->style_name }}</label>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+
+                {{-- Khoảng giá --}}
+                <div class="filter-container">
+                    <button type="button" class="dropdown-btn">
+                        <img src="{{ asset('frontend/images/icon_gia.svg') }}" alt="icon" class="icon"> Khoảng giá ▾
+                    </button>
+                    <div class="dropdown-content">
+                        <div class="form-check">
+                            <input type="checkbox" name="price_range[]" value="lt50"
+                                {{ is_array(request('price_range')) && in_array("lt50", request('price_range')) ? 'checked' : '' }}>
+                            <label>< 50k</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" name="price_range[]" value="50_70"
+                                {{ is_array(request('price_range')) && in_array("50_70", request('price_range')) ? 'checked' : '' }}>
+                            <label>50k - 70k</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" name="price_range[]" value="gt70"
+                                {{ is_array(request('price_range')) && in_array("gt70", request('price_range')) ? 'checked' : '' }}>
+                            <label>> 70k</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+
+    <div class="hello">
+        <h2>Xin chào! Chúng tôi hỗ trợ<br> tìm kiếm quán cà phê</h2>
+    </div>
+</section>
+
+  <!-------------------Slider -------------------->
+   
+   
+ 
 <div class="container_slider mt-4">
   <div class="row">
     <!-- Bên trái -->
@@ -362,13 +358,32 @@
 <script src="{{ asset('frontend/js/content-slider.js') }}"></script>
 <script src="{{ asset('frontend/js/slider.js') }}"></script>
 <script src="{{ asset('frontend/js/like.js') }}"></script>
-<script src="{{ asset('frontend/js/seacher.js') }}"></script>
 <script src="{{ asset('frontend/js/save-favorite.js') }}"></script>
-
+<script src="{{ asset('frontend/js/seacher.js') }}"></script>
+<script src="{{ asset('frontend/js/ajax.js') }}"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="{{ asset('frontend/js/save-favorite.js') }}"></script>
 
-
+<script>
+    function updateSliderValue(slider) {
+    let valueLabel = slider.nextElementSibling;
+    valueLabel.textContent = slider.value + (slider.max == 15 ? 'km' : 'k');
+}
+document.querySelectorAll('.dropdown-btn').forEach(button => {
+    button.addEventListener('click', function() {
+        let content = this.nextElementSibling;
+        if (content.classList.contains('active')) {
+            content.style.maxHeight = '0';
+            content.style.opacity = '0';
+            setTimeout(() => content.classList.remove('active'), 300);
+        } else {
+            content.classList.add('active');
+            content.style.maxHeight = content.scrollHeight + 'px';
+            content.style.opacity = '1';
+        }
+    });
+});
+</script>
 
 
 

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Models\CoffeeShop;
+use App\Models\Style;
+use App\Models\Address;
 
 class HomeController extends Controller
 {
@@ -33,6 +35,7 @@ class HomeController extends Controller
     
     public function index() {
         // Lấy bài viết cho slider và bài viết thường
+        $styles = Style::all(); // Lấy danh sách kiểu quán
         $posts = Post::with('user')
             ->where('status', 'Published')
             ->orderBy('created_at', 'desc')
@@ -42,13 +45,14 @@ class HomeController extends Controller
         $sliderPosts = $posts->take(5);
     
         // Lấy danh sách quán cà phê kèm địa chỉ, số like, trạng thái like của người dùng
-        $shops = CoffeeShop::with('address')
+        $shops = CoffeeShop::with('address', 'style')
         ->withCount('likes')
         ->take(4) // Lấy ít nhất 4 quán
         ->get()
         ->each(function ($shop) {
             $shop->liked = auth()->check() && $shop->likes()->where('user_id', auth()->id())->exists();
         });
+        
         
         // Lấy danh sách các quán có rating 5 sao
         $fiveStarShops = CoffeeShop::with('address')
@@ -58,7 +62,7 @@ class HomeController extends Controller
             $shop->liked = auth()->check() && $shop->likes()->where('user_id', auth()->id())->exists();
         });
         // Trả về view và truyền dữ liệu
-        return view('frontend.trangchu', compact('sliderPosts', 'shops', 'posts', 'fiveStarShops'));
+        return view('frontend.trangchu', compact('sliderPosts', 'shops', 'posts', 'fiveStarShops','styles'));
     }
     public function saveFavorite($shopId)
     {

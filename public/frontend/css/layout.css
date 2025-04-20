@@ -157,20 +157,7 @@ nav ul li.active a {
 .user-name {
     gap: 10px;
     font-weight: bold;
-    /* text-transform: uppercase; */
-    /* Thêm thuộc tính viết hoa */
 }
-
-
-/* .user-role {
-    background: #DDE5B6;
-    padding: 3px 10px;
-    border-radius: 15px;
-    font-size: 16px;
-    font-weight: 500;
-    font-style: italic;
-    color: #333;
-} */
 
 .user-role {
     display: inline-block;
@@ -277,28 +264,26 @@ nav ul li.active a {
 
 /* Thanh tìm kiếm--------------------------------------------------*/
 
+.search-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 70%;
+}
+
 .search-box {
     display: flex;
-    margin: 20px 0px;
+    align-items: center;
     background: white;
     padding: 12px;
     border-radius: 8px;
     width: 60%;
     box-shadow: 0px 4px 10px rgba(240, 228, 164, 0.8);
-    /* Màu vàng */
     border: 1px solid #8f8f8f;
-    /* Viền vàng nhẹ cho nổi bật */
     transition: box-shadow 0.3s ease-in-out;
-}
-
-.search-box input {
-    flex: 1;
-    border: none;
-    padding: 12px;
-    font-size: 18px;
-    outline: none;
-    font-weight: 300;
-    font-family: 'SFU Futura', sans-serif;
+    justify-content: center;
+    margin: 0 auto;
+    /* Đảm bảo nằm giữa */
 }
 
 .btn-location {
@@ -352,7 +337,7 @@ nav ul li.active a {
     display: none;
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.5s ease, opacity 0.3s ease;
+    transition: max-height 0.9s ease, opacity 0.9s ease;
     opacity: 0;
     padding: 0 10px;
 }
@@ -361,6 +346,22 @@ nav ul li.active a {
     display: block;
     max-height: 500px;
     opacity: 1;
+}
+
+.dropdown-content .form-check {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    /* hoặc space-between nếu muốn label đẩy sang phải */
+    gap: 8px;
+    padding: 4px 0;
+}
+
+.dropdown-content .form-check label {
+    flex: 1;
+    text-align: left;
+    margin: 0;
+    white-space: nowrap;
 }
 
 

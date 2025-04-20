@@ -18,6 +18,7 @@ use App\Http\Controllers\FeedController;
 use App\Http\Controllers\AdminController; // Import AdminController
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\SearchController;
 
 // Frontend --------------------------------------------
 Route::get('/test-session', function () {
@@ -49,6 +50,10 @@ Route::put('/menu/update/{id}', [OwnerController::class, 'update'])->name('menu.
 Route::get('/owner/{id}/info', [OwnerController::class, 'infor'])->name('coffeeshop.owner'); 
 Route::put('/owner/update/{id}', [OwnerController::class, 'updateinfor'])->name('owner.updateinfor'); 
 Route::post('/reviews', [ReviewController::class, 'store'])->name('review.store');
+
+// Search 
+Route::get('/search', [SearchController::class, 'search'])->name('search.result');
+Route::get('/autocomplete', [SearchController::class, 'autocomplete']);
 
 // Post Management Routes
 Route::post('/ckeditor/upload', function (Request $request) {

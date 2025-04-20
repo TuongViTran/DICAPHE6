@@ -60,13 +60,12 @@
         </ul>
 </nav>
     
-    <div class="right-section">
-        <!-- Hiện thị tọa độ -------------------->
+    <!-- <div class="right-section">
         <div class="location-info">
         <span class="location-title">Tọa độ:</span>
         <span class="latitude">Đang tải vĩ độ...</span>
         <span class="longitude">Đang tải kinh độ...</span>
-    </div>
+    </div> -->
     <!-- Thời tiết -------------------->
         <div class="weather">
             <span class="weather-icon">☀️</span>
