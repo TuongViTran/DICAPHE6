@@ -1,6 +1,12 @@
 @extends('frontend.layout')
 @section('title', 'Trang Chủ')
 @section('content')
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}"> <!-- CSRF Token -->
+    <title>Trang Chủ</title>
+</head>
  <!-- Thanh tìm kiếm -------------------->
  <section class="search-section">
             <div class="search-box">
@@ -221,9 +227,23 @@
                                             <span id="like-count-{{ $shop->id }}" style="margin-left: 5px; font-weight: bold;">
                                                 {{ $shop->likes_count }}
                                             </span>
-                                            <button class="card_nearme-save">
-                                            <img src="{{ asset('frontend/images/icon_luu.svg') }}" alt="save icon" style="width: 20px; height: 20px; margin-bottom:5px;"> Lưu Nè
+                                           
+                                            <button class="save-btn" data-shop-id="{{ $shop->id }}">
+                                                <svg class="save-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark-check" viewBox="0 0 16 16" style="width: 20px; height: 20px; margin-right: 5px;">
+                                                    <path fill-rule="evenodd" d="M10.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0"/>
+                                                    <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1z"/>
+                                                </svg>
+                                                <span class="save-text">
+                                                    @if($shop->liked)
+                                                        Đã Lưu
+                                                    @else
+                                                        Lưu
+                                                    @endif
+                                                </span>
                                             </button>
+
+
+
                                         </div>
                                     </div>
                                     <!-- Tên quán -->
@@ -290,8 +310,18 @@
                                             <span id="like-count-{{ $shop->id }}" style="margin-left: 5px; font-weight: bold;">
                                                 {{ $shop->likes_count }}
                                             </span>
-                                            <button class="card_nearme-save">
-                                            <img src="{{ asset('frontend/images/icon_luu.svg') }}" alt="save icon" style="width: 20px; height: 20px; margin-bottom:5px;"> Lưu Nè
+                                            <button class="save-btn" data-shop-id="{{ $shop->id }}">
+                                                <svg class="save-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark-check" viewBox="0 0 16 16" style="width: 20px; height: 20px; margin-right: 5px;">
+                                                    <path fill-rule="evenodd" d="M10.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0"/>
+                                                    <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1z"/>
+                                                </svg>
+                                                <span class="save-text">
+                                                    @if($shop->liked)
+                                                        Đã Lưu
+                                                    @else
+                                                        Lưu
+                                                    @endif
+                                                </span>
                                             </button>
                                         </div>
                                     </div>
@@ -333,5 +363,51 @@
 <script src="{{ asset('frontend/js/slider.js') }}"></script>
 <script src="{{ asset('frontend/js/like.js') }}"></script>
 <script src="{{ asset('frontend/js/seacher.js') }}"></script>
-    
-    
+<script src="{{ asset('frontend/js/save-favorite.js') }}"></script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{{ asset('frontend/js/save-favorite.js') }}"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<style>
+/* Trạng thái mặc định (Lưu) */
+.save-btn {
+    background-color: white;
+    color: black;
+    border: 1px solid black;
+    padding: 5px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+/* Trạng thái đã lưu */
+.save-btn.liked {
+    background-color: red;
+    color: white;
+    border: none;
+}
+
+/* Thêm một chút khoảng cách cho icon */
+.save-icon {
+    fill: black; /* Màu của SVG khi chưa lưu */
+}
+
+/* Thay đổi màu của icon khi nút đã được lưu */
+.save-btn.liked .save-icon {
+    fill: white; /* Màu của SVG khi đã lưu */
+}
+
+</style>

@@ -138,5 +138,9 @@ Route::middleware(['auth'])->group(function () {
 // thong bao
 Route::get('/thongbao', [NotificationController::class, 'index'])->name('thongbao');
 
+// lưu quán
+Route::post('/coffeeshop/favorite/{shopId}', [HomeController::class, 'saveFavorite'])->name('home.saveFavorite');
+
+
 // Nếu bạn có file auth.php, có thể require ở đây
 // require __DIR__.'/auth.php';

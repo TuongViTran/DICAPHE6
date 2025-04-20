@@ -66,5 +66,11 @@ class Coffeeshop extends Model
     {
         return $this->belongsTo(Style::class, 'styles_id');
     }
+
+    public function favoritedByUsers()
+    {
+        return $this->belongsToMany(User::class, 'favoriteshop', 'shop_id', 'user_id');
+    }
+    
 }
 ?>

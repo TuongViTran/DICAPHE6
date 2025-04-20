@@ -185,10 +185,13 @@ public function showProfile($id)
     ->take(4)
     ->get();
 
-// Từ danh sách hotCafes, chọn ra các quán có ảnh cover để hiển thị slider
-$sliderPosts = $hotCafes->filter(function ($cafe) {
-    return !empty($cafe->cover_image);
-})->values();
-    return view('frontend.user', compact('user', 'reviews','posts','sliderPosts', 'hotCafes'));
-}
+    // Từ danh sách hotCafes, chọn ra các quán có ảnh cover để hiển thị slider
+    $sliderPosts = $hotCafes->filter(function ($cafe) {
+        return !empty($cafe->cover_image);
+    })->values();
+
+    $savedShops = $user->favoriteShops()->with('address')->get();
+
+        return view('frontend.user', compact('user', 'reviews','posts','sliderPosts', 'hotCafes', 'savedShops'));
+    }
 }

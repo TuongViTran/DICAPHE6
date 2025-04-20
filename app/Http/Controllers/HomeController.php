@@ -60,4 +60,41 @@ class HomeController extends Controller
         // Trả về view và truyền dữ liệu
         return view('frontend.trangchu', compact('sliderPosts', 'shops', 'posts', 'fiveStarShops'));
     }
+    public function saveFavorite($shopId)
+    {
+        $user = auth()->user();  // Lấy người dùng hiện tại
+    
+        // Kiểm tra xem người dùng đã lưu quán này chưa
+        $existingFavorite = \DB::table('favoriteshop')
+            ->where('user_id', $user->id)
+            ->where('shop_id', $shopId)
+            ->first();
+    
+        if ($existingFavorite) {
+            // Nếu đã lưu, thì xóa (bỏ yêu thích)
+            \DB::table('favoriteshop')
+                ->where('user_id', $user->id)
+                ->where('shop_id', $shopId)
+                ->delete();
+    
+            return response()->json([
+                'status' => 'removed',
+                'message' => 'Quán đã được xóa khỏi danh sách yêu thích.'
+            ]);
+        } else {
+            // Nếu chưa lưu, thì thêm vào bảng
+            \DB::table('favoriteshop')
+                ->insert([
+                    'user_id' => $user->id,
+                    'shop_id' => $shopId,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+    
+            return response()->json([
+                'status' => 'saved',
+                'message' => 'Quán đã được thêm vào danh sách yêu thích.'
+            ]);
+        }
+    }
 }

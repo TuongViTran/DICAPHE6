@@ -51,4 +51,13 @@ class User extends Authenticatable
       {
           return $this->attributes['avatar_url'] ? asset('storage/' . $this->attributes['avatar_url']) : asset('default-avatar.png');
       }
+
+      public function favoriteShops()
+      {
+          return $this->belongsToMany(CoffeeShop::class, 'favoriteshop', 'user_id', 'shop_id');
+      }
+      
+      
+      
+
 }
