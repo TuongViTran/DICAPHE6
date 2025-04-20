@@ -127,13 +127,7 @@ class CoffeeShopController extends Controller
     }
 
     // ================== Hiển thị chi tiết ==================
-    public function show($id)
-    {
-        $coffeeShop = CoffeeShop::with('reviews.user')->findOrFail($id);
-        $reviews = Review::where('shop_id', $id)->with('user')->orderBy('created_at', 'desc')->get();
-
-        return view('owner.index', compact('coffeeShop', 'reviews'));
-    }
+    
 
     // ================== Like / Unlike ==================
     public function like($id)
