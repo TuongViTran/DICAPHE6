@@ -11,8 +11,7 @@
             <h2>{{ $post->title }}</h2>
             <p>{{ Str::limit(strip_tags($post->content), 150) }}</p>
             <p class="tacgia">
-            <img src="{{ Str::startsWith($post->user->avatar_url, ['http', 'storage']) ? asset($post->user->avatar_url) : asset('images/' . $post->user->avatar_url) }}" alt="Tác giả">
-
+              <img src="{{ asset('storage/uploads/posts/' . $post->image_url) }}" alt="Tác giả">
               {{ \Carbon\Carbon::parse($post->created_at)->format('d/m/Y') }} |
               Tác giả: {{ $post->user->full_name ?? 'Ẩn danh' }}
             </p>
@@ -59,7 +58,7 @@
 <div class="container my-4">
   <div class="row">
     <!-- Cột trái: danh sách bài viết -->
-    <div class="col-md-8">
+    <div class="col-md-9">
       <h5 class="fw-bold mb-3">📸 Các góc nhìn mới</h5>
 
       @foreach($posts as $post)
@@ -91,11 +90,11 @@
 
     
     <!-- Cột phải: banner / quảng cáo -->
-    <div class="col-md-4 ">
+    <div class="col-md-3 ">
       <img src="{{ asset('frontend/images/banner1.png') }}" class="img-fluid rounded shadow-sm mb-5 " alt="Banner quảng cáo" style="width: 100%;">
-      <img src="{{ asset('frontend/images/banner2.png') }}" class="img-fluid rounded shadow-sm" alt="Banner quảng cáo" style="width: 100%;">
+      <img src="{{ asset('frontend/images/hihi.png') }}" class="img-fluid rounded shadow-sm" alt="Banner quảng cáo" style="width: 100%;">
     </div>
   </div>
 </div>
-
 @endsection
+<script src="{{ asset('frontend/js/slider.js') }}"></script>

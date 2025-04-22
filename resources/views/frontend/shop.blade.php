@@ -148,7 +148,39 @@
                 </div>
                 
                 <div class="mt-4  flex space-x-2" id="bt">
-                    <button class="bg-yellow-900 text-white px-4 py-2 rounded-lg">Menu</button>
+                    <!-- Button mở Modal menu -->
+                        <button type="button" class="btn btn-warning text-white" data-bs-toggle="modal" data-bs-target="#menuModal">
+                          Menu
+                        </button>
+                        <!-- Modal hiển thị danh sách menu -->
+                        <div class="modal fade" id="menuModal" tabindex="-1" aria-labelledby="menuModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog max-w-[600px]">
+                                            <div class="modal-content">
+                                                <!-- Modal Header -->
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title">Menu {{ $coffeeShop->shop_name }}</h4>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                </div>
+
+                                                <!-- Modal body -->
+                                                <div class="modal-body">
+                                                    @if($coffeeShop->menu->count() > 0)
+                                                        @foreach ($coffeeShop->menu as $menu)
+                                                            <div class="mb-3">
+                                                                <img src="{{ asset('frontend/images/' . $menu->image_url) }}" class="rounded img-fluid mb-2 menu-item " 
+                                                                    data-menu-id="{{ $menu->id }}" alt="Menu Image" style="width: 100%; max-height:600px ;">
+                                                            </div>
+                                                        @endforeach
+                                                    @else
+                                                        <p class="text-muted">Chưa có menu nào được thêm.</p>
+                                                    @endif
+                                                </div>
+
+                                                
+
+                                            </div>
+                                        </div>
+                                    </div>
                     <button class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg">Lưu nè</button>
                     <!-- Nút Đánh giá -->
    
