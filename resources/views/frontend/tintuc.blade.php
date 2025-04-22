@@ -11,7 +11,7 @@
             <h2>{{ $post->title }}</h2>
             <p>{{ Str::limit(strip_tags($post->content), 150) }}</p>
             <p class="tacgia">
-            <img src="{{ asset('frontend/images/' . $post->user->avatar_url) }}" alt="Tác giả">
+              <img src="{{ asset('storage/uploads/posts/' . $post->image_url) }}" alt="Tác giả">
               {{ \Carbon\Carbon::parse($post->created_at)->format('d/m/Y') }} |
               Tác giả: {{ $post->user->full_name ?? 'Ẩn danh' }}
             </p>
@@ -96,5 +96,5 @@
     </div>
   </div>
 </div>
-
 @endsection
+<script src="{{ asset('frontend/js/slider.js') }}"></script>

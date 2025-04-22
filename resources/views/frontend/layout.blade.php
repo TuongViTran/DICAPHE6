@@ -15,6 +15,7 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
 
 <!-- Bootstrap JS -->
+ 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 <script src="https://kit.fontawesome.com/24875ac8f5.js" crossorigin="anonymous"></script>
@@ -250,6 +251,7 @@
     </section> -->
     <main>
         @yield('content')
+        @stack('scripts')
     </main>
 
     <footer class="footer">

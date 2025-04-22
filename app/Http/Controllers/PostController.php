@@ -160,8 +160,11 @@ class PostController extends Controller
         $post = Post::with('user')->findOrFail($id);
 
         // Giả sử bạn có bảng "news" khác (tin tức hot và mới)
-        $list_four_tin = Post::orderBy('created_at', 'desc')->take(3)->get(); // bài hot (có thể sửa logic)
-        $news_tin = Post::orderBy('created_at', 'desc')->take(3)->get(); // mới nhất
+  
+        $news_tin = Post::where('id', '!=', $post->id) // Lấy bài viết khác với bài viết hiện tại
+                    ->orderBy('created_at', 'desc')
+                    ->take(3)
+                    ->get();
 
         // Lấy bình luận theo bài viết
         $cmts = Comment::where('post_id', $id)->orderBy('created_at', 'desc')->get();
@@ -173,27 +176,42 @@ class PostController extends Controller
                                         ->first();
             }
 
-        return view('frontend.post', compact('post', 'cmts','editingComment', 'list_four_tin', 'news_tin'));
+        return view('frontend.post', compact('post', 'cmts','editingComment', 'news_tin'));
     }
     // Hàm lưu bình luận
-    public function storeComment(Request $request, $id)
-    {
-        if (!auth()->check()) {
-            return redirect()->route('login')->with('error', 'Bạn cần đăng nhập để bình luận.');
+    public function storeComment(Request $request, $postId)
+{
+    $request->validate([
+        'content' => 'required|string|max:1000',
+    ]);
+
+    if (!auth()->check()) {
+        return redirect()->route('login')->with('error', 'Bạn cần đăng nhập để bình luận.');
+    }
+
+    // Nếu là chỉnh sửa
+    if ($request->filled('comment_id')) {
+        $comment = Comment::findOrFail($request->comment_id);
+
+        if ($comment->user_id !== auth()->id()) {
+            abort(403);
         }
 
-        $request->validate([
-            'content' => 'required|string|max:1000',
-        ]);
+        $comment->content = $request->content;
+        $comment->save();
 
-        Comment::create([
-            'post_id' => $id,
-            'user_id' => auth()->id(),
-            'content' => $request->content,
-        ]);
-
-        return redirect()->back()->with('success', 'Bình luận đã được gửi.');
+        return back()->with('success', 'Cập nhật bình luận thành công!');
     }
+
+    // Nếu là viết mới
+    Comment::create([
+        'post_id' => $postId,
+        'user_id' => auth()->id(),
+        'content' => $request->content,
+    ]);
+
+    return back()->with('success', 'Bình luận đã được gửi.');
+}
     // Hàm xóa bình luận
     public function destroyComment($id)
     {
