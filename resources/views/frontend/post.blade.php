@@ -6,7 +6,7 @@
     <!-- Phần nội dung bài viết -->
     <div class="col-lg-9">
         <div class="mb-4">
-            <h2 class="mb-2">{{ $post->title }}</h2>
+            <h2 class="mb-2 text-4xl font-bold">{{ $post->title }}</h2>
             <div class="text-muted mb-2">
                 <i class="fa-regular fa-calendar"></i> {{ $post->created_at->format('d/m/Y') }} |
                 <i class="fa-regular fa-user"></i> {{ $post->user->full_name ?? 'Ẩn danh' }}
