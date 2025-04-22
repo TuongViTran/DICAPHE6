@@ -7,7 +7,7 @@ use App\Models\Post;
 use App\Models\User;
 use App\Models\CoffeeShop;
 use App\Models\Comment;
-
+use App\Models\Notification;
 class PostController extends Controller
 {
     // Hàm hiển thị trang Home với bài viết và slider
@@ -192,6 +192,17 @@ class PostController extends Controller
             'content' => $request->content,
         ]);
 
+        // --- Gửi thông báo cho chủ bài viết ---
+        $post = Post::find($id);
+
+        if ($post && $post->user_id != auth()->id()) {
+            Notification::create([
+                'user_id' => $post->user_id, // Gửi tới chủ bài viết
+                'type' => 'comment',
+                'message' => auth()->user()->name . ' đã bình luận vào bài viết "' . $post->title . '"',
+                'link' => route('post.show', $post->id),
+            ]);
+        }
         return redirect()->back()->with('success', 'Bình luận đã được gửi.');
     }
     // Hàm xóa bình luận

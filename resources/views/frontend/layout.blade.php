@@ -52,11 +52,22 @@
                 </a>
             </li>
             <li class="{{ request()->routeIs('thongbao') ? 'active' : '' }}">
-                <a href="{{ route('thongbao') }}">
-                    <span class="icon"><img src="{{ asset('frontend/images/icon_thongbao.svg') }}" alt="Thông báo"></span>
-                    <span>Thông báo</span>
+                <a href="{{ route('thongbao') }}" class="d-flex align-items-center position-relative">
+                    <span class="icon position-relative">
+                        <img src="{{ asset('frontend/images/icon_thongbao.svg') }}" alt="Thông báo">
+
+                        @if (isset($unreadCount) && $unreadCount > 0)
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                                style="font-size: 0.65rem; padding: 4px 6px;">
+                                {{ $unreadCount }}
+                                <span class="visually-hidden">thông báo chưa đọc</span>
+                            </span>
+                        @endif
+                    </span>
+                    <span class="ms-2">Thông báo</span>
                 </a>
             </li>
+
         </ul>
 </nav>
     

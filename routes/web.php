@@ -146,6 +146,8 @@ Route::get('/thongbao', [NotificationController::class, 'index'])->name('thongba
 // lưu quán
 Route::post('/coffeeshop/favorite/{shopId}', [HomeController::class, 'saveFavorite'])->name('home.saveFavorite');
 
+// bài viết
+Route::get('/post/{id}', [PostController::class, 'show'])->name('post.show');
 
 // Nếu bạn có file auth.php, có thể require ở đây
 // require __DIR__.'/auth.php';
