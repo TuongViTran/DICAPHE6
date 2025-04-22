@@ -519,53 +519,60 @@
     </div>
     </div>
     <div class="col-lg-4">
-                <div class="bg-white p-4 rounded shadow-sm mb-4">
-                    <h2 class="fs-5 fw-bold mb-3">Quản lý đánh giá</h2>
-                    <ul class="list-unstyled">
-                        <li class="d-flex align-items-center gap-3 mb-3">
-                            <img src="https://storage.googleapis.com/a1aa/image/ijLC10jshGVG4_HQyAyMrqMQPBoFIktLJTsibzJx3BA.jpg" alt="User avatar" class="rounded-circle" width="50" height="50">
-                            <div>
-                                <h3 class="fs-6 fw-bold mb-1">Ngày Bình Yên</h3>
-                                <p class="text-secondary mb-1">Quán cà phê đẹp và yên tĩnh</p>
-                                <p class="text-secondary mb-0">4.0 <span class="text-warning"><i class="fas fa-star"></i></span></p>
-                            </div>
-                        </li>
-                        <li class="d-flex align-items-center gap-3 mb-3">
-                            <img src="https://storage.googleapis.com/a1aa/image/ijLC10jshGVG4_HQyAyMrqMQPBoFIktLJTsibzJx3BA.jpg" alt="User avatar" class="rounded-circle" width="50" height="50">
-                            <div>
-                                <h3 class="fs-6 fw-bold mb-1">Ngày Bình Yên</h3>
-                                <p class="text-secondary mb-1">Quán cà phê đẹp và yên tĩnh</p>
-                                <p class="text-secondary mb-0">4.0 <span class="text-warning"><i class="fas fa-star"></i></span></p>
-                            </div>
-                        </li>
-                        <li class="d-flex align-items-center gap-3 mb-3">
-                            <img src="https://storage.googleapis.com/a1aa/image/ijLC10jshGVG4_HQyAyMrqMQPBoFIktLJTsibzJx3BA.jpg" alt="User avatar" class="rounded-circle" width="50" height="50">
-                            <div>
-                                <h3 class="fs-6 fw-bold mb-1">Ngày Bình Yên</h3>
-                                <p class="text-secondary mb-1">Quán cà phê đẹp và yên tĩnh</p>
-                                <p class="text-secondary mb-0">4.0 <span class="text-warning"><i class="fas fa-star"></i></span></p>
-                            </div>
-                        </li>
-                        <li class="d-flex align-items-center gap-3 mb-3">
-                            <img src="https://storage.googleapis.com/a1aa/image/ijLC10jshGVG4_HQyAyMrqMQPBoFIktLJTsibzJx3BA.jpg" alt="User avatar" class="rounded-circle" width="50" height="50">
-                            <div>
-                                <h3 class="fs-6 fw-bold mb-1">Ngày Bình Yên</h3>
-                                <p class="text-secondary mb-1">Quán cà phê đẹp và yên tĩnh</p>
-                                <p class="text-secondary mb-0">4.0 <span class="text-warning"><i class="fas fa-star"></i></span></p>
-                            </div>
-                        </li>
-                        <li class="d-flex align-items-center gap-3 mb-3">
-                            <img src="https://storage.googleapis.com/a1aa/image/ijLC10jshGVG4_HQyAyMrqMQPBoFIktLJTsibzJx3BA.jpg" alt="User avatar" class="rounded-circle" width="50" height="50">
-                            <div>
-                                <h3 class="fs-6 fw-bold mb-1">Ngày Bình Yên</h3>
-                                <p class="text-secondary mb-1">Quán cà phê đẹp và yên tĩnh</p>
-                                <p class="text-secondary mb-0">4.0 <span class="text-warning"><i class="fas fa-star"></i></span></p>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+                
+    <div class="bg-white p-4 rounded shadow-sm mb-4">
+    <h2 class="fs-5 fw-bold mb-3">Quản lý đánh giá</h2>
+    <ul class="list-unstyled">
+    @if ($reviews->isEmpty())
+    <p class="text-center text-muted mt-4" style="font-style: italic;">Chưa có đánh giá nào.</p>
+@else
+    @foreach ($reviews as $review)
+    <div class="d-flex align-items-start gap-3 mb-4">
+    <!-- Avatar -->
+    <img src="{{ asset('frontend/images/' . basename($review->user->avatar_url)) }}"
+         onerror="this.onerror=null; this.src='{{ asset('frontend/images/avt.png') }}';"
+         width="40" height="40" alt="Avatar"
+         style="border-radius: 50%; object-fit: cover; box-shadow: 0 2px 8px rgba(0,0,0,0.15);">
+
+    <!-- Nội dung đánh giá -->
+    <div class="flex-grow-1" style="line-height: 1.4; position: relative;">
+        <p class="mb-1" style="font-size: 14px;">
+            <strong>{{ $review->user->full_name ?? 'Người dùng ẩn danh' }}</strong>
+            <span class="text-muted"> đang ở tại </span>
+            <strong>{{ $review->shop->shop_name ?? 'Quán ẩn danh' }}</strong>
+        </p>
+
+        <p class="mb-1" style="font-size: 14px;">{{ $review->content }}</p>
+
+        <div class="d-flex align-items-center" style="font-size: 13px; color: #555;">
+            <span>{{ $review->created_at ? $review->created_at->format('d/m/Y') : 'Không có ngày' }}</span>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <span class="like-count">{{ $review->likes_count }} lượt thích</span>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+
+            <!-- Rating sao -->
+            <span class="text-warning">
+                @for ($i = 1; $i <= 5; $i++)
+                    <i class="fa{{ $i <= $review->rating ? 's' : 'r' }} fa-star"></i>
+                @endfor
+            </span>
         </div>
+
+        <!-- Nút like cố định -->
+        <button class="like-button"
+                data-id="{{ $review->id }}"
+                style="position: absolute; top: 0; right: 0; border: none; background: none; cursor: pointer;">
+            <i class="far fa-heart"></i>
+        </button>
+    </div>
+</div>
+
+    @endforeach
+@endif
+
+    </ul>
+</div>
+
     </div>
 @endsection
           
