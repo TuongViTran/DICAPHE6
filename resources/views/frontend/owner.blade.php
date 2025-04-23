@@ -578,8 +578,7 @@
         </div>
     </div>
 
-        @endforeach
-    @endif
+       
 
     </ul>
 </div>
