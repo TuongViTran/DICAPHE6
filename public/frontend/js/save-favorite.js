@@ -1,5 +1,3 @@
-// public/frontend/js/save-favorite.js
-
 $(document).ready(function() {
     $('.save-btn').click(function() {
         var shopId = $(this).data('shop-id');
