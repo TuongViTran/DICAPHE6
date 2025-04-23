@@ -3,29 +3,63 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\CoffeeShop;
 use App\Models\Style;
-use App\Models\Address;
+use Illuminate\Support\Facades\DB;
 
 class SearchController extends Controller
 {
     public function search(Request $request)
     {
         $styles = Style::all();
+    
+        $latitude = $request->input('user_latitude', 16.4724736);
+        $longitude = $request->input('user_longitude', 107.56096);
+        
+        if ((!$latitude || !$longitude) && auth()->check() && auth()->user()->address) {
+            $latitude = auth()->user()->address->latitude ?? 16.4724736;
+            $longitude = auth()->user()->address->longitude ?? 107.56096;
+        }
+    
+        $latitude = $latitude ?: 16.4724736;
+        $longitude = $longitude ?: 107.56096;
 
-        $query = CoffeeShop::with('address');
+        // Công thức tính khoảng cách
+        $distanceFormula = "
+            111.045 * DEGREES(
+                ACOS(
+                    LEAST(1.0, 
+                        COS(RADIANS(?)) * COS(RADIANS(addresses.latitude)) 
+                        * COS(RADIANS(addresses.longitude) - RADIANS(?)) 
+                        + SIN(RADIANS(?)) 
+                        * SIN(RADIANS(addresses.latitude))
+                    )
+                )
+            ) AS distance
+        ";
 
-       
-           // --- Lọc theo từ khoá (tên quán và mô tả) ---
-            if ($request->has('keyword') && !empty($request->keyword)) {
-                $keyword = $request->keyword;
-                $query->where(function($q) use ($keyword) {
-                    $q->where('shop_name', 'like', '%' . $keyword . '%')
-                    ->orWhere('description', 'like', '%' . $keyword . '%');
-                });
-            }
+        $query = DB::table('coffeeshop')
+            ->join('addresses', 'coffeeshop.address_id', '=', 'addresses.id')
+            ->leftJoin('styles', 'coffeeshop.styles_id', '=', 'styles.id')
+            ->select(
+                'coffeeshop.*',
+                'addresses.*',
+                'styles.style_name as style_name',
+                'styles.id as styles_id',
+                DB::raw($distanceFormula)
+            )
+            // Ràng buộc các tham số vào câu truy vấn
+            ->addBinding($latitude, 'select')
+            ->addBinding($longitude, 'select')
+            ->addBinding($latitude, 'select');
 
-
+        // --- Lọc theo từ khoá ---
+        if ($request->filled('keyword')) {
+            $keyword = $request->keyword;
+            $query->where(function ($q) use ($keyword) {
+                $q->where('shop_name', 'like', '%' . $keyword . '%')
+                  ->orWhere('description', 'like', '%' . $keyword . '%');
+            });
+        }
 
         // --- Lọc theo style ---
         if ($request->has('style') && is_array($request->style)) {
@@ -35,8 +69,7 @@ class SearchController extends Controller
         // --- Lọc theo khoảng giá ---
         if ($request->has('price_range')) {
             $priceRanges = $request->input('price_range');
-        
-            $query->where(function($q) use ($priceRanges) {
+            $query->where(function ($q) use ($priceRanges) {
                 foreach ($priceRanges as $price) {
                     if ($price == 'lt50') {
                         $q->orWhere('min_price', '<', 50);
@@ -51,39 +84,26 @@ class SearchController extends Controller
                 }
             });
         }
-        
 
         // --- Lọc theo khoảng cách ---
-        if ($request->has('distance') && auth()->check()) {
-            $user = auth()->user();
-            $userAddress = $user->address; // Đảm bảo người dùng có address liên kết
-
-            if ($userAddress && $userAddress->latitude && $userAddress->longitude) {
-                $userLat = $userAddress->latitude;
-                $userLng = $userAddress->longitude;
-
-                $query->whereHas('address', function ($q) use ($request, $userLat, $userLng) {
-                    $q->whereNotNull('latitude')->whereNotNull('longitude');
-
-                    $q->where(function ($distanceQ) use ($request, $userLat, $userLng) {
-                        foreach ($request->distance as $dist) {
-                            $distanceQ->orWhereRaw("
-                                6371 * acos(
-                                    cos(radians(?)) * cos(radians(latitude)) *
-                                    cos(radians(longitude) - radians(?)) +
-                                    sin(radians(?)) * sin(radians(latitude))
-                                ) <= ?
-                            ", [$userLat, $userLng, $userLat, $dist]);
-                        }
-                    });
-                });
-            }
+        $distanceSelected = $request->input('distance');
+        if ($distanceSelected && is_numeric($distanceSelected)) {
+            $query->whereRaw("$distanceFormula <= ?", [$latitude, $longitude, $latitude, $distanceSelected]);
         }
 
         $coffeeShops = $query->get();
 
+        foreach ($coffeeShops as $shop) {
+            if (isset($shop->distance)) {
+                $shop->distance = round($shop->distance, 2);
+            }
+        }
+
         return view('frontend.search-result', compact('coffeeShops', 'styles'));
     }
+
+
+
     // Hỗ trợ tìm kiếm bằng autocomlete
     
     public function autocomplete(Request $request)

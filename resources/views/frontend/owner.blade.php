@@ -22,7 +22,7 @@
         <div class="p-4 rounded shadow-sm mb-4 d-flex align-items-center justify-content-around" style="background: linear-gradient(to bottom,rgb(241, 215, 180), #fbc2eb00);">
             <!-- Cột bên trái: Ảnh đại diện + Thông tin quán -->
             <div class="d-flex flex-column align-items-center">
-                <img src="{{ asset('frontend/images/' . ($coffeeShop->user->avatar_url ?? 'avt.png')) }}"  alt="User profile picture" class="rounded-circle mb-2" width="90" height="90" style="box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+            <img src="{{ asset('frontend/images/' . basename($user->avatar_url ?? 'avt.png')) }}" alt="User profile picture" class="rounded-circle mb-2" width="90" height="90" style="box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
                 
                 <div class="text-left">
                     <h4 class="text-center fw-bold mb-1">Chủ quán :{{ $coffeeShop->user->full_name }}</h4>
@@ -469,54 +469,54 @@
         @endforeach
     </div>
     </div>
+
     <div class="col-lg-4">
-                <div class="bg-white p-4 rounded shadow-sm mb-4">
-                    <h2 class="fs-5 fw-bold mb-3">Quản lý đánh giá</h2>
-                    <ul class="list-unstyled">
-                        <li class="d-flex align-items-center gap-3 mb-3">
-                            <img src="https://storage.googleapis.com/a1aa/image/ijLC10jshGVG4_HQyAyMrqMQPBoFIktLJTsibzJx3BA.jpg" alt="User avatar" class="rounded-circle" width="50" height="50">
-                            <div>
-                                <h3 class="fs-6 fw-bold mb-1">Ngày Bình Yên</h3>
-                                <p class="text-secondary mb-1">Quán cà phê đẹp và yên tĩnh</p>
-                                <p class="text-secondary mb-0">4.0 <span class="text-warning"><i class="fas fa-star"></i></span></p>
-                            </div>
-                        </li>
-                        <li class="d-flex align-items-center gap-3 mb-3">
-                            <img src="https://storage.googleapis.com/a1aa/image/ijLC10jshGVG4_HQyAyMrqMQPBoFIktLJTsibzJx3BA.jpg" alt="User avatar" class="rounded-circle" width="50" height="50">
-                            <div>
-                                <h3 class="fs-6 fw-bold mb-1">Ngày Bình Yên</h3>
-                                <p class="text-secondary mb-1">Quán cà phê đẹp và yên tĩnh</p>
-                                <p class="text-secondary mb-0">4.0 <span class="text-warning"><i class="fas fa-star"></i></span></p>
-                            </div>
-                        </li>
-                        <li class="d-flex align-items-center gap-3 mb-3">
-                            <img src="https://storage.googleapis.com/a1aa/image/ijLC10jshGVG4_HQyAyMrqMQPBoFIktLJTsibzJx3BA.jpg" alt="User avatar" class="rounded-circle" width="50" height="50">
-                            <div>
-                                <h3 class="fs-6 fw-bold mb-1">Ngày Bình Yên</h3>
-                                <p class="text-secondary mb-1">Quán cà phê đẹp và yên tĩnh</p>
-                                <p class="text-secondary mb-0">4.0 <span class="text-warning"><i class="fas fa-star"></i></span></p>
-                            </div>
-                        </li>
-                        <li class="d-flex align-items-center gap-3 mb-3">
-                            <img src="https://storage.googleapis.com/a1aa/image/ijLC10jshGVG4_HQyAyMrqMQPBoFIktLJTsibzJx3BA.jpg" alt="User avatar" class="rounded-circle" width="50" height="50">
-                            <div>
-                                <h3 class="fs-6 fw-bold mb-1">Ngày Bình Yên</h3>
-                                <p class="text-secondary mb-1">Quán cà phê đẹp và yên tĩnh</p>
-                                <p class="text-secondary mb-0">4.0 <span class="text-warning"><i class="fas fa-star"></i></span></p>
-                            </div>
-                        </li>
-                        <li class="d-flex align-items-center gap-3 mb-3">
-                            <img src="https://storage.googleapis.com/a1aa/image/ijLC10jshGVG4_HQyAyMrqMQPBoFIktLJTsibzJx3BA.jpg" alt="User avatar" class="rounded-circle" width="50" height="50">
-                            <div>
-                                <h3 class="fs-6 fw-bold mb-1">Ngày Bình Yên</h3>
-                                <p class="text-secondary mb-1">Quán cà phê đẹp và yên tĩnh</p>
-                                <p class="text-secondary mb-0">4.0 <span class="text-warning"><i class="fas fa-star"></i></span></p>
-                            </div>
-                        </li>
-                    </ul>
+    <div class="bg-white p-4 rounded shadow-sm mb-4">
+        <h2 class="fs-5 fw-bold mb-3">Quản lý đánh giá</h2>
+        <ul class="list-unstyled">
+            <li class="d-flex align-items-center gap-3 mb-3">
+                <img src="{{ asset('frontend/images/c2.jpg') }}" alt="User avatar" class="rounded-circle" width="50" height="50">
+                <div>
+                    <h3 class="fs-6 fw-bold mb-1">𝐑𝐮𝐬𝐭𝐢𝐜 𝐓𝐞𝐚 & 𝐂𝐨𝐟𝐟𝐞𝐞</h3>
+                    <p class="text-secondary mb-1">Không gian rất yên tĩnh, phù hợp để học bài.</p>
+                    <p class="text-secondary mb-0">4.0 <span class="text-warning"><i class="fas fa-star"></i></span></p>
                 </div>
-            </div>
-        </div>
+            </li>
+            <li class="d-flex align-items-center gap-3 mb-3">
+                <img src="{{ asset('frontend/images/c3.jpg') }}" alt="User avatar" class="rounded-circle" width="50" height="50">
+                <div>
+                    <h3 class="fs-6 fw-bold mb-1">𝐑𝐮𝐬𝐭𝐢𝐜 𝐓𝐞𝐚 & 𝐂𝐨𝐟𝐟𝐞𝐞</h3>
+                    <p class="text-secondary mb-1">Thức uống ngon, nhân viên phục vụ nhiệt tình.</p>
+                    <p class="text-secondary mb-0">4.5 <span class="text-warning"><i class="fas fa-star"></i></span></p>
+                </div>
+            </li>
+            <li class="d-flex align-items-center gap-3 mb-3">
+                <img src="{{ asset('frontend/images/c4.jpg') }}" alt="User avatar" class="rounded-circle" width="50" height="50">
+                <div>
+                    <h3 class="fs-6 fw-bold mb-1">𝐑𝐮𝐬𝐭𝐢𝐜 𝐓𝐞𝐚 & 𝐂𝐨𝐟𝐟𝐞𝐞</h3>
+                    <p class="text-secondary mb-1">Thiết kế quán rất xinh xắn, chụp ảnh đẹp.</p>
+                    <p class="text-secondary mb-0">4.8 <span class="text-warning"><i class="fas fa-star"></i></span></p>
+                </div>
+            </li>
+            <li class="d-flex align-items-center gap-3 mb-3">
+                <img src="{{ asset('frontend/images/c5.jpg') }}" alt="User avatar" class="rounded-circle" width="50" height="50">
+                <div>
+                    <h3 class="fs-6 fw-bold mb-1">𝐑𝐮𝐬𝐭𝐢𝐜 𝐓𝐞𝐚 & 𝐂𝐨𝐟𝐟𝐞𝐞</h3>
+                    <p class="text-secondary mb-1">Mở nhạc nhẹ dễ chịu, có cả ổ điện để làm việc.</p>
+                    <p class="text-secondary mb-0">4.2 <span class="text-warning"><i class="fas fa-star"></i></span></p>
+                </div>
+            </li>
+            <li class="d-flex align-items-center gap-3 mb-3">
+                <img src="{{ asset('frontend/images/c6.jpg') }}" alt="User avatar" class="rounded-circle" width="50" height="50">
+                <div>
+                    <h3 class="fs-6 fw-bold mb-1">𝐑𝐮𝐬𝐭𝐢𝐜 𝐓𝐞𝐚 & 𝐂𝐨𝐟𝐟𝐞𝐞</h3>
+                    <p class="text-secondary mb-1">Vị trí trung tâm, dễ tìm và rất thuận tiện.</p>
+                    <p class="text-secondary mb-0">4.3 <span class="text-warning"><i class="fas fa-star"></i></span></p>
+                </div>
+            </li>
+        </ul>
     </div>
+</div>
+
 @endsection
           

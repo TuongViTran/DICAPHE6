@@ -73,49 +73,63 @@
                                         <h3 class="card-title mb-0 fw-bold">{{ $shop->shop_name }}</h3>
                                         <div class="d-flex align-items-center gap-2">
                                         @php
-                                                $style = $shop->style;
-                                                $bgColor = '#DFFEF2';
-                                                $textColor = '#00B140';
+                                            $styleId = $shop->styles_id ?? null; // ← lấy id style từ cột đã select
 
-                                                if ($style) {
-                                                    switch ($style->id) {
-                                                        case 1:
-                                                            $bgColor = '#EBF6F4'; $textColor = '#0F4C3A'; break; // Truyền thống
-                                                        case 2:
-                                                            $bgColor = '#F1E8F8'; $textColor = '#5F276D'; break; // Hiện đại
-                                                        case 3:
-                                                            $bgColor = '#FBF5E6'; $textColor = '#6F4E28'; break; // Công sở
-                                                        case 4:
-                                                            $bgColor = '#F7E7E7'; $textColor = '#76333C'; break; // Nhà máy
-                                                    }
+                                            $bgColor = '#DFFEF2';
+                                            $textColor = '#00B140';
+
+                                            if ($styleId) {
+                                                switch ($styleId) {
+                                                    case 1:
+                                                        $bgColor = '#EBF6F4'; $textColor = '#0F4C3A'; break; // Truyền thống
+                                                    case 2:
+                                                        $bgColor = '#F1E8F8'; $textColor = '#5F276D'; break; // Hiện đại
+                                                    case 3:
+                                                        $bgColor = '#FBF5E6'; $textColor = '#6F4E28'; break; // Công sở
+                                                    case 4:
+                                                        $bgColor = '#F7E7E7'; $textColor = '#76333C'; break; // Nhà máy
                                                 }
-                                            @endphp
+                                            }
+                                        @endphp
 
-                                            @if($style)
-                                                <span class="badge" style="background-color: {{ $bgColor }}; color: {{ $textColor }}; font-size: 1rem; font-weight: 500; padding: 6px 16px; border-radius: 999px; margin:0 5px 0 5px ">
-                                                    {{ $style->style_name }}
-                                                </span>
-                                            @endif
+                                        @if (!empty($shop->style_name))
+                                            <span class="badge" style="background-color: {{ $bgColor }}; color: {{ $textColor }}; font-size: 1rem; font-weight: 500; padding: 6px 16px; border-radius: 999px; margin:0 5px 0 5px ">
+                                                {{ $shop->style_name }}
+                                            </span>
+                                        @endif
+
+
                                             <span class="badge bg-{{ $shop->status === 'open' ? 'success' : 'secondary' }}">
                                                 {{ $shop->status === 'open' ? 'Đang mở cửa' : 'Đã đóng cửa' }}
                                             </span>
-                                            <div class="text-danger small">
+
+                                            <div class="text-danger small mb-1">
                                                 <i class="fas fa-heart me-1"></i> Đã thích | {{ number_format($shop->likes_count ?? 0) }}
                                             </div>
+
+                                            @if(isset($shop->distance))
+                                                <div class="text-muted small">
+                                                    <i class="fas fa-map-marker-alt me-1"></i> Khoảng cách: {{ $shop->distance }} km
+                                                </div>
+                                            @endif
+
+
                                         </div>
                                     </div>
 
                                     {{-- Đánh giá sao --}}
-                                    <div class="mb-2">
-                                        @for ($i = 1; $i <= 5; $i++)
-                                            @if ($i <= round($shop->rating))
-                                                <i class="fas fa-star text-warning"></i>
+                                    @php $rating = $shop->reviews_avg_rating ?? 0; @endphp
+                                        <div class="mb-2">
+                                            @for ($i = 1; $i <= 5; $i++)
+                                                <i class="{{ $i <= round($rating) ? 'fas' : 'far' }} fa-star text-warning"></i>
+                                            @endfor
+                                            @if ($rating > 0)
+                                                <small class="text-muted">({{ number_format($rating, 1) }})</small>
                                             @else
-                                                <i class="far fa-star text-warning"></i>
+                                                <small class="text-muted">Chưa có đánh giá</small>
                                             @endif
-                                        @endfor
-                                        <small class="text-muted">({{ number_format($shop->rating, 1) }})</small>
-                                    </div>
+                                        </div>
+
 
                                     {{-- Thông tin chi tiết --}}
                                     <ul class="list-unstyled text-muted mb-0 small">
@@ -132,22 +146,32 @@
                                             @endif
 
 
+
+                                        </li>
+                                        <li>
+                                            <i class="fas fa-map-marker-alt me-1"></i>
+                                            @if (isset($shop->address))
+                                                {{ $shop->address->street }}, {{ $shop->address->ward }}
+                                            @else
+                                                <span class="text-muted">Chưa cập nhật địa chỉ</span>
+                                            @endif
                                         </li>
 
-                                        <li>
-                                            <i class="fas fa-map-marker-alt me-1"></i> 
-                                            {{ $shop->address->street }}, {{ $shop->address->ward }}
-                                        </li>
                                     </ul>
                                 </div>
 
                                 {{-- Avatar chủ quán --}}
                                 <div class="d-flex align-items-center mt-3">
-                                    <img src="{{ asset('frontend/images/' . ($shop->user->avatar_url ?? 'avt.png')) }}"
-                                         class="rounded-circle me-2"
-                                         width="50" height="50" alt="Chủ quán">
-                                    <span class="text-muted small">{{ $shop->user->full_name ?? 'Chủ quán' }}</span>
+                                    @php
+                                        $avatar = $shop->user->avatar_url ?? 'avt.png';
+                                        $fullName = $shop->user->full_name ?? 'Chủ quán';
+                                    @endphp
+                                    <img src="{{ asset('frontend/images/' . $avatar) }}"
+                                        class="rounded-circle me-2"
+                                        width="50" height="50" alt="Chủ quán">
+                                    <span class="text-muted small">{{ $fullName }}</span>
                                 </div>
+
                             </div>
                         </div>
                     </div>
@@ -169,15 +193,4 @@
 </div>
 @endsection
 
-@section('scripts')
-<script>
-    window.coffeeShops = @json($coffeeShops->map(function ($shop) {
-        return [
-            'id' => $shop->id,
-            'latitude' => $shop->address->latitude,
-            'longitude' => $shop->address->longitude
-        ];
-    }));
-</script>
-<script src="{{ asset('frontend/js/seacher.js') }}"></script>
-@endsection
+
