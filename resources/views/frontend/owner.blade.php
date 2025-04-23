@@ -424,7 +424,7 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="content" class="form-label">Nội dung</label>
-                                    <textarea id="content" name="content" class="form-control ckeditor"></textarea>
+                                    <textarea id="content" name="content" class="form-control ckeditor" ></textarea>
                                 </div>
                                 <button type="submit" class="btn btn-primary">Lưu bài viết</button>
                             </form>
