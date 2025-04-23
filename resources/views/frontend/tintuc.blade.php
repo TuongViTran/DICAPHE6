@@ -7,7 +7,7 @@
     <div class="content_slider col-md-6">
       <div class="slider" id="content-slider">
         @foreach($sliderPosts as $post)
-          <div class="slide">
+          <div class= "slide">
             <h2>{{ $post->title }}</h2>
             <p>{{ Str::limit(strip_tags($post->content), 150) }}</p>
             <p class="tacgia">
@@ -82,9 +82,22 @@
         </a>
       @endforeach
       <!-- Pagination -->
-      <div class="mt-3">
-            {{ $posts->links('pagination::bootstrap-5') }}
-        </div>
+      <div class="d-flex justify-content-center mt-3">
+      {{ $posts->links() }} 
+      </div>
+      <style>
+          .pagination {
+              margin: 0;
+              gap: 4px;
+          }
+          .pagination li {
+              margin: 0 !important;
+          }
+          .pagination .page-item .page-link {
+              padding: 0.3rem 0.6rem;
+              border-radius: 0.25rem;
+          }
+      </style>
 
     </div>
 

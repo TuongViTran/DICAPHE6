@@ -44,7 +44,7 @@
                     <p class="fs-5 fw-bold mb-0">607</p>
                 </div>
                 <div>
-                    <p class="fs-6 text-secondary mb-1">Đã tìm quán</p>
+                    <p class="fs-6 text-secondary mb-1">Feedback</p>
                     <p class="fs-5 fw-bold mb-0">1.004k</p>
                 </div>
             </div>

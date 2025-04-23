@@ -30,10 +30,12 @@ class PostController extends Controller
     // Hàm hiển thị trang Blog với bài viết và slider
     public function Blog_Post()
     {
-        $posts = Post::with('user')
-        ->where('status', 'Published')
-        ->orderBy('created_at', 'desc')
-        ->paginate(5); // paginate phải là bước cuối cùng
+        // $posts = Post::with('user')
+        // ->where('status', 'Published')
+        // ->orderBy('created_at', 'desc')
+        // ->paginate(4); 
+
+        $posts = Post::orderBy('created_at', 'desc')->where('status', 'Published')->paginate(4);
 
         // Lấy 3 bài viết cho slider
         $sliderPosts = Post::where('status', 'Published')
