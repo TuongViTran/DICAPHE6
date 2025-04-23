@@ -8,6 +8,7 @@
       <div class="slider" id="content-slider">
         @foreach($sliderPosts as $post)
           <div class="slide">
+          <a href="{{ route('posts.show', $post->id) }}" class="text-decoration-none text-dark">
             <h2>{{ $post->title }}</h2>
             <p>{{ Str::limit(strip_tags($post->content), 150) }}</p>
             <p class="tacgia">
@@ -15,6 +16,7 @@
               {{ \Carbon\Carbon::parse($post->created_at)->format('d/m/Y') }} |
               Tác giả: {{ $post->user->full_name ?? 'Ẩn danh' }}
             </p>
+          </a>
           </div>
         @endforeach
       </div>
@@ -23,6 +25,7 @@
         @foreach($posts->skip(1)->take(3) as $post)
           <div class="col-md-4 mb-4">
             <div class="custom-card">
+            <a href="{{ route('posts.show', $post->id) }}" class="text-decoration-none text-dark">
               <div class="card-image" style="background-image: url('{{ asset('storage/uploads/posts/' . $post->image_url) }}');">
                 <div class="overlay"></div>
                 <div class="card-content">
@@ -30,6 +33,7 @@
                   <p class="card-text">{{ Str::limit(strip_tags($post->content), 50) }}</p>
                 </div>
               </div>
+              </a>
             </div>
           </div>
         @endforeach
