@@ -37,12 +37,7 @@
                         <div class="form-check">
                             <input type="checkbox" name="distance[]" value="1"
                                 {{ is_array(request('distance')) && in_array("1", request('distance')) ? 'checked' : '' }}>
-                            <label>< 1km</label>
-                        </div>
-                        <div class="form-check">
-                            <input type="checkbox" name="distance[]" value="2"
-                                {{ is_array(request('distance')) && in_array("2", request('distance')) ? 'checked' : '' }}>
-                            <label>Có thể đi bộ (≈ 2km)</label>
+                            <label>Có thể đi bộ (≈ 1km)</label>
                         </div>
                         <div class="form-check">
                             <input type="checkbox" name="distance[]" value="3"

@@ -142,7 +142,7 @@ Route::middleware('auth')->group(function () {
 Route::post('/review/{id}/like', [ReviewController::class, 'likeReview']);
 
 // Shop
-Route::get('/shop/{id}', [ShopController::class, 'show']);
+Route::get('/shop/{id}', [ShopController::class, 'show'])->name('frontend.shop');
 
 // Middleware auth cho update và delete review
 Route::middleware(['auth'])->group(function () {

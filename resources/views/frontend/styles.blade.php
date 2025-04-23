@@ -15,6 +15,7 @@
                     </div>
                 @else
                     @foreach ($coffeeshops as $shop)
+                    <a href="{{ route('frontend.shop', ['id' => $shop->id]) }}" class="text-decoration-none text-dark">
                         <div class="card mb-4 shadow-sm">
                             <div class="row g-0">
                                 {{-- Hình ảnh --}}
@@ -101,6 +102,7 @@
                                 </div>
                             </div>
                         </div>
+                    </a> 
                     @endforeach
                 @endif
             </div>
