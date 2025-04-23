@@ -6,6 +6,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
 @section('content')
+
 <div class="grid grid-cols-3 gap-4 mb-6">
     <!-- Tổng quán cà phê -->
     <div class="bg-blue-500 text-white p-4 rounded-xl flex items-center">
@@ -19,7 +20,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Tổng người dùng -->
     <div class="bg-yellow-500 text-white p-4 rounded-xl flex items-center">
         <img src="{{ asset('backend/img/Icon (admin)/Icon_ người dùng.svg') }}" alt="User  Icon" class="w-10 h-10">
@@ -35,7 +36,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Tổng bài viết -->
     <div class="bg-red-500 text-white p-4 rounded-xl flex items-center">
         <img src="{{ asset('backend/img/Icon (admin)/Icon_ tổng bài viết.svg') }}" alt="Post Icon" class="w-10 h-10">
@@ -52,6 +53,7 @@
         </div>
     </div>
 </div>
+
 
 <div class="grid grid-cols-3 gap-4 mb-6">
     <div class="col-span-2 bg-white p-4 rounded-lg shadow">
@@ -73,7 +75,8 @@
                         <div class="w-10 h-5 bg-[#f5c41d] rounded-full shadow-inner"></div>
                         <div class="dot absolute left-[2px] top-[2px] bg-white w-4 h-4 rounded-full shadow transition transform translate-x-5"></div>
                     </div>
-                    <span class="text-gray-800 font-medium">Chủ quán</span>
+                    <span class="text-gray-800 font-medium">
+                    Chủ quán</span>
                 </div>
             </div>
         </div>
@@ -82,38 +85,50 @@
         </div>
     </div>
 
-    <div class="col-span-1 bg-white p-4 rounded-lg shadow relative">
+    <div class="col-span-1 bg-white p-6 rounded-2xl shadow-md">
         <div class="flex justify-between items-center mb-4">
-            <h3 class="text-lg font-bold">Khách hàng đăng kí gần đây :</h3>
+            <h3 class="text-lg font-bold text-gray-800">Khách hàng đăng kí gần đây :</h3>
             <a href="#" class="text-blue-500 text-sm font-semibold hover:underline">Xem thêm</a>
         </div>
-        <ul>
-            @php
-            $users = [
-                ['name' => 'Hoàng Long', 'role' => 'Khách hàng', 'time' => '24/11/2025 - 08:56', 'avatar' => 'frontend/images/c1.jpg'],
-                ['name' => 'Nguyễn Văn An', 'role' => 'Chủ quán', 'time' => '24/11/2025 - 09:00', 'avatar' => 'frontend/images/c2.jpg'],
-                ['name' => 'Trần Thị Thúy', 'role' => 'Khách hàng', 'time' => '24/11/2025 - 09:15', 'avatar' => 'frontend/images/c3.jpg'],
-                ['name' => 'Lê Thảo', 'role' => 'Chủ quán', 'time' => '24/11/2025 - 09:30', 'avatar' => 'frontend/images/c4.jpg'],
-            ];
-            @endphp
 
-            @foreach ($users as $user)
-                <li class="flex items-center justify-between mb-4">
-                    <div class="flex items-center flex-grow">
-                        <div>
-                            <img src="{{ asset($user['avatar']) }}" alt="Avatar" class="w-10 h-10 rounded-full mr-3 border border-gray-300 shadow-sm">
-                        </div>
-                        <div>
-                            <p class="font-bold">{{ $user['name'] }}</p>
-                            <p class="text-sm text-gray-600">đã đăng kí thành công</p>
-                            <p class="text-xs text-gray-500">{{ $user['time'] }}</p>
-                        </div>
-                    </div>
-                    <span class="bg-{{ $user['role'] == 'Khách hàng' ? 'green-100' : 'orange-100' }} text-{{ $user['role'] == 'Khách hàng' ? 'green-700' : 'red-700' }} text-xs font-semibold px-3 py-1 rounded-2xl shadow-sm">
-                        {{ $user['role'] }}
-                    </span>
-                </li>
-            @endforeach
+        <ul class="space-y-5">
+           @php
+    $displayedUsers = $latestUsers->filter(function($user) {
+        return in_array($user->role, ['user', 'owner']);
+    })->take(4);
+@endphp
+
+<ul class="space-y-5">
+    @forelse ($displayedUsers as $user)
+        <li class="flex justify-between items-center">
+            <div class="flex items-center gap-3 min-w-0">
+                <img 
+                    src="{{ $user->avatar_url ? asset('frontend/images/' . basename($user->avatar_url)) : asset('frontend/images/avt.png') }}"
+                    onerror="this.onerror=null; this.src='{{ asset('frontend/images/avt.png') }}';"
+                    alt="{{ $user->full_name }}"
+                    class="w-12 h-12 rounded-full border border-gray-300 shadow-sm flex-shrink-0 object-cover"
+                >
+                <div class="min-w-0">
+                    <p class="font-bold text-gray-800 truncate">{{ $user->full_name }}</p>
+                    <p class="text-xs text-gray-500 leading-4">đã đăng kí thành công</p>
+                    <p class="text-[10px] text-gray-400 leading-3">{{ $user->created_at->format('d/m/Y - H:i') }}</p>
+                </div>
+            </div>
+            <span class="px-4 py-1 rounded-full text-xs font-semibold shadow-sm whitespace-nowrap
+                @if ($user->role === 'user')
+                    bg-green-100 text-green-700
+                @elseif ($user->role === 'owner')
+                    bg-orange-100 text-orange-700
+                @endif
+            ">
+                {{ $user->role === 'user' ? 'Khách hàng' : 'Chủ quán' }}
+            </span>
+        </li>
+    @empty
+        <li class="text-center text-gray-500 text-sm">Chưa có người dùng mới.</li>
+    @endforelse
+</ul>
+
         </ul>
     </div>
 </div>
@@ -150,7 +165,7 @@
                             </td>
                             <td class="py-2 px-2">
                                 <span title="Tổng {{ $shop->five_star_reviews_count ?? 0 }} lượt đánh giá 5 sao"
-                                      class="flex items-center gap-1 px-2 py-0.5 bg-green-100 text-green-700 text-[10px] rounded-full">
+                                      class="flex items-center gap-1 px-2 py-0.5 bg-green-100 text-green-700 text-[10                                    px] rounded-full">
                                     ✅ Tốt
                                 </span>
                             </td>
@@ -244,7 +259,7 @@
                     <span>Nhà máy</span>
                     <span class="font-bold">60%</span>
                 </div>
-                <div class="w-full bg-gray-200 rounded-full h-2">
+                <div class="w-full bg-gray-200                 rounded-full h-2">
                     <div class="bg-yellow-500 h-2 rounded-full" style="width: 60%;"></div>
                 </div>
             </div>

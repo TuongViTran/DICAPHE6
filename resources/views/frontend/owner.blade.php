@@ -613,6 +613,9 @@
         <p class="text-center text-muted mt-4" style="font-style: italic;">Chưa có đánh giá nào.</p>
     @else
         @foreach ($reviews as $review)
+        @php
+    $userLiked = auth()->check() && $review->likedUsers->contains(auth()->id());
+@endphp  
         <div class="d-flex align-items-start gap-3 mb-4">
         <!-- Avatar -->
         <img src="{{ asset('frontend/images/' . basename($review->user->avatar_url)) }}"
@@ -625,7 +628,11 @@
             <p class="mb-1" style="font-size: 14px;">
                 <strong>{{ $review->user->full_name ?? 'Người dùng ẩn danh' }}</strong>
                 <span class="text-muted"> đang ở tại </span>
-                <strong>{{ $review->shop->shop_name ?? 'Quán ẩn danh' }}</strong>
+                <strong>
+                    <a href="{{ route('frontend.shop', ['id' => $review->shop->id]) }}">
+                        <strong>{{ $review->shop->shop_name }}</strong>
+                    </a>
+                </strong>
             </p>
 
             <p class="mb-1" style="font-size: 14px;">{{ $review->content }}</p>
@@ -645,11 +652,11 @@
             </div>
 
             <!-- Nút like cố định -->
-            <button class="like-button"
-                    data-id="{{ $review->id }}"
-                    style="position: absolute; top: 0; right: 0; border: none; background: none; cursor: pointer;">
-                <i class="far fa-heart"></i>
-            </button>
+            <button class="like-button" 
+                                data-id="{{ $review->id }}" 
+                                style="border: none; background: none; cursor: pointer; position: absolute; top: 35px; right: 15px;">
+                                <i class="fa{{ $userLiked ? 's' : 'r' }} fa-heart text-{{ $userLiked ? 'danger' : 'dark' }}"></i>
+                            </button>
         </div>
     </div>
 
@@ -730,7 +737,50 @@
 @endif
 @endsection
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="{{ asset('frontend/js/save-favorite.js') }}"></script>    
+<script src="{{ asset('frontend/js/save-favorite.js') }}"></script>  
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const likeButtons = document.querySelectorAll('.like-button');
+
+    likeButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const reviewId = button.getAttribute('data-id');
+
+            fetch(`/review/${reviewId}/like`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({})
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const icon = button.querySelector('i');
+                    const likeCount = button.parentElement.querySelector('.like-count');
+
+                    if (data.liked) {
+                        icon.classList.remove('far');
+                        icon.classList.add('fas', 'text-danger');
+                        icon.classList.remove('text-dark');
+                    } else {
+                        icon.classList.remove('fas', 'text-danger');
+                        icon.classList.add('far', 'text-dark');
+                    }
+
+                    if (likeCount) {
+                        likeCount.textContent = data.likes_count;
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    });
+});
+</script>  
 <style>
 /* Trạng thái mặc định (Lưu) */
 .save-btn {

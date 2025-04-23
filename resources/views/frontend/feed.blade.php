@@ -137,7 +137,12 @@
     
                     <div style="margin-top:15px">
                         <strong>{{ $review->user->full_name ?? 'Người dùng ẩn danh' }}</strong>
-                        <span style="max-width: 30px; "> đang ở tại <strong >{{ $review->shop->shop_name ?? 'Người dùng ẩn danh' }}</strong>
+                        <span style="max-width: 30px; "> đang ở tại 
+                            <strong >  
+                                <a href="{{ route('frontend.shop', ['id' => $review->shop->id]) }}">
+                                <strong>{{ $review->shop->shop_name }}</strong>
+                                </a>
+                            </strong>
                         </span>
     
                         <div style="display:flex">
