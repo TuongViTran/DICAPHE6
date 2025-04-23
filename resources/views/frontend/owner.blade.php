@@ -23,7 +23,7 @@
         <div class="p-4 rounded shadow-sm mb-4 d-flex align-items-center justify-content-around" style="background: linear-gradient(to bottom,rgb(241, 215, 180), #fbc2eb00);">
             <!-- Cột bên trái: Ảnh đại diện + Thông tin quán -->
             <div class="d-flex flex-column align-items-center">
-                <img src="{{ asset('frontend/images/' . ($coffeeShop->user->avatar_url ?? 'avt.png')) }}"  alt="User profile picture" class="rounded-circle mb-2" width="90" height="90" style="box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+                <img src="{{ asset('frontend/images/' . basename($coffeeShop->user->avatar_url ?? 'avt.png')) }}"  alt="User profile picture" class="rounded-circle mb-2" width="90" height="90" style="box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
                 
                 <div class="text-left">
                     <h4 class="text-center fw-bold mb-1">Chủ quán: {{ $coffeeShop->user->full_name }}</h4>
@@ -44,7 +44,7 @@
                     <p class="fs-5 fw-bold mb-0">607</p>
                 </div>
                 <div>
-                    <p class="fs-6 text-secondary mb-1">Đã tìm quán</p>
+                    <p class="fs-6 text-secondary mb-1">Feedback</p>
                     <p class="fs-5 fw-bold mb-0">1.004k</p>
                 </div>
             </div>
@@ -518,7 +518,6 @@
         @endforeach
     </div>
     </div>
-
     <div class="col-lg-4">
                 
     <div class="bg-white p-4 rounded shadow-sm mb-4">
@@ -575,7 +574,16 @@
 </div>
 
     </div>
+
         </div>
+    </div>
+
+        @endforeach
+    @endif
+
+    </ul>
+</div>
+
     </div>
 @endsection
           

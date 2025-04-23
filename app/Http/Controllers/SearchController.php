@@ -25,8 +25,8 @@ class SearchController extends Controller
         $latitude = $latitude ?: 16.4724736;
         $longitude = $longitude ?: 107.56096;
 
-        // Công thức tính khoảng cách
-        $distanceFormula = "
+        // Công thức có alias -> dùng cho SELECT
+            $distanceFormula = "
             111.045 * DEGREES(
                 ACOS(
                     LEAST(1.0, 
@@ -37,7 +37,22 @@ class SearchController extends Controller
                     )
                 )
             ) AS distance
-        ";
+            ";
+
+            // Công thức không có alias -> dùng trong WHERE
+            $distanceOnlyFormula = "
+            111.045 * DEGREES(
+                ACOS(
+                    LEAST(1.0, 
+                        COS(RADIANS(?)) * COS(RADIANS(addresses.latitude)) 
+                        * COS(RADIANS(addresses.longitude) - RADIANS(?)) 
+                        + SIN(RADIANS(?)) 
+                        * SIN(RADIANS(addresses.latitude))
+                    )
+                )
+            )
+            ";
+
 
         $query = DB::table('coffeeshop')
         ->join('addresses', 'coffeeshop.address_id', '=', 'addresses.id')
@@ -95,10 +110,19 @@ class SearchController extends Controller
         }
 
         // --- Lọc theo khoảng cách ---
-        $distanceSelected = $request->input('distance');
-        if ($distanceSelected && is_numeric($distanceSelected)) {
-            $query->whereRaw("$distanceFormula <= ?", [$latitude, $longitude, $latitude, $distanceSelected]);
+        $distanceRanges = $request->input('distance', []);
+        if (!empty($distanceRanges) && is_array($distanceRanges)) {
+            $query->where(function ($q) use ($distanceRanges, $latitude, $longitude, $distanceOnlyFormula) {
+                foreach ($distanceRanges as $range) {
+                    if (is_numeric($range)) {
+                        $q->orWhereRaw("($distanceOnlyFormula) <= ?", [
+                            $latitude, $longitude, $latitude, $range
+                        ]);
+                    }
+                }
+            });
         }
+
 
         $coffeeShops = $query->get();
 

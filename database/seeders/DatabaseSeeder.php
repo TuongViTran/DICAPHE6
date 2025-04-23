@@ -214,10 +214,10 @@ class DatabaseSeeder extends Seeder
                 'user_id' => 1,
                 'description' => 'Không gian thoải mái, lý tưởng cho làm việc,quán gần đây.',
                 'address_id' => 1,
-                'status' => 'open',
+                'status' => 'Đang mở cửa',
                 'opening_time' => '07:00:00',
                 'closing_time' => '22:00:00',
-                'parking' => 'Có',
+                'parking' => 'Chỗ đậu xe miễn phí',
                 'wifi_password' => 'thecoffee123',
                 'hotline' => '19001001',
                 'reviews_avg_rating' => 4.5,
@@ -239,10 +239,10 @@ class DatabaseSeeder extends Seeder
                 'description' => 'Chuyện nép mình ở một góc phố bình lặng, dưới hàng cây cao lớn, mang nét Việt giản đơn và ấm áp. Gian nhà mái ngói của 𝑪𝒉𝒖𝒚𝒆̣̂𝒏 đã ngập tràn không khí Xuân,
                  trang trí đơn giản mà hợp vibes, với đầy sắc đỏ may mắn,Không gian thoải mái',
                 'address_id' => 2,
-                'status' => 'open',
+                'status' => 'Đang mở cửa',
                 'opening_time' => '08:00:00',
                 'closing_time' => '23:00:00',
-                'parking' => 'Có',
+                'parking' => 'Chỗ đậu xe rộng rãi, miễn phí',
                 'wifi_password' => 'chuyen456',
                 'hotline' => '19001002',
                 'reviews_avg_rating' => 4.2,
@@ -264,7 +264,7 @@ class DatabaseSeeder extends Seeder
                 'description' =>'mang hơi thở industrial đầy cá tính, kết cấu không gian đơn giản từ ngôi nhà cũ được cải tạo, thông phá; nội thất tối giản, gam màu - vật liệu mạnh mẽ. Tuy nhiên tổng thể phong cách có phần quen thuộc, 
                   chưa đẫm nét sáng tạo, điểm nổi bật riêng',
                 'address_id' => 3,
-                'status' => 'open',
+                'status' => 'Đang mở cửa',
                 'opening_time' => '06:30:00',
                 'closing_time' => '21:30:00',
                 'parking' => 'Không',
@@ -289,7 +289,7 @@ class DatabaseSeeder extends Seeder
                 'description' => 'Tọa độ mới đầy nổi bật trên con đường dọc bờ sông Hàn - ThìLà mang một nét riêng độc đáo, sáng tạo, chứa đựng hồn Việt nhẹ nhàng. Không gian quán vừa phải, mặt tiền trải dài cùng đường nét kiến trúc tạo cảm giác to lớn. Trải nghiệm ThìLà ta cảm nhận được sự đầy tư chỉn chu từ câu chuyện đến vật liệu, nội thất, 
                 ánh sáng,...; sự hài hòa giữa cũ và mới đem lại sự thư thái, dễ chịu',
                 'address_id' => 4,
-                'status' => 'closed',
+                'status' => 'Đã đóng cửa',
                 'opening_time' => '09:00:00',
                 'closing_time' => '21:00:00',
                 'parking' => 'Có',
@@ -314,7 +314,7 @@ class DatabaseSeeder extends Seeder
                 'description' => 'Bòng café được tách khỏi sự nhộn nhịp của một con đường trung tâm thành phố bằng khoảng sân vườn nhỏ trước nhà,
                  bạn sẽ ngạc nhiên bởi không gian rộng rãi bên trong khi bước qua lối vào mặt tiền khá khiêm tốn',
                 'address_id' => 2,
-                'status' => 'closed',
+                'status' => 'Đã đóng cửa',
                 'opening_time' => '09:00:00',
                 'closing_time' => '21:00:00',
                 'parking' => 'Có',
@@ -339,7 +339,7 @@ class DatabaseSeeder extends Seeder
                 'description' => 'vậtthể có thiết kế theo phong cách triển lãm được đôi bạn trẻ đặt hết tâm huyết, 
                 sự sáng,Không gian thoải mái.Tầng 1 của vậtthể là không gian dành cho cà phê, trà-bánh: có tông màu vàng chủ đạo',
                 'address_id' => 2,
-                'status' => 'closed',
+                'status' => 'Đang mở cửa',
                 'opening_time' => '09:00:00',
                 'closing_time' => '21:00:00',
                 'parking' => 'Có',
@@ -435,6 +435,48 @@ class DatabaseSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now()
             ],
+            [
+                'user_id' => 1,
+                'title' => 'Top quán cà phê “ẩn mình” giữa lòng Hà Nội xưa',
+                'description' => 'Giữa phố cổ đông đúc, có những quán cà phê nhỏ mang đậm chất Hà Nội xưa, rất yên tĩnh và hoài niệm.',
+                'content' => 'Danh sách những quán cà phê mang phong cách hoài cổ, nằm nép mình trong những con ngõ nhỏ của Hà Nội – nơi lý tưởng để chill và hoài niệm.',
+                'image_url' => 'post5.webp',
+                'status' => 'Published',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'user_id' => 3,
+                'title' => 'Check-in 5 quán cà phê Đà Lạt đẹp như tranh vẽ',
+                'description' => 'Không gian đồi núi, mây mù và những quán cà phê chill đậm chất Đà Lạt đang chờ bạn khám phá.',
+                'content' => '5 quán cà phê có view thung lũng, nhà gỗ, hoặc phong cách Scandinavian giữa lòng Đà Lạt, rất được giới trẻ săn đón để “sống ảo”.',
+                'image_url' => 'post6.jpg',
+                'status' => 'Published',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'user_id' => 4,
+                'title' => 'Các quán cà phê đẹp ở Đà Nẵng với view biển mát rượi',
+                'description' => 'Bạn vừa muốn uống cà phê vừa được ngắm biển? Đà Nẵng có những địa điểm tuyệt vời dành cho bạn.',
+                'content' => 'Tổng hợp những quán cà phê nằm sát bãi biển Mỹ Khê, nơi bạn có thể chill với bạn bè dưới ánh nắng và gió biển mát lạnh.',
+                'image_url' => 'post7.webp',
+                'status' => 'Published',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            
+            [
+                'user_id' => 2,
+                'title' => 'Những quán cà phê decor độc đáo tại Hội An',
+                'description' => 'Cà phê Hội An nổi bật với sự kết hợp giữa kiến trúc cổ và decor hiện đại, mang đến trải nghiệm cực kỳ “artsy”.',
+                'content' => 'Danh sách các quán cà phê có thiết kế độc đáo, tường vàng, bàn gỗ, đèn lồng – rất đúng chất Hội An nhưng lại pha chút hiện đại, cá tính.',
+                'image_url' => 'post9.jpg',
+                'status' => 'Published',
+                'created_at' => now(),
+                'updated_at' => now()
+            ]
+        
         ]);
 
         DB::table('comment')->insert([

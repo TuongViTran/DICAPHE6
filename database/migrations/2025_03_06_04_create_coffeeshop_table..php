@@ -21,7 +21,7 @@ return new class extends Migration
             // 2. Khóa ngoại liên kết với bảng addresses
             $table->foreignId('address_id')->constrained('addresses')->onDelete('cascade');
     
-            $table->enum('status', ['open', 'closed'])->default('open');
+            $table->enum('status', ['Đang mở cửa', 'Đã đóng cửa'])->default('Đang mở cửa');
             $table->time('opening_time')->nullable();
             $table->time('closing_time')->nullable();
             $table->string('parking')->nullable();
