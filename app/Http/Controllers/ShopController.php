@@ -19,7 +19,16 @@ class ShopController extends Controller
         $latitude = $shop->address->latitude ?? null;
         $longitude = $shop->address->longitude ?? null;
         
-        return view('frontend.shop', compact('coffeeShop','latitude', 'longitude', 'shop'));
+        $savedShops = collect(); // Mặc định là rỗng nếu chưa đăng nhập
+        if (auth()->check()) {
+            $savedShops = \DB::table('favoriteshop')
+                ->where('user_id', auth()->id())
+                ->pluck('shop_id');
+        }
+
+        
+
+        return view('frontend.shop', compact('coffeeShop','latitude', 'longitude', 'shop', 'savedShops'));
         
     }
 }
