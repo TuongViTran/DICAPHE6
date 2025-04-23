@@ -51,6 +51,8 @@ Route::put('/menu/update/{id}', [OwnerController::class, 'update'])->name('menu.
 Route::get('/owner/{id}/info', [OwnerController::class, 'infor'])->name('coffeeshop.owner'); 
 Route::put('/owner/update/{id}', [OwnerController::class, 'updateinfor'])->name('owner.updateinfor'); 
 Route::post('/reviews', [ReviewController::class, 'store'])->name('review.store');
+Route::get('/owner/reviews/{shopId}', [OwnerController::class, 'showShopReviews'])->name('owner.reviews.byshop');
+
 
 // Search 
 Route::get('/search', [SearchController::class, 'search'])->name('search.result');
@@ -153,6 +155,8 @@ Route::get('/thongbao', [NotificationController::class, 'index'])->name('thongba
 // lưu quán
 Route::post('/coffeeshop/favorite/{shopId}', [HomeController::class, 'saveFavorite'])->name('home.saveFavorite');
 
+// bài viết
+Route::get('/post/{id}', [PostController::class, 'show'])->name('post.show');
 
 // Nếu bạn có file auth.php, có thể require ở đây
 // require __DIR__.'/auth.php';

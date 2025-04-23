@@ -739,9 +739,10 @@ nav ul li.active a {
 }
 
 .user-menu {
-    position: relative;
-    display: inline-block;
-    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    /* khoảng cách giữa avatar, tên và role */
 }
 
 .user-avatar {

@@ -1,5 +1,6 @@
 @extends('frontend.layout')
 @section('title','Owner')
+
 @section('content')
 @if(session('success'))
 <div class="alert alert-success alert-dismissible fade show text-center" role="alert" id="successAlert">
@@ -22,10 +23,10 @@
         <div class="p-4 rounded shadow-sm mb-4 d-flex align-items-center justify-content-around" style="background: linear-gradient(to bottom,rgb(241, 215, 180), #fbc2eb00);">
             <!-- Cột bên trái: Ảnh đại diện + Thông tin quán -->
             <div class="d-flex flex-column align-items-center">
-            <img src="{{ asset('frontend/images/' . basename($user->avatar_url ?? 'avt.png')) }}" alt="User profile picture" class="rounded-circle mb-2" width="90" height="90" style="box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+                <img src="{{ asset('frontend/images/' . ($coffeeShop->user->avatar_url ?? 'avt.png')) }}"  alt="User profile picture" class="rounded-circle mb-2" width="90" height="90" style="box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
                 
                 <div class="text-left">
-                    <h4 class="text-center fw-bold mb-1">Chủ quán :{{ $coffeeShop->user->full_name }}</h4>
+                    <h4 class="text-center fw-bold mb-1">Chủ quán: {{ $coffeeShop->user->full_name }}</h4>
                     <p class="text-secondary mb-1"><i class="fa-solid fa-door-open"></i> Open daily: {{ \Carbon\Carbon::parse($coffeeShop->opening_time)->format('H:i') }} - {{ \Carbon\Carbon::parse($coffeeShop->closing_time)->format('H:i') }}</p>
                     <p class="text-secondary mb-1"><i class="fa-solid fa-tags"></i> Price: {{ $coffeeShop->min_price }}k - {{ $coffeeShop->max_price }}k</p>
                     <p class="text-secondary mb-0"><i class="fa-solid fa-location-dot"></i> Address: {{ $coffeeShop->address->street ?? 'Chưa cập nhật' }}</p>
@@ -53,61 +54,103 @@
                 
                 <div class="bg-white p-4 rounded shadow-sm mb-4">
                     <h2 class="fs-5 fw-bold mb-3">Quán của tôi</h2>
-                    <div class="border p-3 rounded shadow-sm bg-white">
-                        <div class="d-flex gap-4">
-                            <!-- Bên trái: Hình ảnh -->
-                            <div class="flex-shrink-0">
-                                <!-- Ảnh lớn (Hình chữ nhật) -->
-                                <img src="{{asset('frontend/images/'. $coffeeShop->cover_image)}}" 
-                                    alt="Ảnh lớn" 
-                                    style="width: 100%; height: 300px; object-fit: cover; border-radius: 8px;">
-                                <!-- Ảnh nhỏ (Hình vuông) -->
-                                <div class="mt-3 d-flex justify-content-between" style="max-width: 380px;">
-                                    <img src="{{asset('frontend/images/'. $coffeeShop->image_1)}}" 
-                                        alt="Image 1" class="rounded" 
-                                        style="width: 32%; height: 110px; object-fit: cover;">
-                                    <img src="{{asset('frontend/images/' . $coffeeShop->image_2)}}" 
-                                        alt="Image 2" class="rounded" 
-                                        style="width: 32%; height: 110px; object-fit: cover;">
-                                    <img src="{{asset('frontend/images/' . $coffeeShop->image_3)}}" 
-                                        alt="Image 3" class="rounded" 
-                                        style="width: 32%; height: 110px; object-fit: cover;">
-                                </div>
-                            </div>
+                    
+                    
+                        <div class="flex flex-col md:flex-row gap-8">
+                            
+                           <!-- Cột trái: Hình ảnh -->
+                                <div class="md:w-1/2">
+                                    <!-- Ảnh lớn -->
+                                    <img 
+                                        alt="Front view of {{ $coffeeShop->shop_name }}" 
+                                        class="rounded-2xl mb-4 w-full object-cover" 
+                                        style="max-height: 240px; object-fit: cover;" 
+                                        src="{{ asset('frontend/images/' . $coffeeShop->cover_image) }}" 
+                                    />
 
-                            <!-- Bên phải: Thông tin quán -->
-                            <div class="flex-grow-1">
-                                <h3 class="fs-4 fw-bold">{{ $coffeeShop->shop_name }}</h3>
-                                <div class="d-flex align-items-center gap-2">
-                                @for ($i = 1; $i <= 5; $i++)
-                                        @if($i <= $coffeeShop->reviews_avg_rating)
-                                        <i class="fa-solid fa-star" style="color: #FFD43B;"></i>
-                                        @else
-                                        <i class="fa-thin fa-star" style="color: #FFD43B;"></i>
-                                        @endif
-                                    @endfor
-                                    <span class="text-secondary">{{ $coffeeShop->rating }}</span>
-                                    <span class="badge bg-success">{{ $coffeeShop->status }}</span>
+                                    <!-- Ảnh nhỏ -->
+                                        <div class="grid grid-cols-3 gap-4">
+                                            @foreach (['image_1', 'image_2', 'image_3'] as $img)
+                                                <div class="rounded-xl overflow-hidden aspect-square">
+                                                    <img 
+                                                        src="{{ asset('frontend/images/' . $coffeeShop->$img) }}" 
+                                                        alt="Ảnh phụ" 
+                                                        class="w-full h-full object-cover"
+                                                    />
+                                                </div>
+                                            @endforeach
+                                        </div>
+
                                 </div>
 
-                                <p class="text-secondary mt-2"><i class="bi bi-clock"></i> Open daily: {{ \Carbon\Carbon::parse($coffeeShop->opening_time)->format('H:i') }} - {{ \Carbon\Carbon::parse($coffeeShop->closing_time)->format('H:i') }}</p>
-                                <p class="text-secondary"><i class="bi bi-cash"></i> Price: {{ $coffeeShop->min_price }} - {{ $coffeeShop->max_price }}</p>
-                                <p class="text-secondary"><i class="bi bi-geo-alt"></i> Address: {{ $coffeeShop->address->street}}, {{ $coffeeShop->address->district}}, {{ $coffeeShop->address->city}} </p>
+                            <!-- Cột phải: Thông tin -->
+                            <div class="md:w-1/2">
+                                <!-- Tên quán -->
+                                <h1 class="text-2xl font-bold font-[Futura] mb-2">{{ $coffeeShop->shop_name }}</h1>
 
-                                <h5 class="fw-bold mt-3">Thông tin</h5>
-                                <p class="mb-1"><strong>Đậu xe:</strong> {{ $coffeeShop->parking }}</p>
-                                <p class="mb-1"><strong>Mật khẩu WiFi:</strong> {{ $coffeeShop->wifi_password }}</p>
-                                <p class="mb-1"><strong>Hotline:</strong> {{ $coffeeShop->phone }}</p>
-                                <div class="mt-3 d-flex gap-3">
-                                    
+                                <!-- Đánh giá & style -->
+                                <div class="flex items-center flex-wrap gap-2 mt-2">
+                                    <!-- Sao đánh giá -->
+                                    <div class="flex text-yellow-500 text-[20px]">
+                                        @php $rating = $coffeeShop->reviews_avg_rating; @endphp
+                                        @for ($i = 1; $i <= 5; $i++)
+                                            @if ($rating >= $i)
+                                                <i class="fas fa-star text-yellow-500 text-[20px]"></i>
+                                            @elseif ($rating >= ($i - 0.5))
+                                                <i class="fas fa-star-half-alt text-yellow-500 text-[20px]"></i>
+                                            @else
+                                                <i class="far fa-star text-yellow-400 text-[20px]"></i>
+                                            @endif
+                                        @endfor
+                                    </div>
+
+
+                                    <!-- Badge phong cách -->
+                                    @php
+                                        $style = $coffeeShop->style;
+                                        $badgeColors = [
+                                            1 => ['#EBF6F4', '#0F4C3A'],
+                                            2 => ['#F1E8F8', '#5F276D'],
+                                            3 => ['#FBF5E6', '#6F4E28'],
+                                            4 => ['#F7E7E7', '#76333C']
+                                        ];
+                                        [$bg, $text] = $badgeColors[$style->id] ?? ['#DFFEF2', '#00B140'];
+                                    @endphp
+
+                                    <span class="rounded-full px-4 py-1 text-xs font-semibold" style="background-color: {{ $bg }}; color: {{ $text }}">
+                                        {{ $style->style_name }}
+                                    </span>
+
+                                    <!-- Badge trạng thái -->
+                                    <span class="rounded-full px-4 py-1 text-xs font-semibold bg-green-100 text-green-700">
+                                        {{ $coffeeShop->status }}
+                                    </span>
+                                </div>
+
+                                <!-- Thời gian, giá, địa chỉ -->
+                                <div class="mt-2  space-y-2 text-gray-600">
+                                    <p><i class="bi bi-clock"></i> Open: {{ \Carbon\Carbon::parse($coffeeShop->opening_time)->format('H:i') }} - {{ \Carbon\Carbon::parse($coffeeShop->closing_time)->format('H:i') }}</p>
+                                    <p><i class="bi bi-cash"></i> Price: {{ $coffeeShop->min_price }} - {{ $coffeeShop->max_price }}</p>
+                                    <p><i class="bi bi-geo-alt"></i> Address: {{ $coffeeShop->address->street }}, {{ $coffeeShop->address->district }}, {{ $coffeeShop->address->city }}</p>
+                                </div>
+
+                                <!-- Thông tin thêm -->
+                                <div class="mt-2">
+                                    <h2 class="text-2xl font-semibold mb-2">Thông tin</h2>
+                                    <p class="text-gray-500 mb-2">IG: @Ngaybinhyen_Giaolộ8</p>
+                                    <p class="text-gray-500 mb-2"><strong>Đậu xe:</strong> {{ $coffeeShop->parking }}</p>
+                                    <p class="text-gray-500 mb-2"><strong>Mật khẩu WiFi:</strong> {{ $coffeeShop->wifi_password }}</p>
+                                    <p class="text-gray-500 mb-2"><strong>Hotline:</strong> {{ $coffeeShop->phone }}</p>
+                                </div>
+
                                     <!-- Button mở Modal menu -->
-                                    <button type="button" class="btn btn-warning text-white" data-bs-toggle="modal" data-bs-target="#menuModal">
+                                    <button type="button" class="btn btn-warning text-white mr-4" data-bs-toggle="modal" data-bs-target="#menuModal">
                                         Menu
                                     </button>
 
                                     <!-- Modal hiển thị danh sách menu -->
                                     <div class="modal fade" id="menuModal" tabindex="-1" aria-labelledby="menuModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog modal-lg">
+                                        <div class="modal-dialog max-w-[600px]">
                                             <div class="modal-content">
                                                 <!-- Modal Header -->
                                                 <div class="modal-header">
@@ -120,7 +163,7 @@
                                                     @if($coffeeShop->menu->count() > 0)
                                                         @foreach ($coffeeShop->menu as $menu)
                                                             <div class="mb-3">
-                                                                <img src="{{ asset('frontend/images/' . $menu->image_url) }}" class="rounded img-fluid mb-2 menu-item" 
+                                                                <img src="{{ asset('frontend/images/' . $menu->image_url) }}" class="rounded img-fluid mb-2 menu-item " 
                                                                     data-menu-id="{{ $menu->id }}" alt="Menu Image">
                                                             </div>
                                                         @endforeach
@@ -326,16 +369,22 @@
                                             </div>
                                         </div>
                                     </div>
+                                      <!-- Nút yêu thích -->
+                                        <div class="flex items-center mt-2 text-black text-base">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" 
+                                                stroke-width="1.5" stroke="red" class="w-5 h-5 mr-1">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M21.752 6.744a5.754 5.754 0 00-9.01-1.308L12 6.34l-.742-.904a5.754 5.754 0 00-9.01 1.308 6.196 6.196 0 001.282 7.684l7.042 6.442a1.5 1.5 0 002.036 0l7.042-6.442a6.196 6.196 0 001.282-7.684z" />
+                                            </svg>
+                                            <span>Đã thích (3,3K)</span>
+                                        </div>
                                 </div>
-                                <!-- Nút yêu thích -->
-                            <div class="mt-2">
-                                <p><i class="fa-solid fa-heart" style="color: #f44206;"></i> Đã thích (3,3K)</p>
+                              
                             </div>
-                            </div>
-                        </div>
+                   
 
                         
-                    </div>
+                  
                 
             
     </div>
@@ -471,52 +520,53 @@
     </div>
 
     <div class="col-lg-4">
-    <div class="bg-white p-4 rounded shadow-sm mb-4">
-        <h2 class="fs-5 fw-bold mb-3">Quản lý đánh giá</h2>
-        <ul class="list-unstyled">
-            <li class="d-flex align-items-center gap-3 mb-3">
-                <img src="{{ asset('frontend/images/c2.jpg') }}" alt="User avatar" class="rounded-circle" width="50" height="50">
-                <div>
-                    <h3 class="fs-6 fw-bold mb-1">𝐑𝐮𝐬𝐭𝐢𝐜 𝐓𝐞𝐚 & 𝐂𝐨𝐟𝐟𝐞𝐞</h3>
-                    <p class="text-secondary mb-1">Không gian rất yên tĩnh, phù hợp để học bài.</p>
-                    <p class="text-secondary mb-0">4.0 <span class="text-warning"><i class="fas fa-star"></i></span></p>
+                <div class="bg-white p-4 rounded shadow-sm mb-4">
+                    <h2 class="fs-5 fw-bold mb-3">Quản lý đánh giá</h2>
+                    <ul class="list-unstyled">
+                        <li class="d-flex align-items-center gap-3 mb-3">
+                            <img src="https://storage.googleapis.com/a1aa/image/ijLC10jshGVG4_HQyAyMrqMQPBoFIktLJTsibzJx3BA.jpg" alt="User avatar" class="rounded-circle" width="50" height="50">
+                            <div>
+                                <h3 class="fs-6 fw-bold mb-1">Ngày Bình Yên</h3>
+                                <p class="text-secondary mb-1">Quán cà phê đẹp và yên tĩnh</p>
+                                <p class="text-secondary mb-0">4.0 <span class="text-warning"><i class="fas fa-star"></i></span></p>
+                            </div>
+                        </li>
+                        <li class="d-flex align-items-center gap-3 mb-3">
+                            <img src="https://storage.googleapis.com/a1aa/image/ijLC10jshGVG4_HQyAyMrqMQPBoFIktLJTsibzJx3BA.jpg" alt="User avatar" class="rounded-circle" width="50" height="50">
+                            <div>
+                                <h3 class="fs-6 fw-bold mb-1">Ngày Bình Yên</h3>
+                                <p class="text-secondary mb-1">Quán cà phê đẹp và yên tĩnh</p>
+                                <p class="text-secondary mb-0">4.0 <span class="text-warning"><i class="fas fa-star"></i></span></p>
+                            </div>
+                        </li>
+                        <li class="d-flex align-items-center gap-3 mb-3">
+                            <img src="https://storage.googleapis.com/a1aa/image/ijLC10jshGVG4_HQyAyMrqMQPBoFIktLJTsibzJx3BA.jpg" alt="User avatar" class="rounded-circle" width="50" height="50">
+                            <div>
+                                <h3 class="fs-6 fw-bold mb-1">Ngày Bình Yên</h3>
+                                <p class="text-secondary mb-1">Quán cà phê đẹp và yên tĩnh</p>
+                                <p class="text-secondary mb-0">4.0 <span class="text-warning"><i class="fas fa-star"></i></span></p>
+                            </div>
+                        </li>
+                        <li class="d-flex align-items-center gap-3 mb-3">
+                            <img src="https://storage.googleapis.com/a1aa/image/ijLC10jshGVG4_HQyAyMrqMQPBoFIktLJTsibzJx3BA.jpg" alt="User avatar" class="rounded-circle" width="50" height="50">
+                            <div>
+                                <h3 class="fs-6 fw-bold mb-1">Ngày Bình Yên</h3>
+                                <p class="text-secondary mb-1">Quán cà phê đẹp và yên tĩnh</p>
+                                <p class="text-secondary mb-0">4.0 <span class="text-warning"><i class="fas fa-star"></i></span></p>
+                            </div>
+                        </li>
+                        <li class="d-flex align-items-center gap-3 mb-3">
+                            <img src="https://storage.googleapis.com/a1aa/image/ijLC10jshGVG4_HQyAyMrqMQPBoFIktLJTsibzJx3BA.jpg" alt="User avatar" class="rounded-circle" width="50" height="50">
+                            <div>
+                                <h3 class="fs-6 fw-bold mb-1">Ngày Bình Yên</h3>
+                                <p class="text-secondary mb-1">Quán cà phê đẹp và yên tĩnh</p>
+                                <p class="text-secondary mb-0">4.0 <span class="text-warning"><i class="fas fa-star"></i></span></p>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
-            </li>
-            <li class="d-flex align-items-center gap-3 mb-3">
-                <img src="{{ asset('frontend/images/c3.jpg') }}" alt="User avatar" class="rounded-circle" width="50" height="50">
-                <div>
-                    <h3 class="fs-6 fw-bold mb-1">𝐑𝐮𝐬𝐭𝐢𝐜 𝐓𝐞𝐚 & 𝐂𝐨𝐟𝐟𝐞𝐞</h3>
-                    <p class="text-secondary mb-1">Thức uống ngon, nhân viên phục vụ nhiệt tình.</p>
-                    <p class="text-secondary mb-0">4.5 <span class="text-warning"><i class="fas fa-star"></i></span></p>
-                </div>
-            </li>
-            <li class="d-flex align-items-center gap-3 mb-3">
-                <img src="{{ asset('frontend/images/c4.jpg') }}" alt="User avatar" class="rounded-circle" width="50" height="50">
-                <div>
-                    <h3 class="fs-6 fw-bold mb-1">𝐑𝐮𝐬𝐭𝐢𝐜 𝐓𝐞𝐚 & 𝐂𝐨𝐟𝐟𝐞𝐞</h3>
-                    <p class="text-secondary mb-1">Thiết kế quán rất xinh xắn, chụp ảnh đẹp.</p>
-                    <p class="text-secondary mb-0">4.8 <span class="text-warning"><i class="fas fa-star"></i></span></p>
-                </div>
-            </li>
-            <li class="d-flex align-items-center gap-3 mb-3">
-                <img src="{{ asset('frontend/images/c5.jpg') }}" alt="User avatar" class="rounded-circle" width="50" height="50">
-                <div>
-                    <h3 class="fs-6 fw-bold mb-1">𝐑𝐮𝐬𝐭𝐢𝐜 𝐓𝐞𝐚 & 𝐂𝐨𝐟𝐟𝐞𝐞</h3>
-                    <p class="text-secondary mb-1">Mở nhạc nhẹ dễ chịu, có cả ổ điện để làm việc.</p>
-                    <p class="text-secondary mb-0">4.2 <span class="text-warning"><i class="fas fa-star"></i></span></p>
-                </div>
-            </li>
-            <li class="d-flex align-items-center gap-3 mb-3">
-                <img src="{{ asset('frontend/images/c6.jpg') }}" alt="User avatar" class="rounded-circle" width="50" height="50">
-                <div>
-                    <h3 class="fs-6 fw-bold mb-1">𝐑𝐮𝐬𝐭𝐢𝐜 𝐓𝐞𝐚 & 𝐂𝐨𝐟𝐟𝐞𝐞</h3>
-                    <p class="text-secondary mb-1">Vị trí trung tâm, dễ tìm và rất thuận tiện.</p>
-                    <p class="text-secondary mb-0">4.3 <span class="text-warning"><i class="fas fa-star"></i></span></p>
-                </div>
-            </li>
-        </ul>
+            </div>
+        </div>
     </div>
-</div>
-
 @endsection
           

@@ -12,15 +12,16 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" />
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
 
 <!-- Bootstrap JS -->
+ 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 <script src="https://kit.fontawesome.com/24875ac8f5.js" crossorigin="anonymous"></script>
 <!-- Thêm Google Places API -->
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDfOjgSqISKR-JKrx5BeJim8bKFFMt9yIU=places&callback=initAutocomplete" async defer></script>
-
-
+<script src="https://cdn.tailwindcss.com"></script>
 
 </head>
 <body>
@@ -52,11 +53,22 @@
                 </a>
             </li>
             <li class="{{ request()->routeIs('thongbao') ? 'active' : '' }}">
-                <a href="{{ route('thongbao') }}">
-                    <span class="icon"><img src="{{ asset('frontend/images/icon_thongbao.svg') }}" alt="Thông báo"></span>
-                    <span>Thông báo</span>
+                <a href="{{ route('thongbao') }}" class="d-flex align-items-center position-relative">
+                    <span class="icon position-relative">
+                        <img src="{{ asset('frontend/images/icon_thongbao.svg') }}" alt="Thông báo">
+
+                        @if (isset($unreadCount) && $unreadCount > 0)
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                                style="font-size: 0.65rem; padding: 4px 6px;">
+                                {{ $unreadCount }}
+                                <span class="visually-hidden">thông báo chưa đọc</span>
+                            </span>
+                        @endif
+                    </span>
+                    <span class="ms-2">Thông báo</span>
                 </a>
             </li>
+
         </ul>
 </nav>
     
@@ -76,7 +88,7 @@
 
        <!-- Kiểm tra trạng thái đăng nhập -->
         
-       <div class="auth-buttons">
+    <div class="auth-buttons">
       @auth
       
         <div class="user-menu" id="user-menu">
@@ -151,18 +163,20 @@
 </script>
 
 </header>
-    <main>
+<main>
         @yield('content')
-    </main>
+        @stack('scripts')
+ </main>
       
+<div style="text-align: center; margin: 20px 0;">
+    <img src="{{ asset('frontend/images/Social.png') }}" alt="Social" 
+         style="max-width: 500px; display: block; margin-left: auto; margin-right: auto;">
+</div>
 
 
 
-    <footer class="footer">
+ <footer class="footer">
          <!--- Ảnh Social -->
-      <div style="text-align: center; margin: 20px 0;">
-         <img src="{{ asset('frontend/images/Social.png') }}" alt="Social" style="max-width: 500px;">
-       </div>
 
         <div class="footer-container">
             <div class="footer-logo">

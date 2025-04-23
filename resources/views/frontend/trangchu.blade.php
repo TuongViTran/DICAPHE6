@@ -179,30 +179,30 @@
      </div>
    <div class=" styles row mt-4">
     <div class="style col-md-3">
-        <a href="{{ route('style.show', $style->id) }}" class="card-link">
+        <a href="{{ route('style.show', 1) }}" class="card-link">
             <div class="style_card">
-                <img src="{{asset('frontend/images/tt.svg') }}" alt="Traditional Coffee Shop">
+                <img src="{{asset('frontend/images/tt.svg') }}" alt="Truyển Thống">
             </div>
         </a>
     </div>
     <div class="style col-md-3">
-        <a href="" class="card-link">
+        <a href="{{ route('style.show', 2) }}" class="card-link">
             <div class="style_card">
-                <img src="{{asset('frontend/images/hd.svg') }}" alt="Traditional Coffee Shop">
+                <img src="{{asset('frontend/images/hd.svg') }}" alt="Hiện Đại">
             </div>
         </a>
     </div>
     <div class="style col-md-3">
-        <a href="link_traditional.html" class="card-link">
+        <a href="{{ route('style.show', 3) }}" class="card-link">
             <div class="style_card">
-                <img src="{{asset('frontend/images/cs.svg') }}" alt="Traditional Coffee Shop">
+                <img src="{{asset('frontend/images/cs.svg') }}" alt="Công sở ">
             </div>
         </a>
     </div>
     <div class="style col-md-3">
-        <a href="link_traditional.html" class="card-link">
+        <a href="{{ route('style.show',4) }}" class="card-link">
             <div class="style_card">
-                <img src="{{asset('frontend/images/nm.svg') }}" alt="Traditional Coffee Shop">
+                <img src="{{asset('frontend/images/nm.svg') }}" alt="Nhà Máy">
             </div>
         </a>
     </div>
@@ -502,9 +502,6 @@ document.querySelectorAll('.dropdown-btn').forEach(button => {
         alert("Trình duyệt của bạn không hỗ trợ định vị!");
     }
 </script>
-
-
-
 
 
 

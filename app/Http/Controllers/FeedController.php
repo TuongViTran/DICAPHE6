@@ -18,9 +18,7 @@ class FeedController extends Controller
         ->orderBy('created_at', 'desc')
         ->take(5)
         ->get();
-        return view('frontend.feed', compact('reviews', 'posts'));
-
-        
+        return view('frontend.feed', compact('reviews', 'posts'));  
     }
     public function index(Request $request)
     {
