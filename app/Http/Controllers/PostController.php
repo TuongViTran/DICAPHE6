@@ -178,7 +178,6 @@ class PostController extends Controller
 
         return view('frontend.post', compact('post', 'cmts','editingComment', 'news_tin'));
     }
-    // Hàm lưu bình luận
     public function storeComment(Request $request, $postId)
 {
     $request->validate([
@@ -200,39 +199,30 @@ class PostController extends Controller
         $comment->content = $request->content;
         $comment->save();
 
-<<<<<<< HEAD
-        Comment::create([
-            'post_id' => $id,
-            'user_id' => auth()->id(),
-            'content' => $request->content,
-        ]);
-
-        // --- Gửi thông báo cho chủ bài viết ---
-        $post = Post::find($id);
-
-        if ($post && $post->user_id != auth()->id()) {
-            Notification::create([
-                'user_id' => $post->user_id, // Gửi tới chủ bài viết
-                'type' => 'comment',
-                'message' => auth()->user()->name . ' đã bình luận vào bài viết "' . $post->title . '"',
-                'link' => route('post.show', $post->id),
-            ]);
-        }
-        return redirect()->back()->with('success', 'Bình luận đã được gửi.');
-=======
         return back()->with('success', 'Cập nhật bình luận thành công!');
->>>>>>> 4716c86e7aedac8632666f43774582f30c8a33b1
     }
 
-    // Nếu là viết mới
-    Comment::create([
+    // Nếu là bình luận mới
+    $comment = Comment::create([
         'post_id' => $postId,
         'user_id' => auth()->id(),
         'content' => $request->content,
     ]);
 
+    // Gửi thông báo cho chủ bài viết nếu không phải người tự bình luận vào bài viết mình
+    $post = Post::find($postId);
+    if ($post && $post->user_id != auth()->id()) {
+        Notification::create([
+            'user_id' => $post->user_id,
+            'type' => 'comment',
+            'message' => auth()->user()->name . ' đã bình luận vào bài viết "' . $post->title . '"',
+            'link' => route('posts.show', $post->id),
+        ]);
+    }
+
     return back()->with('success', 'Bình luận đã được gửi.');
 }
+
     // Hàm xóa bình luận
     public function destroyComment($id)
     {
