@@ -19,6 +19,7 @@ use App\Http\Controllers\AdminController; // Import AdminController
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\StyleController;
 
 // Frontend --------------------------------------------
 Route::get('/test-session', function () {
@@ -56,6 +57,12 @@ Route::get('/owner/reviews/{shopId}', [OwnerController::class, 'showShopReviews'
 // Search 
 Route::get('/search', [SearchController::class, 'search'])->name('search.result');
 Route::get('/autocomplete', [SearchController::class, 'autocomplete']);
+
+//Style 
+Route::get('/styles', [StyleController::class, 'index'])->name('style.index');
+Route::get('/styles/{id}', [StyleController::class, 'show'])->name('style.show');
+
+
 
 // Post Management Routes
 Route::post('/ckeditor/upload', function (Request $request) {

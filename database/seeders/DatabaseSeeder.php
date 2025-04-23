@@ -140,58 +140,71 @@ class DatabaseSeeder extends Seeder
         ]);
         
 
-        // 4. Seed bảng addresses
+      
         // 4. Seed bảng addresses
         DB::table('addresses')->insert([
-            [
-                'street'      => '703 Âu Cơ',
-                'ward'        => 'Hoà Khánh Bắc',
-                'district'    => 'Liên Chiểu',
-                'city'        => 'Đà Nẵng',
-                'postal_code' => '550000',
-                'country'     => 'Vietnam',
-                'latitude'    => 16.078768558437,
-                'longitude'   => 108.12720128166,
-                'created_at'  => now(),
-                'updated_at'  => now(),
-            ],
-            [
-                'street'      => '101 Đ. Ung Văn Khiêm',
-                'ward'        => 'Bắc Mỹ Phú',
+            [ // Dưới 1km
+                'street'      => '01 Nguyễn Văn Thoại',
+                'ward'        => 'Hòa Thuận Tây',
                 'district'    => 'Hải Châu',
                 'city'        => 'Đà Nẵng',
                 'postal_code' => '550000',
                 'country'     => 'Vietnam',
-                'latitude'    => 16.051530032459,
-                'longitude'   => 108.24072815957,
+                'latitude'    => 16.472000,
+                'longitude'   => 107.561000,
                 'created_at'  => now(),
                 'updated_at'  => now(),
             ],
-            [
-                'street'      => '24 Lê Hồng Phong',
-                'ward'        => 'Phước Ninh',
+            [ // Khoảng 2km
+                'street'      => '02 Lê Duẩn',
+                'ward'        => 'Hòa Thuận Đông',
                 'district'    => 'Hải Châu',
                 'city'        => 'Đà Nẵng',
                 'postal_code' => '550000',
                 'country'     => 'Vietnam',
-                'latitude'    => 16.064230632223,
-                'longitude'   => 108.22267932399,
+                'latitude'    => 16.460000,
+                'longitude'   => 107.575000,
                 'created_at'  => now(),
                 'updated_at'  => now(),
             ],
-            [
-                'street'      => '328 Đ. Trần Hưng Đạo',
-                'ward'        => 'An Hải Tây',
-                'district'    => 'Sơn Trà',
+            [ // Khoảng 3km
+                'street'      => '03 Nguyễn Chí Thanh',
+                'ward'        => 'Thạch Thang',
+                'district'    => 'Hải Châu',
                 'city'        => 'Đà Nẵng',
                 'postal_code' => '550000',
                 'country'     => 'Vietnam',
-                'latitude'    => 16.053382925335,
-                'longitude'   => 108.23256376447,
+                'latitude'    => 16.455000,
+                'longitude'   => 107.590000,
+                'created_at'  => now(),
+                'updated_at'  => now(),
+            ],
+            [ // Khoảng 5km
+                'street'      => '04 Trần Cao Vân',
+                'ward'        => 'Tam Thuận',
+                'district'    => 'Thanh Khê',
+                'city'        => 'Đà Nẵng',
+                'postal_code' => '550000',
+                'country'     => 'Vietnam',
+                'latitude'    => 16.440000,
+                'longitude'   => 107.600000,
+                'created_at'  => now(),
+                'updated_at'  => now(),
+            ],
+            [ // Khoảng 7km
+                'street'      => '05 Nguyễn Hữu Thọ',
+                'ward'        => 'Khuê Trung',
+                'district'    => 'Cẩm Lệ',
+                'city'        => 'Đà Nẵng',
+                'postal_code' => '550000',
+                'country'     => 'Vietnam',
+                'latitude'    => 16.430000,
+                'longitude'   => 107.620000,
                 'created_at'  => now(),
                 'updated_at'  => now(),
             ],
         ]);
+        
         
          // 5. Seed bảng coffeeshop
          DB::table('coffeeshop')->insert([

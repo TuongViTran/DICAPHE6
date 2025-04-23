@@ -3,29 +3,87 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\CoffeeShop;
 use App\Models\Style;
-use App\Models\Address;
+use Illuminate\Support\Facades\DB;
+use App\Models\CoffeeShop;
+
 
 class SearchController extends Controller
 {
     public function search(Request $request)
     {
         $styles = Style::all();
+    
+        $latitude = $request->input('user_latitude', 16.4724736);
+        $longitude = $request->input('user_longitude', 107.56096);
+        
+        if ((!$latitude || !$longitude) && auth()->check() && auth()->user()->address) {
+            $latitude = auth()->user()->address->latitude ?? 16.4724736;
+            $longitude = auth()->user()->address->longitude ?? 107.56096;
+        }
+    
+        $latitude = $latitude ?: 16.4724736;
+        $longitude = $longitude ?: 107.56096;
 
-        $query = CoffeeShop::with('address');
+        // Công thức có alias -> dùng cho SELECT
+            $distanceFormula = "
+            111.045 * DEGREES(
+                ACOS(
+                    LEAST(1.0, 
+                        COS(RADIANS(?)) * COS(RADIANS(addresses.latitude)) 
+                        * COS(RADIANS(addresses.longitude) - RADIANS(?)) 
+                        + SIN(RADIANS(?)) 
+                        * SIN(RADIANS(addresses.latitude))
+                    )
+                )
+            ) AS distance
+            ";
 
-       
-           // --- Lọc theo từ khoá (tên quán và mô tả) ---
-            if ($request->has('keyword') && !empty($request->keyword)) {
-                $keyword = $request->keyword;
-                $query->where(function($q) use ($keyword) {
-                    $q->where('shop_name', 'like', '%' . $keyword . '%')
-                    ->orWhere('description', 'like', '%' . $keyword . '%');
-                });
-            }
+            // Công thức không có alias -> dùng trong WHERE
+            $distanceOnlyFormula = "
+            111.045 * DEGREES(
+                ACOS(
+                    LEAST(1.0, 
+                        COS(RADIANS(?)) * COS(RADIANS(addresses.latitude)) 
+                        * COS(RADIANS(addresses.longitude) - RADIANS(?)) 
+                        + SIN(RADIANS(?)) 
+                        * SIN(RADIANS(addresses.latitude))
+                    )
+                )
+            )
+            ";
 
 
+        $query = DB::table('coffeeshop')
+        ->join('addresses', 'coffeeshop.address_id', '=', 'addresses.id')
+        ->leftJoin('styles', 'coffeeshop.styles_id', '=', 'styles.id')
+        ->leftJoin('users', 'coffeeshop.user_id', '=', 'users.id') // 👈 Thêm dòng này
+        ->select(
+            'coffeeshop.*',
+            'addresses.street as address_street',
+            'addresses.ward as address_ward',
+            'addresses.district as address_district',
+            'addresses.city as address_city',
+            'styles.style_name as style_name',
+            'styles.id as styles_id',
+            'users.avatar_url as user_avatar_url',  // 👈 Lấy avatar
+            'users.full_name as user_full_name',    // 👈 Lấy tên
+            DB::raw($distanceFormula)
+    )
+
+        ->addBinding($latitude, 'select')
+        ->addBinding($longitude, 'select')
+        ->addBinding($latitude, 'select');
+    
+        // --- Lọc theo từ khoá ---
+        if ($request->filled('keyword')) {
+            $keyword = $request->keyword;
+            $query->where(function ($q) use ($keyword) {
+                $q->where('coffeeshop.shop_name', 'like', "%$keyword%")
+                  ->orWhere('coffeeshop.description', 'like', "%$keyword%");
+            });
+            
+        }
 
         // --- Lọc theo style ---
         if ($request->has('style') && is_array($request->style)) {
@@ -35,8 +93,7 @@ class SearchController extends Controller
         // --- Lọc theo khoảng giá ---
         if ($request->has('price_range')) {
             $priceRanges = $request->input('price_range');
-        
-            $query->where(function($q) use ($priceRanges) {
+            $query->where(function ($q) use ($priceRanges) {
                 foreach ($priceRanges as $price) {
                     if ($price == 'lt50') {
                         $q->orWhere('min_price', '<', 50);
@@ -51,132 +108,120 @@ class SearchController extends Controller
                 }
             });
         }
-        
 
         // --- Lọc theo khoảng cách ---
-        if ($request->has('distance') && auth()->check()) {
-            $user = auth()->user();
-            $userAddress = $user->address; // Đảm bảo người dùng có address liên kết
-
-            if ($userAddress && $userAddress->latitude && $userAddress->longitude) {
-                $userLat = $userAddress->latitude;
-                $userLng = $userAddress->longitude;
-
-                $query->whereHas('address', function ($q) use ($request, $userLat, $userLng) {
-                    $q->whereNotNull('latitude')->whereNotNull('longitude');
-
-                    $q->where(function ($distanceQ) use ($request, $userLat, $userLng) {
-                        foreach ($request->distance as $dist) {
-                            $distanceQ->orWhereRaw("
-                                6371 * acos(
-                                    cos(radians(?)) * cos(radians(latitude)) *
-                                    cos(radians(longitude) - radians(?)) +
-                                    sin(radians(?)) * sin(radians(latitude))
-                                ) <= ?
-                            ", [$userLat, $userLng, $userLat, $dist]);
-                        }
-                    });
-                });
-            }
+        $distanceRanges = $request->input('distance', []);
+        if (!empty($distanceRanges) && is_array($distanceRanges)) {
+            $query->where(function ($q) use ($distanceRanges, $latitude, $longitude, $distanceOnlyFormula) {
+                foreach ($distanceRanges as $range) {
+                    if (is_numeric($range)) {
+                        $q->orWhereRaw("($distanceOnlyFormula) <= ?", [
+                            $latitude, $longitude, $latitude, $range
+                        ]);
+                    }
+                }
+            });
         }
+
 
         $coffeeShops = $query->get();
 
-        return view('frontend.search-result', compact('coffeeShops', 'styles'));
+        foreach ($coffeeShops as $shop) {
+            if (isset($shop->distance)) {
+                $shop->distance = round($shop->distance, 2);
+            }
+        }
+
+        return view('frontend.search-result', compact('coffeeShops', 'styles',));
     }
-    // Hỗ trợ tìm kiếm bằng autocomlete
-    
+
+
     public function autocomplete(Request $request)
-    {
-        $keyword = $request->get('keyword');
-    
-        // Kiểm tra nếu từ khóa rỗng
-        if (!$keyword) {
-            return response()->json([]);
-        }
-    
-        $results = [];
-    
-        // Gợi ý tên quán
-        $shopNames = CoffeeShop::where('shop_name', 'like', "%{$keyword}%")
-            ->limit(5)
-            ->pluck('shop_name')
-            ->toArray();
-    
-        foreach ($shopNames as $name) {
-            $results[] = ['type' => 'shop_name', 'label' => $name];
-        }
-        $keyword = $request->get('keyword');
+{
+    $keyword = $request->get('keyword');
 
-        // Lấy danh sách description có chứa từ khóa
-        $descriptions = CoffeeShop::where('description', 'like', "%{$keyword}%")
-            ->limit(5)
-            ->pluck('description')
-            ->toArray();
-
-        // Cắt ngắn phần mô tả chứa từ khóa
-        foreach ($descriptions as $desc) {
-            // Tìm vị trí từ khóa trong mô tả
-            $pos = stripos($desc, $keyword);
-
-            if ($pos !== false) {
-                // Cắt ra khoảng 50 ký tự xung quanh từ khóa
-                $start = max(0, $pos - 25);
-                $snippet = substr($desc, $start, 80);
-                // Thêm dấu "..." nếu cắt giữa câu
-                if ($start > 0) $snippet = '...' . ltrim($snippet);
-                if ($start + 80 < strlen($desc)) $snippet = rtrim($snippet) . '...';
-
-                $results[] = [
-                    'type' => 'description',
-                    'label' => $snippet,
-                ];
-            }
-        }
-
-
-    
-        // Gợi ý theo khoảng giá
-        $priceSuggestions = [
-            ['label' => '< 50k', 'value' => 'lt50'],
-            ['label' => '50k - 70k', 'value' => '50_70'],
-            ['label' => '> 70k', 'value' => 'gt70'],
-        ];
-        foreach ($priceSuggestions as $suggestion) {
-            if (stripos($suggestion['label'], $keyword) !== false) {
-                $results[] = ['type' => 'price_range', 'label' => $suggestion['label']];
-            }
-        }
-    
-        // Gợi ý style
-        $styles = Style::where('style_name', 'like', "%{$keyword}%")
-            ->limit(5)
-            ->pluck('style_name')
-            ->toArray();
-    
-        foreach ($styles as $style) {
-            $results[] = ['type' => 'style', 'label' => $style];
-        }
-    
-        // Gợi ý từ khóa hot
-        $specialSuggestions = [
-            'Quán gần đây',
-            'Hot trend',
-            'Được yêu thích',
-            'Mở cửa bây giờ'
-        ];
-        foreach ($specialSuggestions as $special) {
-            if (stripos($special, $keyword) !== false) {
-                $results[] = ['type' => 'keyword_suggestion', 'label' => $special];
-            }
-        }
-    
-        // Loại bỏ các mục trùng lặp dựa trên 'label'
-        $results = array_unique($results, SORT_REGULAR);
-    
-        // Giới hạn tổng số kết quả trả về
-        $results = array_slice($results, 0, 10);
-    
-        return response()->json($results);
+    if (!$keyword) {
+        return response()->json([]);
     }
+
+    $results = [];
+
+    // Gợi ý tên quán
+    $shopNames = CoffeeShop::where('shop_name', 'like', "%{$keyword}%")
+        ->limit(5)
+        ->pluck('shop_name')
+        ->toArray();
+
+    foreach ($shopNames as $name) {
+        $results[] = ['type' => 'shop_name', 'label' => $name];
+    }
+
+    // Gợi ý theo mô tả
+    $descriptions = CoffeeShop::where('description', 'like', "%{$keyword}%")
+        ->limit(5)
+        ->pluck('description')
+        ->toArray();
+
+    foreach ($descriptions as $desc) {
+        $pos = stripos($desc, $keyword);
+        if ($pos !== false) {
+            $start = max(0, $pos - 25);
+            $snippet = substr($desc, $start, 80);
+
+            if ($start > 0) {
+                $snippet = '...' . ltrim($snippet);
+            }
+            if ($start + 80 < strlen($desc)) {
+                $snippet = rtrim($snippet) . '...';
+            }
+
+            $results[] = [
+                'type' => 'description',
+                'label' => $snippet,
+            ];
+        }
+    }
+
+    // Gợi ý theo khoảng giá
+    $priceSuggestions = [
+        ['label' => '< 50k', 'value' => 'lt50'],
+        ['label' => '50k - 70k', 'value' => '50_70'],
+        ['label' => '> 70k', 'value' => 'gt70'],
+    ];
+    foreach ($priceSuggestions as $suggestion) {
+        if (stripos($suggestion['label'], $keyword) !== false) {
+            $results[] = ['type' => 'price_range', 'label' => $suggestion['label']];
+        }
+    }
+
+    // Gợi ý theo style
+    $styles = Style::where('style_name', 'like', "%{$keyword}%")
+        ->limit(5)
+        ->pluck('style_name')
+        ->toArray();
+
+    foreach ($styles as $style) {
+        $results[] = ['type' => 'style', 'label' => $style];
+    }
+
+    // Gợi ý từ khóa đặc biệt
+    $specialSuggestions = [
+        'Quán gần đây',
+        'Hot trend',
+        'Được yêu thích',
+        'Mở cửa bây giờ'
+    ];
+    foreach ($specialSuggestions as $special) {
+        if (stripos($special, $keyword) !== false) {
+            $results[] = ['type' => 'keyword_suggestion', 'label' => $special];
+        }
+    }
+
+    // Xoá trùng theo label
+    $results = collect($results)->unique('label')->values()->take(10);
+
+    return response()->json($results);
+}
+
+    
 }    

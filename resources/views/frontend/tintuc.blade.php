@@ -7,7 +7,7 @@
     <div class="content_slider col-md-6">
       <div class="slider" id="content-slider">
         @foreach($sliderPosts as $post)
-          <div class= "slide">
+          <div class="slide">
             <h2>{{ $post->title }}</h2>
             <p>{{ Str::limit(strip_tags($post->content), 150) }}</p>
             <p class="tacgia">
@@ -36,30 +36,33 @@
       </div>
     </div>
 
-    <!-- Bên phải -->
-    <div class="col-md-6">
-      <div class="slider-wrapper">
-        <div class="slider" id="auto-slider">
-          @foreach($sliderPosts as $slide)
-            <div class="slide">
-              <img src="{{ asset('storage/uploads/posts/' . $slide->image_url) }}" alt="{{ $slide->title }}" style="object-fit: cover;">
-            </div>
-          @endforeach
-        </div>
-        <div class="slider-indicators">
-          @foreach($sliderPosts as $index => $slide)
-            <span class="dot" data-slide="{{ $index }}"></span>
-          @endforeach
+      <!-- Bên phải -->
+      <div class="col-md-6">
+        <div class="slider-wrapper">
+          <div class="slider" id="auto-slider">
+            @foreach($sliderPosts as $slide)
+              <div class="slide">
+                <img src="{{ asset('storage/uploads/posts/' . $slide->image_url) }}" alt="{{ $slide->title }}" style="object-fit: cover;">
+              </div>
+            @endforeach
+          </div>
+          <div class="slider-indicators">
+            @foreach($sliderPosts as $index => $slide)
+              <span class="dot" data-slide="{{ $index }}"></span>
+            @endforeach
+          </div>
         </div>
       </div>
-    </div>
-  </div> <!-- /row -->
-</div> <!-- /container_slider -->
-<div class="container my-4">
-  <div class="row">
-    <!-- Cột trái: danh sách bài viết -->
-    <div class="col-md-9">
-      <h5 class="fw-bold mb-3">📸 Các góc nhìn mới</h5>
+    </div> <!-- /row -->
+  </div> <!-- /container_slider -->
+
+
+
+    <div class="container_slider">
+      <div class="row">
+        <!-- Cột trái: danh sách bài viết -->
+        <div class="col-md-9">
+          <h5 class="fw-bold mb-3">📸 Các góc nhìn mới</h5>
 
       @foreach($posts as $post)
       <a href="{{ route('posts.show', $post->id) }}" class="text-decoration-none text-dark">
@@ -82,32 +85,19 @@
         </a>
       @endforeach
       <!-- Pagination -->
-      <div class="d-flex justify-content-center mt-3">
-      {{ $posts->links() }} 
+      <div class="mt-3">
+            {{ $posts->links('pagination::bootstrap-5') }}
+        </div>
+
+        </div>
+
+        
+        <!-- Cột phải: banner / quảng cáo -->
+        <div class="col-md-3 ">
+          <img src="{{ asset('frontend/images/banner1.png') }}" class="img-fluid rounded shadow-sm mb-5 " alt="Banner quảng cáo" style="width: 100%;">
+          <img src="{{ asset('frontend/images/hihi.png') }}" class="img-fluid rounded shadow-sm" alt="Banner quảng cáo" style="width: 100%;">
+        </div>
       </div>
-      <style>
-          .pagination {
-              margin: 0;
-              gap: 4px;
-          }
-          .pagination li {
-              margin: 0 !important;
-          }
-          .pagination .page-item .page-link {
-              padding: 0.3rem 0.6rem;
-              border-radius: 0.25rem;
-          }
-      </style>
-
-    </div>
-
-    
-    <!-- Cột phải: banner / quảng cáo -->
-    <div class="col-md-3 ">
-      <img src="{{ asset('frontend/images/banner1.png') }}" class="img-fluid rounded shadow-sm mb-5 " alt="Banner quảng cáo" style="width: 100%;">
-      <img src="{{ asset('frontend/images/hihi.png') }}" class="img-fluid rounded shadow-sm" alt="Banner quảng cáo" style="width: 100%;">
-    </div>
   </div>
-</div>
 @endsection
 <script src="{{ asset('frontend/js/slider.js') }}"></script>

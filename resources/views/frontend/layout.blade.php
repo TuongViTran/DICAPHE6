@@ -23,7 +23,6 @@
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDfOjgSqISKR-JKrx5BeJim8bKFFMt9yIU=places&callback=initAutocomplete" async defer></script>
 <script src="https://cdn.tailwindcss.com"></script>
 
-
 </head>
 <body>
 <header>
@@ -89,7 +88,7 @@
 
        <!-- Kiểm tra trạng thái đăng nhập -->
         
-       <div class="auth-buttons">
+    <div class="auth-buttons">
       @auth
       
         <div class="user-menu" id="user-menu">
@@ -164,108 +163,21 @@
 </script>
 
 </header>
-
-
-<!-- Thanh tìm kiếm -------------------->
-    <!-- <section class="search-section">
-            <div class="search-box">
-            <span class="icon"><img src="{{ asset('frontend/images/Search.svg') }}" alt="Trang chủ"></span><input type="text" placeholder="Hôm nay bạn muốn đi đâu?" />
-                <button class="btn-location">Tìm kiếm </button>
-            </div>
-            <div class="filters">
-            <div class="filter-container">
-                    <button class="dropdown-btn">
-                    <img src="{{ asset('frontend/images/icon_khoangcach.svg') }}" alt="icon" class="icon"> Khoảng cách ▾
-                    </button>
-                <div class="dropdown-content">
-                    <div class="slider-container">
-                        <span>0km</span>
-                        <input type="range" min="0" max="15" class="slider" oninput="updateSliderValue(this)">
-                        <span class="slider-value">0km</span>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="walkable">
-                        <label for="walkable">Có thể đi bộ</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="distance2">
-                        <label for="distance2">2 km</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="distance5">
-                        <label for="distance5">&lt; 5km</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="distance7">
-                        <label for="distance7">5-7km</label>
-                    </div>
-                </div>
-            </div>
-            <div class="filter-container">
-                    <button class="dropdown-btn">
-                    <img src="{{ asset('frontend/images/icon_stylequan.svg') }}" alt="icon" class="icon"> Style quán ▾
-                    </button>
-                <div class="dropdown-content">
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="work">
-                        <label for="work">Work Coffee</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="vintage">
-                        <label for="vintage">Vintage Coffee</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="modern">
-                        <label for="modern">Modern Coffee</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="traditional">
-                        <label for="traditional">Traditional Coffee</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="concept">
-                        <label for="concept">Concept Coffee</label>
-                    </div>
-                </div>
-            </div>
-            <div class="filter-container">
-                    <button class="dropdown-btn">
-                    <img src="{{ asset('frontend/images/icon_gia.svg') }}" alt="icon" class="icon"> Khoảng giá ▾
-                    </button>
-                <div class="dropdown-content">
-                    <div class="slider-container">
-                        <span>0k</span>
-                        <input type="range" min="0" max="50" class="slider" oninput="updateSliderValue(this)">
-                        <span class="slider-value">0k</span>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="price50">
-                        <label for="price50">&lt; 50k</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="price50_70">
-                        <label for="price50_70">50k - 70k</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="price70">
-                        <label for="price70">&gt; 70k</label>
-                    </div>
-                </div>
-            </div>
-        </div>
-        </div>
-        
-        <div class="hello">
-        <h2>Xin chào! Chúng tôi hỗ trợ<br> tìm kiếm quán cà phê</h2> 
-        </div> 
-       
-    </section> -->
-    <main>
+<main>
         @yield('content')
         @stack('scripts')
-    </main>
+ </main>
+      
+<div style="text-align: center; margin: 20px 0;">
+    <img src="{{ asset('frontend/images/Social.png') }}" alt="Social" 
+         style="max-width: 500px; display: block; margin-left: auto; margin-right: auto;">
+</div>
 
-    <footer class="footer">
+
+
+ <footer class="footer">
+         <!--- Ảnh Social -->
+
         <div class="footer-container">
             <div class="footer-logo">
               <img src="{{ asset('frontend/images/Logo.svg') }}" alt="caphedidau" class="icon">
