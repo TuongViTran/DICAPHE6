@@ -20,7 +20,7 @@ return new class extends Migration {
             
             // Khóa ngoại đến bảng reviews
             $table->foreignId('review_id')
-                ->constrained('reviews') // Liên kết đến bảng reviews
+                ->constrained('review') // Liên kết đến bảng review
                 ->onDelete('cascade');
     
             // Đảm bảo mỗi user chỉ like 1 đánh giá 1 lần
