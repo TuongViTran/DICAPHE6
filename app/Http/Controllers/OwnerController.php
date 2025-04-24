@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\Address;
 use App\Models\Shop;
 use App\Models\Post;
+use App\Models\Review;
 
 class OwnerController extends Controller
 {  public function owner($id)
@@ -23,8 +24,15 @@ class OwnerController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
         $userId = auth()->id();
+
+        
+        // Lấy danh sách đánh giá theo shop_id
+        $reviews = Review::with('user')
+        ->where('shop_id', $coffeeShop->id)
+        ->latest()
+        ->get();
     
-        return view('frontend.owner', compact('coffeeShop','posts'));
+        return view('frontend.owner', compact('coffeeShop','posts', 'reviews'));
     }
     
     public function update(Request $request, $id)
@@ -137,7 +145,11 @@ class OwnerController extends Controller
 
         
         
-       
+      
+
+
+
+
      
     
 

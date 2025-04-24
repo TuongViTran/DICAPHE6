@@ -47,11 +47,18 @@ class HomeController extends Controller
         // Lấy danh sách quán cà phê kèm địa chỉ, số like, trạng thái like của người dùng
         $shops = CoffeeShop::with('address', 'style')
         ->withCount('likes')
-        ->take(4) // Lấy ít nhất 4 quán
+        ->take(4)
         ->get()
         ->each(function ($shop) {
-            $shop->liked = auth()->check() && $shop->likes()->where('user_id', auth()->id())->exists();
+            $shop->liked = false;
+            if (auth()->check()) {
+                $shop->liked = \DB::table('favoriteshop')
+                    ->where('user_id', auth()->id())
+                    ->where('shop_id', $shop->id)
+                    ->exists();
+            }
         });
+
         
         
         // Lấy danh sách các quán có rating 5 sao
@@ -59,8 +66,15 @@ class HomeController extends Controller
         ->where('reviews_avg_rating',  '>=', 4.5)
         ->get()
         ->each(function ($shop) {
-            $shop->liked = auth()->check() && $shop->likes()->where('user_id', auth()->id())->exists();
+            $shop->liked = false;
+            if (auth()->check()) {
+                $shop->liked = \DB::table('favoriteshop')
+                    ->where('user_id', auth()->id())
+                    ->where('shop_id', $shop->id)
+                    ->exists();
+            }
         });
+        
         // Trả về view và truyền dữ liệu
         return view('frontend.trangchu', compact('sliderPosts', 'shops', 'posts', 'fiveStarShops','styles'));
     }

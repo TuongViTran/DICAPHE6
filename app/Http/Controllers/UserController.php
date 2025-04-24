@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Support\Facades\DB;
 
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -179,8 +180,9 @@ public function showProfile($id)
      ->orderBy('created_at', 'desc')
      ->get();
 
- 
+    // lấy thông tin người dùng
     $user = User::findOrFail($id);
+    // Lấy danh sách đánh giá của user
     $reviews = Review::where('user_id', $id)
         ->with('user')
         ->orderBy('created_at', 'desc')
@@ -197,8 +199,17 @@ public function showProfile($id)
         return !empty($cafe->cover_image);
     })->values();
 
+    // Lấy các quán đã lưu của user
     $savedShops = $user->favoriteShops()->with('address')->get();
 
-        return view('frontend.user', compact('user', 'reviews','posts','sliderPosts', 'hotCafes', 'savedShops'));
+    // Số quán đã lưu từ bảng favoriteshop
+    $savedCount = DB::table('favoriteshop')
+    ->where('user_id', $user->id)
+    ->count();
+
+    // Số đánh giá từ bảng review
+    $reviewCount = Review::where('user_id', $user->id)->count();
+
+        return view('frontend.user', compact('user', 'reviews','posts','sliderPosts', 'hotCafes', 'savedShops','savedCount', 'reviewCount'));
     }
 }

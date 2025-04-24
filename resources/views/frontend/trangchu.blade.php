@@ -17,6 +17,11 @@
                 </span>
                 <input type="text" id="searchInput" name="keyword" class="form-control" style="width: 400px; padding: 10px;"
                     placeholder="Hôm nay bạn muốn đi đâu?" value="{{ request('keyword') }}" autocomplete="off">
+                    
+                <!-- Input ẩn để gửi tọa độ -->
+                <input type="hidden" name="user_latitude" id="user_latitude">
+                <input type="hidden" name="user_longitude" id="user_longitude">
+
                 <button type="submit" class="btn btn-warning">Tìm kiếm</button>
 
                 <ul id="suggestionList" class="list-group position-absolute w-100" style="z-index: 1000; top: 100%; display: none;"></ul>
@@ -32,7 +37,7 @@
                         <div class="form-check">
                             <input type="checkbox" name="distance[]" value="1"
                                 {{ is_array(request('distance')) && in_array("1", request('distance')) ? 'checked' : '' }}>
-                            <label>< 1km</label>
+                            <label>Có thể đi bộ (≈ 1km)</label>
                         </div>
                         <div class="form-check">
                             <input type="checkbox" name="distance[]" value="3"
@@ -44,8 +49,14 @@
                                 {{ is_array(request('distance')) && in_array("5", request('distance')) ? 'checked' : '' }}>
                             <label>< 5km</label>
                         </div>
+                        <div class="form-check">
+                            <input type="checkbox" name="distance[]" value="7"
+                                {{ is_array(request('distance')) && in_array("7", request('distance')) ? 'checked' : '' }}>
+                            <label>< 7km</label>
+                        </div>
                     </div>
                 </div>
+
 
                 {{-- Style quán --}}
                 <div class="filter-container">
@@ -106,6 +117,7 @@
       <div class="slider" id="content-slider">
         @foreach($sliderPosts as $post)
           <div class="slide">
+          <a href="{{ route('posts.show', $post->id) }}" class="text-decoration-none text-dark">
             <h2>{{ $post->title }}</h2>
             <p>{{ Str::limit(strip_tags($post->content), 150) }}</p>
             <p class="tacgia">
@@ -113,6 +125,7 @@
               {{ \Carbon\Carbon::parse($post->created_at)->format('d/m/Y') }} |
               Tác giả: {{ $post->user->full_name ?? 'Ẩn danh' }}
             </p>
+            </a>
           </div>
         @endforeach
       </div>
@@ -121,6 +134,7 @@
         @foreach($posts->skip(1)->take(3) as $post)
           <div class="col-md-4 mb-4">
             <div class="custom-card">
+            <a href="{{ route('posts.show', $post->id) }}" class="text-decoration-none text-dark">
               <div class="card-image" style="background-image: url('{{ asset('storage/uploads/posts/' . $post->image_url) }}');">
                 <div class="overlay"></div>
                 <div class="card-content">
@@ -128,6 +142,7 @@
                   <p class="card-text">{{ Str::limit(strip_tags($post->content), 50) }}</p>
                 </div>
               </div>
+                </a>
             </div>
           </div>
         @endforeach
@@ -140,7 +155,9 @@
         <div class="slider" id="auto-slider">
           @foreach($sliderPosts as $slide)
             <div class="slide">
+            
               <img src="{{ asset('storage/uploads/posts/' . $slide->image_url) }}" alt="{{ $slide->title }}" style="object-fit: cover;">
+           
             </div>
           @endforeach
         </div>
@@ -152,7 +169,7 @@
       </div>
     </div>
   </div> <!-- /row -->
-</div> <!-- /container_slider -->
+</div> <!-- Style các quán cà phê- -->
 
    <div class="containter_style">
      <div class="content_style">
@@ -163,30 +180,30 @@
      </div>
    <div class=" styles row mt-4">
     <div class="style col-md-3">
-        <a href="link_traditional.html" class="card-link">
+        <a href="{{ route('style.show', 1) }}" class="card-link">
             <div class="style_card">
-                <img src="{{asset('frontend/images/tt.svg') }}" alt="Traditional Coffee Shop">
+                <img src="{{asset('frontend/images/tt.svg') }}" alt="Truyển Thống">
             </div>
         </a>
     </div>
     <div class="style col-md-3">
-        <a href="link_traditional.html" class="card-link">
+        <a href="{{ route('style.show', 2) }}" class="card-link">
             <div class="style_card">
-                <img src="{{asset('frontend/images/hd.svg') }}" alt="Traditional Coffee Shop">
+                <img src="{{asset('frontend/images/hd.svg') }}" alt="Hiện Đại">
             </div>
         </a>
     </div>
     <div class="style col-md-3">
-        <a href="link_traditional.html" class="card-link">
+        <a href="{{ route('style.show', 3) }}" class="card-link">
             <div class="style_card">
-                <img src="{{asset('frontend/images/cs.svg') }}" alt="Traditional Coffee Shop">
+                <img src="{{asset('frontend/images/cs.svg') }}" alt="Công sở ">
             </div>
         </a>
     </div>
     <div class="style col-md-3">
-        <a href="link_traditional.html" class="card-link">
+        <a href="{{ route('style.show',4) }}" class="card-link">
             <div class="style_card">
-                <img src="{{asset('frontend/images/nm.svg') }}" alt="Traditional Coffee Shop">
+                <img src="{{asset('frontend/images/nm.svg') }}" alt="Nhà Máy">
             </div>
         </a>
     </div>
@@ -216,15 +233,8 @@
                                             @endfor
                                         </div>
                                         <div class="d-flex align-items-center">
-                                            <span class="heart-icon me-1 like-btn" data-id="{{ $shop->id }}" 
-                                                style="font-size: 1.4em; cursor: pointer; transition: 0.3s; color: {{ $shop->liked ? '#FF4D4D' : '#e4e5e9' }};">
-                                                {{ $shop->liked ? '❤️' : '♡' }}
-                                            </span>
-                                            <span id="like-count-{{ $shop->id }}" style="margin-left: 5px; font-weight: bold;">
-                                                {{ $shop->likes_count }}
-                                            </span>
                                            
-                                            <button class="save-btn" data-shop-id="{{ $shop->id }}">
+                                            <button class="save-btn {{ $shop->liked ? 'liked' : '' }}" data-shop-id="{{ $shop->id }}">
                                                 <svg class="save-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark-check" viewBox="0 0 16 16" style="width: 20px; height: 20px; margin-right: 5px;">
                                                     <path fill-rule="evenodd" d="M10.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0"/>
                                                     <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1z"/>
@@ -254,7 +264,7 @@
                                           <div class="col-md-3">
                                                 <!-- Avatar quán -->
                                                 <div class="card_nearme-avatar text-center mt-2">
-                                                    <img src="{{ $shop->avatar_url ?? asset('frontend/images/default_avatar.jpg') }}" class="avatar-img" alt="Avatar">
+                                                    <img src="{{ asset('frontend/images/' . basename($shop->user->avatar_url)) }}" class="avatar-img" alt="Avatar">
                                                 </div>
                                           </div>
                                           <div class="col-md-9">
@@ -299,14 +309,8 @@
                                             @endfor
                                         </div>
                                         <div class="d-flex align-items-center">
-                                            <span class="heart-icon me-1 like-btn" data-id="{{ $shop->id }}" 
-                                                style="font-size: 1.4em; cursor: pointer; transition: 0.3s; color: {{ $shop->liked ? '#FF4D4D' : '#e4e5e9' }};">
-                                                {{ $shop->liked ? '❤️' : '♡' }}
-                                            </span>
-                                            <span id="like-count-{{ $shop->id }}" style="margin-left: 5px; font-weight: bold;">
-                                                {{ $shop->likes_count }}
-                                            </span>
-                                            <button class="save-btn" data-shop-id="{{ $shop->id }}">
+                                           
+                                            <button class="save-btn {{ $shop->liked ? 'liked' : '' }}" data-shop-id="{{ $shop->id }}">
                                                 <svg class="save-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark-check" viewBox="0 0 16 16" style="width: 20px; height: 20px; margin-right: 5px;">
                                                     <path fill-rule="evenodd" d="M10.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0"/>
                                                     <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1z"/>
@@ -353,6 +357,86 @@
                   @endforeach
             </div>
         </div>
+        <!-- Các quán gần tôi -------------------------------------- -------------------------------------------------->
+   <div class="container_nearmes">
+    <div class="content_nearme" >
+          <img src="{{ asset('frontend/images/icon_ganday.svg') }}" alt="icon" class="icon">
+          <h2> Các quán đã lưu</h2>
+        </div>
+          <div class="row">
+                  @foreach($shops as $shop)
+                      <div class="col-md-3 mb-4">
+                          <div class="card_nearme shadow-sm">
+                              <!-- Ảnh quán cafe -->
+                              <div class="position-relative">
+                              <img src="{{ asset('frontend/images/' . $shop->cover_image) }}" class="card_nearme-img" alt="Coffee Shop">
+
+                              </div>
+                              <!-- Nội dung quán -->
+                                <div class="card_nearme-body p-2">
+                                    <!-- Đánh giá sao và nút Lưu -->
+                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                        <div>
+                                            @for($i = 0; $i < 5; $i++)
+                                                <span class="card_nearme-star" style="color: {{ $i < $shop->reviews_avg_rating ? '#FFC107' : '#e4e5e9' }}; font-size: 1.2em;">★</span>
+                                            @endfor
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                          
+                                           
+                                            <button class="save-btn {{ $shop->liked ? 'liked' : '' }}" data-shop-id="{{ $shop->id }}">
+                                                <svg class="save-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark-check" viewBox="0 0 16 16" style="width: 20px; height: 20px; margin-right: 5px;">
+                                                    <path fill-rule="evenodd" d="M10.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0"/>
+                                                    <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1z"/>
+                                                </svg>
+                                                <span class="save-text">
+                                                    @if($shop->liked)
+                                                        Đã Lưu
+                                                    @else
+                                                        Lưu
+                                                    @endif
+                                                </span>
+                                            </button>
+
+
+
+                                        </div>
+                                    </div>
+                                    <!-- Tên quán -->
+                                    <h5 class="card_nearme-title fw-bold">
+                                        <a href="{{ url('/shop/' . $shop->id) }}" class="text-dark text-decoration-none">
+                                            {{ $shop->shop_name }}
+                                        </a>
+                                    </h5>
+
+                                    <!-- Thông tin chi tiết -->
+                                    <div class="row">
+                                          <div class="col-md-3">
+                                                <!-- Avatar quán -->
+                                                <div class="card_nearme-avatar text-center mt-2">
+                                                    <img src="{{ asset('frontend/images/' . basename($shop->user->avatar_url)) }}" class="avatar-img" alt="Avatar">
+                                                </div>
+                                          </div>
+                                          <div class="col-md-9">
+                                          <p class="card_nearme-text mb-1">
+                                                    <span class="icon_nearme"><img src="{{ asset('frontend/images/mc.svg') }}" alt="Trang chủ"> Giờ: {{ date('H:i', strtotime($shop->opening_time)) }} am - {{ date('H:i', strtotime($shop->closing_time)) }} pm</span>
+                                                </p>
+                                                <p class="card_nearme-text mb-1">
+                                                    <span class="icon_nearme"><img src="{{ asset('frontend/images/gia.svg') }}" alt="Trang chủ"> Giá: {{ number_format($shop->min_price, 2, ',', '.') }}k - {{ number_format($shop->max_price, 2, ',', '.') }}k</span>
+                                                </p>
+                                                <p class="card_nearme-text">
+                                                    <span class="icon_nearme"><img src="{{ asset('frontend/images/đc.svg') }}" alt="Trang chủ"> Địa chỉ: {{ $shop->address->street ?? 'Đang cập nhật' }}</span>
+                                                </p>
+                                          </div>
+                                    </div>
+                                </div>
+                          </div>
+                      </div>
+                  @endforeach
+            </div>
+        </div>
+
+
 @endsection
           
 <script src="{{ asset('frontend/js/content-slider.js') }}"></script>
@@ -384,8 +468,22 @@ document.querySelectorAll('.dropdown-btn').forEach(button => {
     });
 });
 </script>
-
-
+<script>
+    // Tự động lấy vị trí khi người dùng mở trang
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(position => {
+            // Hiển thị tọa độ lên giao diện
+            document.querySelector('.latitude').textContent = "Vĩ độ: " + position.coords.latitude;
+            document.querySelector('.longitude').textContent = "Kinh độ: " + position.coords.longitude;
+        }, error => {
+            // Xử lý khi không thể lấy vị trí hoặc người dùng từ chối quyền truy cập
+            console.error("Không thể lấy vị trí: ", error);
+            alert("Bạn cần bật định vị để sử dụng tính năng này!");
+        });
+    } else {
+        alert("Trình duyệt của bạn không hỗ trợ định vị!");
+    }
+</script>
 
 
 

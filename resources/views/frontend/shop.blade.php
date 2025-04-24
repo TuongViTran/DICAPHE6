@@ -48,6 +48,12 @@
 </style>
 
 @section('content')
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}"> <!-- CSRF Token -->
+   
+</head>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
 <script src="https://cdn.tailwindcss.com"></script>
 
@@ -148,8 +154,55 @@
                 </div>
                 
                 <div class="mt-4  flex space-x-2" id="bt">
-                    <button class="bg-yellow-900 text-white px-4 py-2 rounded-lg">Menu</button>
-                    <button class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg">Lưu nè</button>
+                    <!-- Button mở Modal menu -->
+                        <button type="button" class="btn btn-warning text-white" data-bs-toggle="modal" data-bs-target="#menuModal">
+                          Menu
+                        </button>
+                        <!-- Modal hiển thị danh sách menu -->
+                        <div class="modal fade" id="menuModal" tabindex="-1" aria-labelledby="menuModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog max-w-[600px]">
+                                            <div class="modal-content">
+                                                <!-- Modal Header -->
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title">Menu {{ $coffeeShop->shop_name }}</h4>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                </div>
+
+                                                <!-- Modal body -->
+                                                <div class="modal-body">
+                                                    @if($coffeeShop->menu->count() > 0)
+                                                        @foreach ($coffeeShop->menu as $menu)
+                                                            <div class="mb-3">
+                                                                <img src="{{ asset('frontend/images/' . $menu->image_url) }}" class="rounded img-fluid mb-2 menu-item " 
+                                                                    data-menu-id="{{ $menu->id }}" alt="Menu Image" style="width: 100%; max-height:600px ;">
+                                                            </div>
+                                                        @endforeach
+                                                    @else
+                                                        <p class="text-muted">Chưa có menu nào được thêm.</p>
+                                                    @endif
+                                                </div>
+
+                                                
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="save-btn {{ $savedShops->contains($shop->id) ? 'liked' : '' }}" data-shop-id="{{ $shop->id }}">
+    <svg class="save-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+        viewBox="0 0 16 16" style="width: 20px; height: 20px; margin-right: 5px;">
+        <path fill-rule="evenodd"
+            d="M10.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0" />
+        <path
+            d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1z" />
+    </svg>
+    <span class="save-text">
+        @if($savedShops->contains($shop->id))
+            Đã Lưu
+        @else
+            Lưu
+        @endif
+    </span>
+</button>
                     <!-- Nút Đánh giá -->
    
             
@@ -376,8 +429,20 @@
             <div class="col-md-6">
             <div class="mt-6">
             <h2 class="text-2xl font-bold">Vị trí</h2>
-            <iframe style="border-radius:30px" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3834.2547299694816!2d108.16610517459974!3d16.052265939892848!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3142196d9a203685%3A0x4e8027fe58d65525!2zQ2FvIMSR4bqzbmcgRlBUIEPGoSB
-                T4bufIDI!5e0!3m2!1svi!2s!4v1744278102972!5m2!1svi!2s" width="650" height="530" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            @if ($latitude && $longitude)
+        <!-- Sử dụng iframe của Google Maps với latitude và longitude từ database -->
+        <iframe
+            width="650"
+            height="530"
+            style="border:0; border-radius:30px;"
+            loading="lazy"
+            allowfullscreen
+            referrerpolicy="no-referrer-when-downgrade"
+            src="https://www.google.com/maps?q={{ $latitude }},{{ $longitude }}&hl=vi&z=15&output=embed">
+        </iframe>
+    @else
+        <p class="text-red-500">Chưa có địa chỉ để hiển thị bản đồ.</p>
+    @endif
         </div>
         <div class="mt-6">
             <img alt="" class="rounded-lg" style="height:100px;width:400px; margin-left:60px"  src="{{ asset('frontend/images/quangcao.jpg' ) }}" />
@@ -396,3 +461,41 @@
     </script>
 @endif
 <script src="//unpkg.com/alpinejs" defer></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{{ asset('frontend/js/save-favorite.js') }}"></script>
+
+
+
+
+
+<style>
+/* Trạng thái mặc định (Lưu) */
+.save-btn {
+    background-color: white;
+    color: black;
+    border: 1px solid black;
+    padding: 5px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+/* Trạng thái đã lưu */
+.save-btn.liked {
+    background-color: red;
+    color: white;
+    border: none;
+}
+
+/* Thêm một chút khoảng cách cho icon */
+.save-icon {
+    fill: black; /* Màu của SVG khi chưa lưu */
+}
+
+/* Thay đổi màu của icon khi nút đã được lưu */
+.save-btn.liked .save-icon {
+    fill: white; /* Màu của SVG khi đã lưu */
+}
+
+</style>

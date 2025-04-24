@@ -1,17 +1,29 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const slider = document.getElementById("auto-slider");
-    const slides = slider.querySelectorAll(".slide");
+    const autoSlider = document.getElementById("auto-slider");
+    const autoSlides = autoSlider.querySelectorAll(".slide");
+
+    const contentSlider = document.getElementById("content-slider");
+    const contentSlides = contentSlider.querySelectorAll(".slide");
+
     const dots = document.querySelectorAll(".dot");
+    const dotsContent = document.querySelectorAll(".dot-content");
 
     let currentSlide = 0;
-    const totalSlides = slides.length;
+    const totalSlides = autoSlides.length;
     const slideIntervalTime = 4000;
 
     function showSlide(index) {
-        slider.style.transform = `translateX(-${index * 100}%)`;
+        // Di chuyển cả hai slider cùng lúc
+        autoSlider.style.transform = `translateX(-${index * 100}%)`;
+        contentSlider.style.transform = `translateX(-${index * 100}%)`;
 
+        // Cập nhật dot của autoSlider
         dots.forEach((dot) => dot.classList.remove("active"));
-        dots[index].classList.add("active");
+        if (dots[index]) dots[index].classList.add("active");
+
+        // Cập nhật dot của contentSlider
+        dotsContent.forEach((dot) => dot.classList.remove("active"));
+        if (dotsContent[index]) dotsContent[index].classList.add("active");
     }
 
     function nextSlide() {
@@ -21,7 +33,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let autoSlide = setInterval(nextSlide, slideIntervalTime);
 
+    // Dots bên phải (auto-slider)
     dots.forEach((dot) => {
+        dot.addEventListener("click", function () {
+            clearInterval(autoSlide);
+            currentSlide = parseInt(this.getAttribute("data-slide"));
+            showSlide(currentSlide);
+            autoSlide = setInterval(nextSlide, slideIntervalTime);
+        });
+    });
+
+    // Dots bên trái (content-slider)
+    dotsContent.forEach((dot) => {
         dot.addEventListener("click", function () {
             clearInterval(autoSlide);
             currentSlide = parseInt(this.getAttribute("data-slide"));
