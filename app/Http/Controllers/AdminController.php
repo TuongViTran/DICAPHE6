@@ -37,7 +37,7 @@ class AdminController extends Controller
 
     
                 // Kiểm tra like
-                $shop->liked = auth()->check() && $shop->likes()->where('user_id', auth()->id())->exists();
+                
             });
     
         // Quán có sao tệ nhất
@@ -65,7 +65,7 @@ class AdminController extends Controller
 
     
                 // Kiểm tra like
-                $shop->liked = auth()->check() && $shop->likes()->where('user_id', auth()->id())->exists();
+                
 
             });
     
