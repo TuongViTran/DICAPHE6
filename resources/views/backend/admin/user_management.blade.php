@@ -10,6 +10,10 @@
             <a href="{{ route('user.create') }}" class="bg-white border border-blue-500 text-blue-500 p-2 rounded ml-4">
                 + THÊM MỚI
             </a>
+            <form action="{{ route('user.management') }}" method="GET" class="ml-4">
+                <input type="text" name="search" placeholder="Tìm kiếm theo tên..." class="border rounded p-2">
+                <button type="submit" class="bg-blue-500 text-white p-2 rounded">Tìm</button>
+            </form>
         </div>
     </div>
 
