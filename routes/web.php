@@ -116,6 +116,7 @@ Route::prefix('feed-management')->name('feed.')->group(function () {
 });
 
 // Quản lý quán cà phê
+
 Route::get('/coffeeshops', [CoffeeShopController::class, 'index'])->name('coffeeshops_management');
 Route::get('/promotions', [PromotionController::class, 'index'])->name('promotions_management');
 Route::resource('cafes', CafeManagementController::class);
