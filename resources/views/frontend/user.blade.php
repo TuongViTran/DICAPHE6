@@ -20,66 +20,144 @@
       font-weight: bold;
       margin-bottom: 20px;
     }
-    .hot-cafes-container {
-      display: flex;
-      flex-wrap: wrap;
-      background: #fff;
-      border-radius: 10px;
-      padding: 20px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    }
-    .hot-cafes-left {
-      flex: 1;
-      min-width: 220px;
-    }
-    .hot-cafes-left img {
-      width: 100%;
-      height: 70%;
-      border-radius: 10px;
-      object-fit: cover;
-    }
-    .hot-cafes-right {
-      flex: 2;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 15px;
-      padding-left: 20px;
-    }
-    .cafe-card {
-      background-color: #f9f9f9;
-      border-radius: 8px;
-      padding: 10px 15px;
-    }
-    .cafe-card:nth-child(1) {
-      background-color: #f4f8cc;
-    }
-    .cafe-card h4 {
-      margin: 0 0 6px;
-      font-size: 16px;
-    }
-    .cafe-info {
-      font-size: 13px;
-      margin: 2px 0;
-    }
-    .stars {
-      color: #fbbf24;
-      font-size: 14px;
-    }
-    .indicator {
-      text-align: center;
-      margin-top: 10px;
-    }
-    .indicator span {
-      display: inline-block;
-      width: 10px;
-      height: 10px;
-      margin: 0 3px;
-      border-radius: 50%;
-      background: #d1d5db;
-    }
-    .indicator span.active {
-      background: #c0d904;
-    }
+    /* ===== Container tổng ===== */
+.hot-cafes-container {
+  display: flex;
+  align-items: stretch;
+  flex-wrap: wrap;
+  background: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  gap: 20px;
+}
+
+/* ===== Bên trái: Slider ===== */
+.slider-wrapper {
+  flex: 1;
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.slide {
+  min-width: 100%;
+  height: 100%;
+  display: block;
+  position: relative;
+}
+
+.slide img {
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.slider-indicators {
+  position: absolute;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  z-index: 10;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  background-color: rgba(255, 255, 255, 0.6);
+  border-radius: 50%;
+  transition: background-color 0.3s ease;
+}
+
+.dot.active {
+  background-color: #facc15;
+}
+
+/* ===== Bên phải: Danh sách quán ===== */
+.hot-cafes-right {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  padding-left: 20px;
+}
+
+.cafe-card {
+  background-color: white;
+  border-radius: 8px;
+  padding: 12px 15px;
+  transition: background-color 0.3s ease;
+}
+
+.cafe-card:nth-child(odd) {
+  border-right: 1px solid #ccc;
+}
+
+.cafe-card.active {
+  background-color: #fdfdbc;
+}
+
+.cafe-card h4,
+.cafe-card p {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.cafe-info {
+  font-size: 14px;
+  margin-bottom: 7px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.stars {
+  color: #fbbf24;
+  font-size: 14px;
+}
+
+/* ===== Carousel đánh giá (nếu dùng) ===== */
+.review-carousel {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  gap: 20px;
+  padding-bottom: 10px;
+}
+
+.review-carousel .card {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  min-width: 350px;
+}
+
+.review-carousel::-webkit-scrollbar {
+  height: 8px;
+}
+
+.review-carousel::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 10px;
+}
+
+.review-content {
+  margin-left: 50px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 400px;
+  margin-bottom: 10px;
+}
+
+/* ===== Nút chức năng (nếu có) ===== */
     .chucnang {
         margin-left:195px
     }
@@ -87,159 +165,11 @@
         margin-left: 10px;
         color:white
     }
-    .chucnang button svg{
-        margin-top:-4px;
-        margin-left:4px
-    }
-    .review-carousel {
-    display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    gap: 20px;
-    padding-bottom: 10px;
-}
-.review-carousel .card {
-    flex: 0 0 auto;
-    scroll-snap-align: start;
-    min-width: 350px;
-}
-.review-carousel::-webkit-scrollbar {
-    height: 8px;
-}
-.review-carousel::-webkit-scrollbar-thumb {
-    background: #ccc;
-    border-radius: 10px;
-}
-.review-content {
-  margin-left: 50px;
-  white-space: nowrap;        /* Không cho xuống dòng */
-  overflow: hidden;           /* Ẩn phần dư */
-  text-overflow: ellipsis;    /* Hiện dấu ... */
-  max-width: 400px;           /* Giới hạn chiều ngang */
-  display: block;             /* Đảm bảo nó hoạt động đúng */
-  margin-bottom:10px
+    .chucnang button svg {
+    margin-top: 0;
+    margin-left: 0;
 }
 
-
-.hot-cafes-right {
-  flex: 1;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  
-  gap: 0;
-}
-
-/* Tạo đường kẻ dọc ở giữa 2 cột */
-.hot-cafes-right .cafe-card:nth-child(odd) {
-  border-right: 1px solid #ccc;
-  padding: 12px 15px 12px 15px;
-}
-
-.hot-cafes-right .cafe-card:nth-child(even) {
-  padding: 12px 15px 12px 15px;
-}
-
-
-
-
-.slider-wrapper {
-  flex: 1;
-  position: relative;
-  width: 60%;
-  border-radius: 12px;
-  overflow: hidden;
-}
-
-.slider {
-  display: flex;
-  height: 100%;
-  transition: transform 0.5s ease;
-}
-
-.slide {
-  min-width: 100%;
-  display: none;
-}
-
-.slide:first-child {
-  display: block;
-}
-
-.slide img {
-  width: 100%;
-  height: auto;
-  border-radius: 12px;
-  object-fit: cover;
-}
-
-.slider-indicators {
-  position: absolute;
-  bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  text-align: center;
-  margin-top: 10px;
-}
-
-.dot {
-  display: inline-block;
-  width: 10px;
-  height: 10px;
-  margin: 5px;
-  background-color: #bbb;
-  border-radius: 50%;
-  cursor: pointer;
-}
-
-.dot.active {
-  background-color: #333;
-}
-
-/* Right side: Cafe list */
-.hot-cafes-right {
-  flex: 1;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px;
-  width: 40%;
-}
-
-.cafe-card {
-  padding: 12px;
-  border-radius: 0; /* Xóa bo góc */
-  background-color: white;
-  border: none; /* Bỏ viền xám */
-}
-
-
-.cafe-card.active {
-  background-color: #fefebf;
-}
-
-.cafe-card h4 {
-  font-size: 16px;
-  font-weight: bold;
-  margin-bottom: 8px;
-}
-
-.cafe-info {
-  margin-bottom: 7px;
-  font-size: 14px;
-}
-
-.stars {
-  color: gold;
-  font-size: 14px;
-}
-
-.cafe-card {
-    background-color: white;
-    transition: background-color 0.3s ease;
-}
-
-.cafe-card.active {
-    background-color: #fdfdbc; /* nền vàng */
-}
 
 
 
@@ -422,71 +352,73 @@
 
       
                 <div class="mt-2 d-flex chucnang" style="margin-left:280px">
-                <form action="{{ route('reviews.destroy', $review->id) }}" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn xoá đánh giá này không?');" style="display:inline;">
-                  @csrf
-                  @method('DELETE')
-                  <button type="submit" class="btn btn-danger btn-sm" style="height:35px">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
-                          <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
-                      </svg>
-                      Xóa
-                  </button>
-              </form>
+                    <form action="{{ route('reviews.destroy', $review->id) }}" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn xoá đánh giá này không?');" style="display:inline;">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger btn-sm d-flex align-items-center" style="height:35px">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+         class="bi bi-x-lg me-1" viewBox="0 0 16 16">
+        <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+    </svg>
+    Xóa
+</button>
+
+                    </form>
 
                     <!-- Nút chỉnh sửa -->
                     <button type="button" style="height:35px" class="btn btn-warning btn-sm" width="16" height="16" data-bs-toggle="modal" data-bs-target="#editModal-{{ $review->id }}">
                         ✏️ Chỉnh sửa
                     </button>
-<!-- Modal Chỉnh Sửa Review -->
-<div class="modal fade" id="editModal-{{ $review->id }}" tabindex="-1" aria-labelledby="editModalLabel-{{ $review->id }}" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <!-- Tiêu đề -->
-      <div class="modal-header">
-        <h5  class="modal-title">Chỉnh sửa đánh giá tại: {{ $review->shop->shop_name ?? 'Quán không xác định' }}</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
+                    <!-- Modal Chỉnh Sửa Review -->
+                    <div class="modal fade" id="editModal-{{ $review->id }}" tabindex="-1" aria-labelledby="editModalLabel-{{ $review->id }}" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <!-- Tiêu đề -->
+                          <div class="modal-header">
+                            <h5  class="modal-title">Chỉnh sửa đánh giá tại: {{ $review->shop->shop_name ?? 'Quán không xác định' }}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                          </div>
 
-      <!-- Form Chỉnh Sửa -->
-      <form action="{{ route('reviews.update', $review->id) }}" method="POST" enctype="multipart/form-data">
-        @csrf
-        @method('PUT')
+                          <!-- Form Chỉnh Sửa -->
+                          <form action="{{ route('reviews.update', $review->id) }}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            @method('PUT')
 
-        <div class="modal-body">
-          <!-- Chọn số sao -->
-          <label class="form-label">Đánh giá sao:</label>
-          <select class="form-control" name="rating" required>
-            <option value="5" {{ $review->rating == 5 ? 'selected' : '' }}>⭐⭐⭐⭐⭐ - Xuất sắc</option>
-            <option value="4" {{ $review->rating == 4 ? 'selected' : '' }}>⭐⭐⭐⭐ - Tốt</option>
-            <option value="3" {{ $review->rating == 3 ? 'selected' : '' }}>⭐⭐⭐ - Bình thường</option>
-            <option value="2" {{ $review->rating == 2 ? 'selected' : '' }}>⭐⭐ - Tệ</option>
-            <option value="1" {{ $review->rating == 1 ? 'selected' : '' }}>⭐ - Rất tệ</option>
-          </select>
+                            <div class="modal-body">
+                              <!-- Chọn số sao -->
+                              <label class="form-label">Đánh giá sao:</label>
+                              <select class="form-control" name="rating" required>
+                                <option value="5" {{ $review->rating == 5 ? 'selected' : '' }}>⭐⭐⭐⭐⭐ - Xuất sắc</option>
+                                <option value="4" {{ $review->rating == 4 ? 'selected' : '' }}>⭐⭐⭐⭐ - Tốt</option>
+                                <option value="3" {{ $review->rating == 3 ? 'selected' : '' }}>⭐⭐⭐ - Bình thường</option>
+                                <option value="2" {{ $review->rating == 2 ? 'selected' : '' }}>⭐⭐ - Tệ</option>
+                                <option value="1" {{ $review->rating == 1 ? 'selected' : '' }}>⭐ - Rất tệ</option>
+                              </select>
 
-          <!-- Nội dung đánh giá -->
-          <label class="form-label mt-2">Nội dung đánh giá:</label>
-          <textarea class="form-control"  name="content" rows="6" required>{{ $review->content }}</textarea>
+                              <!-- Nội dung đánh giá -->
+                              <label class="form-label mt-2">Nội dung đánh giá:</label>
+                              <textarea class="form-control"  name="content" rows="6" required>{{ $review->content }}</textarea>
 
-          <!-- Ảnh đánh giá (nếu muốn cho phép sửa ảnh) -->
-          <label class="form-label mt-2">Thay ảnh (nếu cần):</label>
-          <input type="file" class="form-control" name="img_url" accept="image/*">
-          @error('img_url')
-            <span class="text-danger">{{ $message }}</span>
-          @enderror
+                              <!-- Ảnh đánh giá (nếu muốn cho phép sửa ảnh) -->
+                              <label class="form-label mt-2">Thay ảnh (nếu cần):</label>
+                              <input type="file" class="form-control" name="img_url" accept="image/*">
+                              @error('img_url')
+                                <span class="text-danger">{{ $message }}</span>
+                              @enderror
 
-          <!-- Ngày đánh giá -->
-          <p class="mt-2 text-muted"><i class="bi bi-calendar"></i> Đã tạo: {{ $review->created_at->format('d/m/Y') }}</p>
-        </div>
+                              <!-- Ngày đánh giá -->
+                              <p class="mt-2 text-muted"><i class="bi bi-calendar"></i> Đã tạo: {{ $review->created_at->format('d/m/Y') }}</p>
+                            </div>
 
-        <!-- Nút Gửi -->
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
+                            <!-- Nút Gửi -->
+                            <div class="modal-footer">
+                              <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
 
 
                 </div>

@@ -37,7 +37,7 @@
             <div class="bg-white p-3 rounded shadow-sm text-center d-flex gap-4 justify-content-around" style="min-width: 500px;">
                 <div>
                     <p class="fs-6 text-secondary mb-1">Bài viết</p>
-                    <p class="fs-5 fw-bold mb-0">7</p>
+                    <p class="fs-5 fw-bold mb-0">{{ $postCount }}</p>
                 </div>
                 <div>
                     <p class="fs-6 text-secondary mb-1">Đã lưu</p>
@@ -45,7 +45,7 @@
                 </div>
                 <div>
                     <p class="fs-6 text-secondary mb-1">Feedback</p>
-                    <p class="fs-5 fw-bold mb-0">1.004k</p>
+                    <p class="fs-5 fw-bold mb-0">{{ $reviewCount }}</p>
                 </div>
             </div>
         </div>
@@ -265,8 +265,8 @@
                                                         <div class="mb-3">
                                                             <label for="status" class="form-label">Trạng Thái</label>
                                                             <select class="form-select" id="status" name="status">
-                                                                <option value="open" {{ $coffeeShop->status == 'open' ? 'selected' : '' }}>Mở cửa</option>
-                                                                <option value="closed" {{ $coffeeShop->status == 'closed' ? 'selected' : '' }}>Đóng cửa</option>
+                                                                <option value="Đang mở cửa" {{ $coffeeShop->status == 'Đang mở cửa' ? 'selected' : '' }}>Mở cửa</option>
+                                                                <option value="Đã đóng cửa" {{ $coffeeShop->status == 'Đã đóng cửa' ? 'selected' : '' }}>Đóng cửa</option>
                                                             </select>
                                                         </div>
 
@@ -410,29 +410,78 @@
                         <div class="modal-body">
                             <form action="{{ route('posts.store', ['id' => $coffeeShop->user_id]) }}" method="POST" enctype="multipart/form-data">
                                 @csrf
+
+                                {{-- Hiển thị lỗi validate tổng quát --}}
+                                @if ($errors->any())
+                                    <div class="alert alert-danger">
+                                        <strong>Đã xảy ra lỗi!</strong>
+                                        <ul class="mb-0">
+                                            @foreach ($errors->all() as $error)
+                                                <li>{{ $error }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                @endif
+
+                                {{-- Ảnh đại diện --}}
                                 <div class="mb-3">
-                                    <label for="image" class="form-label">Ảnh đại diện của bài biết</label>
-                                    <input type="file" class="form-control" id="image" name="image" accept="image/*" required>
+                                    <label for="image" class="form-label">Ảnh đại diện của bài viết</label>
+                                    <input type="file" class="form-control @error('image') is-invalid @enderror" 
+                                        id="image" name="image" accept="image/*" required>
+                                    @error('image')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
+
+                                {{-- Tiêu đề --}}
                                 <div class="mb-3">
                                     <label for="title" class="form-label">Tiêu đề</label>
-                                    <input type="text" class="form-control" id="title" name="title" required>
+                                    <input type="text" class="form-control @error('title') is-invalid @enderror" 
+                                        id="title" name="title" value="{{ old('title') }}" required>
+                                    @error('title')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
+
+                                {{-- Mô tả --}}
                                 <div class="mb-3">
                                     <label for="description" class="form-label">Mô tả</label>
-                                    <textarea id="description" name="description" class="form-control" rows="3" required></textarea>
+                                    <textarea id="description" name="description" rows="3"
+                                            class="form-control @error('description') is-invalid @enderror" required>{{ old('description') }}</textarea>
+                                    @error('description')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
+
+                                {{-- Nội dung --}}
                                 <div class="mb-3">
                                     <label for="content" class="form-label">Nội dung</label>
-                                    <textarea id="content" name="content" class="form-control ckeditor" ></textarea>
+                                    <textarea id="content" name="content" class="form-control ckeditor @error('content') is-invalid @enderror">{{ old('content') }}</textarea>
+                                    @error('content')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
+
+                                {{-- Nút lưu --}}
                                 <button type="submit" class="btn btn-primary">Lưu bài viết</button>
                             </form>
+
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        {{-- Tự mở modal tạo nếu lỗi từ tạo --}}
+            @if (session('create_modal'))
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    let createModal = new bootstrap.Modal(document.getElementById("createPostModal"));
+                    createModal.show();
+                });
+            </script>
+            @endif
+
 
         <!-- Danh sách bài viết -->
 
@@ -470,52 +519,94 @@
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger btn-sm">❌ Xóa</button>
                             </form>
+                            <!-- Nút mở modal -->
                             <button type="button" class="btn btn-warning btn-sm text-white" data-bs-toggle="modal" data-bs-target="#editPostModal{{ $post->id }}">
                                 ✏️ Chỉnh sửa
                             </button>
-                                <!-- Modal sửa -->
-                                <div class="modal fade" id="editPostModal{{ $post->id }}" tabindex="-1" aria-labelledby="editPostLabel{{ $post->id }}" aria-hidden="true">
-                                    <div class="modal-dialog modal-xl">
-                                        <div class="modal-content">
-                                            <form action="{{ route('posts.update', $post->id) }}" method="POST" enctype="multipart/form-data">
-                                                @csrf
-                                                @method('PUT')
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="editPostLabel{{ $post->id }}">Chỉnh sửa bài viết</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+
+                            <!-- Modal chỉnh sửa -->
+                            <div class="modal fade" id="editPostModal{{ $post->id }}" tabindex="-1" aria-labelledby="editPostLabel{{ $post->id }}" aria-hidden="true">
+                                <div class="modal-dialog modal-xl">
+                                    <div class="modal-content">
+                                        <form action="{{ route('posts.update', $post->id) }}" method="POST" enctype="multipart/form-data">
+                                            @csrf
+                                            @method('PUT')
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="editPostLabel{{ $post->id }}">Chỉnh sửa bài viết</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body">
+
+                                                {{-- Hiển thị lỗi nếu có --}}
+                                                @if(session('error'))
+                                                    <div class="alert alert-danger">{{ session('error') }}</div>
+                                                @endif
+                                             
+
+                                                {{-- Ảnh đại diện --}}
+                                                <div class="mb-3">
+                                                    <label for="image" class="form-label">Ảnh đại diện</label>
+                                                    <input type="file" class="form-control @error('image') is-invalid @enderror" name="image" accept="image/*">
+                                                    @error('image')
+                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
+                                                    <img src="{{ asset('storage/uploads/posts/' . $post->image_url) }}" class="mt-2 rounded" style="height: 120px;">
                                                 </div>
-                                                <div class="modal-body">
-                                                    <div class="mb-3">
-                                                        <label for="image" class="form-label">Ảnh đại diện</label>
-                                                        <input type="file" class="form-control" name="image" accept="image/*">
-                                                        <img src="{{ asset('storage/uploads/posts/' . $post->image_url) }}" class="mt-2 rounded" style="height: 120px;">
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label class="form-label">Tiêu đề</label>
-                                                        <input type="text" class="form-control" name="title" value="{{ $post->title }}" required>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label class="form-label">Mô tả</label>
-                                                        <textarea class="form-control" name="description" rows="3" required>{{ $post->description }}</textarea>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label class="form-label">Nội dung</label>
-                                                        <textarea class="form-control ckeditor" name="content" id="content2" rows="5">{{ $post->content }}</textarea>
-                                                    </div>
+
+                                                {{-- Tiêu đề --}}
+                                                <div class="mb-3">
+                                                    <label class="form-label">Tiêu đề</label>
+                                                    <input type="text" class="form-control @error('title') is-invalid @enderror" name="title" value="{{ old('title', $post->title) }}" required>
+                                                    @error('title')
+                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
                                                 </div>
-                                                <div class="modal-footer">
-                                                    <button type="submit" class="btn btn-primary">Cập nhật</button>
+
+                                                {{-- Mô tả --}}
+                                                <div class="mb-3">
+                                                    <label class="form-label">Mô tả</label>
+                                                    <textarea class="form-control @error('description') is-invalid @enderror" name="description" rows="3" required>{{ old('description', $post->description) }}</textarea>
+                                                    @error('description')
+                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
                                                 </div>
-                                            </form>
-                                        </div>
+
+                                                {{-- Nội dung --}}
+                                                <div class="mb-3">
+                                                    <label class="form-label">Nội dung</label>
+                                                    <textarea class="form-control ckeditor @error('content') is-invalid @enderror" name="content" rows="5">{{ old('content', $post->content) }}</textarea>
+                                                    @error('content')
+                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
+                                                </div>
+
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="submit" class="btn btn-primary">Cập nhật</button>
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
+                            </div>
+                            
                         </div>
                     </div>
                 </div>
             </div>
            
         @endforeach
+        {{-- Tự mở modal edit nếu lỗi từ chỉnh sửa --}}
+            @if (session('edit_modal_id'))
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    let modalId = "editPostModal{{ session('edit_modal_id') }}";
+                    let editModal = new bootstrap.Modal(document.getElementById(modalId));
+                    editModal.show();
+                });
+            </script>
+            @endif
+
     </div>
     </div>
     <div class="col-lg-4">
@@ -572,17 +663,6 @@
 
     </ul>
 </div>
-
-    </div>
-
-        </div>
-    </div>
-
-       
-
-    </ul>
-</div>
-
     </div>
 @endsection
           
