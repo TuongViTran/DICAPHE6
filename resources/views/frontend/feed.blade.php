@@ -1,7 +1,11 @@
 @extends('frontend.layout')
 @section('title', 'Feed')
 @section('content')
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<meta name="csrf-token" content="{{ csrf_token() }}">
+</head>
+
 <style>
     .user-avatar {
     width: 40px;
@@ -116,7 +120,9 @@
             <h4 style="margin-bottom:20px"><strong>Xem review để chọn quán nè</strong></h4>
             <div class="review-scroll-container">
             @foreach ($reviews->items() as $review)
-            
+            @php
+                $userLiked = auth()->check() && $review->likedUsers->contains(auth()->id());
+            @endphp
             <div class="card mb-1 p-3" style="border:none">
                 <div class="d-flex align-items-center">
                     <!-- Avatar người dùng -->
@@ -143,9 +149,13 @@
                                     @endfor
                             </p>
     
-                            <button class="like-button" data-id="{{ $review->id }}" style="border: none; background: none; cursor: pointer; margin-top:-19px;position: relative; left: 200px; top:-23px">
-                                ❤️ 
-                            </button>
+                            <button class="like-button" 
+        data-id="{{ $review->id }}" 
+        style="border: none; background: none; cursor: pointer; margin-top:-19px;position: relative; left: 200px; top:-23px">
+    <i class="fa{{ $userLiked ? 's' : 'r' }} fa-heart text-{{ $userLiked ? 'danger' : 'dark' }}"></i>
+</button>
+
+
                         </div>
                     </div>           
                 </div>
@@ -264,26 +274,31 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    $(document).ready(function() {
-        $('.like-button').click(function() {
-            let reviewId = $(this).data('id'); // Lấy ID của review
-            let likeCount = $(this).siblings('.like-count'); // Vị trí hiển thị số lượt thích
-            let button = $(this);
+document.addEventListener('DOMContentLoaded', function() {
+        const likeButtons = document.querySelectorAll('.like-button');
+        
+        likeButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const reviewId = button.getAttribute('data-review-id');
 
-            $.ajax({
-                url: `/review/${reviewId}/like`,
-                type: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}' // Token bảo mật Laravel
-                },
-                success: function(response) {
-                    likeCount.text(response.likes); // Cập nhật số lượt thích
-                    button.addClass('liked'); // Thêm hiệu ứng nếu cần
-                },
-                error: function() {
-                    alert('Có lỗi xảy ra, vui lòng thử lại!');
-                }
+                fetch(`/review/${reviewId}/like`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({})
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Cập nhật số lượt like
+                        button.querySelector('.like-count').textContent = data.likes_count;
+                    }
+                });
             });
         });
     });
 </script>
+
+

@@ -44,9 +44,8 @@ class HomeController extends Controller
         // Lấy bài viết cho slider (5 bài gần đây nhất)
         $sliderPosts = $posts->take(5);
     
-        // Lấy danh sách quán cà phê kèm địa chỉ, số like, trạng thái like của người dùng
+        // Lấy danh sách quán cà phê kèm địa chỉ, trạng thái like của người dùng
         $shops = CoffeeShop::with('address', 'style')
-        ->withCount('likes')
         ->take(4)
         ->get()
         ->each(function ($shop) {

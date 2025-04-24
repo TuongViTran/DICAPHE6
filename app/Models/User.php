@@ -56,7 +56,12 @@ class User extends Authenticatable
       {
           return $this->belongsToMany(CoffeeShop::class, 'favoriteshop', 'user_id', 'shop_id');
       }
-      
+
+       public function likedReviews()
+    {
+        return $this->belongsToMany(Review::class, 'likes', 'user_id', 'review_id'); // Chỉ định bảng 'likes'
+    }
+
       
       
 

@@ -18,21 +18,20 @@ return new class extends Migration {
                 ->constrained('users')
                 ->onDelete('cascade');
             
-            // Khóa ngoại đến bảng coffeeshop
-            $table->foreignId('coffeeshop_id')
-            ->constrained('coffeeshop') // Tên bảng là 'coffeeshop'
-            ->onDelete('cascade');
+            // Khóa ngoại đến bảng reviews
+            $table->foreignId('review_id')
+                ->constrained('reviews') // Liên kết đến bảng reviews
+                ->onDelete('cascade');
     
-            // Đảm bảo mỗi user chỉ like 1 quán 1 lần
-            $table->unique(['user_id', 'coffeeshop_id'], 'unique_user_coffeeshop');
+            // Đảm bảo mỗi user chỉ like 1 đánh giá 1 lần
+            $table->unique(['user_id', 'review_id'], 'unique_user_review');
     
             // Thêm index tăng hiệu suất truy vấn
-            $table->index(['user_id', 'coffeeshop_id']);
+            $table->index(['user_id', 'review_id']);
     
             $table->timestamps();
         });
     }
-
 
     public function down(): void
     {

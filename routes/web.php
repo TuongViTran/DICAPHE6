@@ -139,7 +139,9 @@ Route::middleware('auth')->group(function () {
 });
 
 // Review like
-Route::post('/review/{id}/like', [ReviewController::class, 'likeReview']);
+// Route::post('/review/{id}/like', [ReviewController::class, 'likeReview']);
+Route::post('/review/{review}/like', [ReviewController::class, 'toggleLike'])->middleware('auth');
+
 
 // Shop
 Route::get('/shop/{id}', [ShopController::class, 'show'])->name('frontend.shop');

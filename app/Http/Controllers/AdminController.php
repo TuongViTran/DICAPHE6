@@ -31,8 +31,8 @@ class AdminController extends Controller
                 $shop->setAttribute('reviews_avg_rating', $avgRating);
                 $shop->save();
 
-                // Kiểm tra like
-                $shop->liked = auth()->check() && $shop->likes()->where('user_id', auth()->id())->exists();
+                
+                
             });
 
         // Quán có sao tệ nhất
@@ -55,8 +55,8 @@ class AdminController extends Controller
                 $shop->setAttribute('reviews_avg_rating', $avgRating);
                 $shop->save();
 
-                // Kiểm tra like
-                $shop->liked = auth()->check() && $shop->likes()->where('user_id', auth()->id())->exists();
+                
+                
             });
 
 

@@ -375,9 +375,13 @@
                                     @endfor
                             </p>
     
-                            <button class="like-button" data-id="{{ $review->id }}" style="border: none; background: none; cursor: pointer; margin-top:-19px;position: relative; left: 50px; top:-23px">
-                                ❤️ 
-                            </button>
+                            <button 
+                class="btn-like btn border-0 bg-transparent p-0 me-2" 
+                data-review-id="{{ $review->id }}"
+                style="color: {{ $review->likedUsers->contains(auth()->id()) ? '#e25555' : '#ccc' }};"
+            >
+                <i class="fa-solid fa-heart"></i>
+            </button>
                             
                         </div>
                     </div>           
@@ -630,7 +634,46 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="{{ asset('frontend/js/save-favorite.js') }}"></script>
 
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const buttons = document.querySelectorAll('.like-button');
 
+    buttons.forEach(button => {
+        button.addEventListener('click', function () {
+            console.log('Click detected'); // <--- THÊM DÒNG NÀY
+
+            const reviewId = this.dataset.id;
+            const likeCountSpan = this.closest('.d-flex').querySelector('.like-count');
+            const icon = this.querySelector('i');
+
+            fetch(`/review/${reviewId}/like`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Content-Type': 'application/json'
+                },
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data); // <--- IN RA RESPONSE
+
+                if (data.success) {
+                    likeCountSpan.textContent = data.likes_count;
+
+                    if (data.liked) {
+                        icon.classList.remove('fa-regular', 'text-dark');
+                        icon.classList.add('fa-solid', 'text-danger');
+                    } else {
+                        icon.classList.remove('fa-solid', 'text-danger');
+                        icon.classList.add('fa-regular', 'text-dark');
+                    }
+                }
+            });
+        });
+    });
+});
+
+</script>
 
 
 
