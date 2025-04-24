@@ -663,18 +663,6 @@
 
     </ul>
 </div>
-
-    </div>
-
-        </div>
-    </div>
-
-        @endforeach
-    @endif
-
-    </ul>
-</div>
-
     </div>
 @endsection
           
