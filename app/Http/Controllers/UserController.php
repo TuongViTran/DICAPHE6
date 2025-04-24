@@ -15,14 +15,21 @@ use App\Models\CoffeeShop;
 
 class UserController extends Controller
 {
-    // Hiển thị danh sách người dùng
-    public function index()
-    {
-         
+    
+    public function index(Request $request)
+{
+    // Lấy giá trị tìm kiếm từ request
+    $search = $request->input('search');
 
-        $users = User::withCount('posts')->get(); // Lấy tất cả người dùng cùng với số bài viết
-        return view('backend.admin.user_management', compact('users'));
-    }
+    // Lấy danh sách người dùng, có thể thêm điều kiện tìm kiếm
+    $users = User::withCount('posts')
+        ->when($search, function ($query, $search) {
+            return $query->where('full_name', 'like', '%' . $search . '%');
+        })
+        ->paginate(10); // Phân trang 10 người dùng mỗi trang
+
+    return view('backend.admin.user_management', compact('users'));
+}
 
     // Hiển thị form thêm mới người dùng
     public function create()

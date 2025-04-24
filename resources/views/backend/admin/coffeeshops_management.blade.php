@@ -10,6 +10,7 @@
             <a href="{{ route('coffeeshop.create') }}" class="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition duration-200">
                 + THÊM MỚI QUÁN CÀ PHÊ
             </a>
+            
         </div>
     </div>
     @if (session('success'))
