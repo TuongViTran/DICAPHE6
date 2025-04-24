@@ -24,7 +24,8 @@ class OwnerController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
         $userId = auth()->id();
-
+        $postCount = Post::where('user_id', $userId)->count(); // Tổng số bài viết của chủ quán
+        $reviewCount = $coffeeShop->reviews()->count();  //Tổng lượt đánh giá của shop
         
         // Lấy danh sách đánh giá theo shop_id
         $reviews = Review::with('user')
@@ -32,7 +33,7 @@ class OwnerController extends Controller
         ->latest()
         ->get();
     
-        return view('frontend.owner', compact('coffeeShop','posts', 'reviews'));
+        return view('frontend.owner', compact('coffeeShop','posts', 'reviews', 'postCount', 'reviewCount'));
     }
     
     public function update(Request $request, $id)

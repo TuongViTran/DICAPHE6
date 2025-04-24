@@ -37,7 +37,7 @@
             <div class="bg-white p-3 rounded shadow-sm text-center d-flex gap-4 justify-content-around" style="min-width: 500px;">
                 <div>
                     <p class="fs-6 text-secondary mb-1">Bài viết</p>
-                    <p class="fs-5 fw-bold mb-0">7</p>
+                    <p class="fs-5 fw-bold mb-0">{{ $postCount }}</p>
                 </div>
                 <div>
                     <p class="fs-6 text-secondary mb-1">Đã lưu</p>
@@ -45,7 +45,7 @@
                 </div>
                 <div>
                     <p class="fs-6 text-secondary mb-1">Feedback</p>
-                    <p class="fs-5 fw-bold mb-0">1.004k</p>
+                    <p class="fs-5 fw-bold mb-0">{{ $reviewCount }}</p>
                 </div>
             </div>
         </div>

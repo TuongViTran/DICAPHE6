@@ -56,8 +56,9 @@ class PostController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
         $userId = auth()->id();
-
-        $coffeeShop = CoffeeShop::where('user_id', $id)->with('user')->first();
+        $postCount = Post::where('user_id', $userId)->count(); // Lấy tổng số bài viết của người dùng hiện tại
+        $coffeeShop = CoffeeShop::where('user_id', $id)->with('user')->first(); // Lấy thông tin quán cà phê của người dùng
+        $reviewCount = $coffeeShop->reviews()->count();  //Tổng lượt đánh giá của shop
 
         // Lấy danh sách đánh giá theo shop_id
         $reviews = Review::with('user')
@@ -65,7 +66,7 @@ class PostController extends Controller
         ->latest()
         ->get();
 
-        return view('frontend.owner', compact('posts','coffeeShop', 'reviews'));
+        return view('frontend.owner', compact('posts','coffeeShop', 'reviews', 'postCount', 'reviewCount'));
     }
     
     // Hàm lưu bài viết mới trong owner
@@ -83,6 +84,13 @@ class PostController extends Controller
                 'description' => 'required|string|max:500',
                 'content' => 'required',
                 'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            ], [
+                'title.required' => 'Tiêu đề không được để trống.',
+                'description.required' => 'Mô tả không được để trống.',
+                'content.required' => 'Nội dung không được để trống.',
+                'image.required' => 'Hình ảnh là bắt buộc.',
+                'image.image' => 'Tệp phải là hình ảnh.',
+                'image.mimes' => 'Ảnh phải thuộc định dạng: jpeg, png, jpg, gif.',
             ]);
     
             // Upload ảnh
