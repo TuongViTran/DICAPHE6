@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\CoffeeShop;
 use App\Models\Comment;
 use App\Models\Notification;
+use App\Models\Review;
 class PostController extends Controller
 {
     // Hàm hiển thị trang Home với bài viết và slider
@@ -58,43 +59,51 @@ class PostController extends Controller
 
         $coffeeShop = CoffeeShop::where('user_id', $id)->with('user')->first();
 
-        return view('frontend.owner', compact('posts','coffeeShop'));
+        // Lấy danh sách đánh giá theo shop_id
+        $reviews = Review::with('user')
+        ->where('shop_id', $coffeeShop->id)
+        ->latest()
+        ->get();
+
+        return view('frontend.owner', compact('posts','coffeeShop', 'reviews'));
     }
     
     // Hàm lưu bài viết mới trong owner
-    public function store(Request $request,$userId)
+    public function store(Request $request, $userId)
     {
-        $coffeeShop = CoffeeShop::where('user_id', $userId)->with('user')->first();
+        $coffeeShop = CoffeeShop::where('user_id', $userId)->first();
 
         if (!$coffeeShop) {
             return redirect()->back()->with('error', 'Không tìm thấy quán cà phê cho người dùng này.');
         }
 
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string|max:500',
-            'content' => 'required',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
-        ]);
-        // Xử lý upload ảnh
-        $imagePath = null;
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageName = time() . '_' . $image->getClientOriginalName();
-            $imagePath = $image->storeAs('uploads/posts', $imageName, 'public');
+        try {
+            $validated = $request->validate([
+                'title' => 'required|string|max:255',
+                'description' => 'required|string|max:500',
+                'content' => 'required',
+                'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            ]);
+    
+            // Upload ảnh
+            $imageName = time() . '_' . $request->file('image')->getClientOriginalName();
+            $request->file('image')->storeAs('uploads/posts', $imageName, 'public');
+    
+            Post::create([
+                'title' => $request->title,
+                'description' => $request->description,
+                'status' => 'Published',
+                'content' => $request->content,
+                'image_url' => $imageName,
+                'user_id' => $userId,
+            ]);
+    
+            return redirect()->route('posts.index', ['id' => $userId])->with('success', 'Tạo bài viết thành công!');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // ⚠️ Đánh dấu lỗi là của modal "create"
+            session()->flash('create_modal', true);
+            throw $e;
         }
-
-        Post::create([
-            'title' => $request->title,
-            'description' => $request->description,
-            'status' => 'Published',
-            'content' => $request->content,
-            //'image_url' => $request->image, // Ảnh đã được lưu từ CKEditor
-            'image_url' => $imageName,
-            'user_id' => $userId
-        ]);
-
-        return redirect()->route('posts.index', ['id' => $userId])->with('success', 'Bài viết đã được tạo.');
     }
 
     // Hàm xóa bài viết
@@ -114,32 +123,43 @@ class PostController extends Controller
     }
 
     // Hàm cập nhật bài viết
-    public function update(Request $request, Post $post)
+    public function update(Request $request, $id)
     {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string|max:500',
-            'content' => 'required',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
+        $post = Post::findOrFail($id);
 
-        // Nếu có ảnh mới thì xử lý
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageName = time() . '_' . $image->getClientOriginalName();
-            $image->storeAs('uploads/posts', $imageName, 'public');
-            $post->image_url = $imageName;
+        try {
+            $validated = $request->validate([
+                'title' => 'required|string|max:255',
+                'description' => 'required|string|max:500',
+                'content' => 'required',
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            ], [
+                'title.required' => 'Tiêu đề không được để trống.',
+                'description.required' => 'Mô tả không được để trống.',
+                'content.required' => 'Nội dung không được để trống.',
+                'image.required' => 'Hình ảnh là bắt buộc.',
+                'image.image' => 'Tệp phải là hình ảnh.',
+                'image.mimes' => 'Ảnh phải thuộc định dạng: jpeg, png, jpg, gif.',
+            ]);
+
+            if ($request->hasFile('image')) {
+                $imageName = time() . '_' . $request->file('image')->getClientOriginalName();
+                $request->file('image')->storeAs('uploads/posts', $imageName, 'public');
+                $post->image_url = $imageName;
+            }
+
+            $post->update([
+                'title' => $validated['title'],
+                'description' => $validated['description'],
+                'content' => $validated['content'],
+            ]);
+
+            return redirect()->back()->with('success', 'Cập nhật thành công!');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            session()->flash('edit_modal_id', $post->id); // 👈 để biết mở modal edit nào
+            throw $e;
         }
-
-        $post->update([
-            'title' => $request->title,
-            'description' => $request->description,
-            'content' => $request->content,
-        ]);
-
-        return back()->with('success', 'Cập nhật bài viết thành công!');
     }
-
 
     // upload anh cho ckeditor
     public function upload(Request $request)
