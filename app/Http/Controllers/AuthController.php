@@ -81,6 +81,7 @@ class AuthController extends Controller
             'role' => 'required|in:user,owner',
             'gender' => 'nullable|in:male,female,other', // Kiểm tra giới tính
             'avatar_url' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'phone' => 'nullable|string|max:15|unique:users',
         ]);
 
         $avatarPath = null;
@@ -104,6 +105,7 @@ class AuthController extends Controller
             'role' => $request->role,
             'gender' => $request->gender, // Lưu giới tính
             'avatar_url' => $avatarPath,
+            'phone' => $request->phone,
         ]);
 
         // Đăng nhập người dùng ngay sau khi đăng ký
