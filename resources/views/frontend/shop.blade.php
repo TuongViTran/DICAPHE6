@@ -18,7 +18,7 @@
         margin-bottom:5px;
     }
     .tt2 div svg{
-        margin: 5px 15px 0 10px
+        margin: 5px 15px 0 20px
     }
     #tt3{
         font-size:20px;
