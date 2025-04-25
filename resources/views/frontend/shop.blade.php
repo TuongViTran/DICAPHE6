@@ -350,7 +350,7 @@
                         Cảm ơn bạn đã lựa chọn quán cà phê của chúng tôi. Chúc bạn một ngày tuyệt vời!
                     </p>
 
-                </div>
+                </div>  
 
                 
             </div>

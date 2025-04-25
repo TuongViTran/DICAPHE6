@@ -359,7 +359,7 @@
           <h2>📌 Các quán đã lưu</h2>
         </div>
        
-@if($savedShops->isEmpty())
+        @if(empty($savedShops))
     <p class="text-muted">Chưa có quán nào được lưu.</p>
 @else
     <div class="row">

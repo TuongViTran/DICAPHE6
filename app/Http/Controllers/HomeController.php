@@ -61,7 +61,11 @@ class HomeController extends Controller
         
          // Lấy các quán đã lưu của user
          $user = auth()->user();
-        $savedShops = $user->favoriteShops()->with('address')->get();
+         $savedShops = [];
+         
+         if ($user) {
+             $savedShops = $user->favoriteShops()->with('address')->get();
+         }
         
         // Lấy danh sách các quán có rating 5 sao
         $fiveStarShops = CoffeeShop::with('address')
