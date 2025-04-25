@@ -45,6 +45,50 @@
     .hide-scrollbar::-webkit-scrollbar {
         display: none; /* Chrome, Safari and Opera */
     }
+    .slogan {
+    font-size: 1.5rem; /* nhỏ lại từ 2rem còn 1.5rem */
+    font-family: 'Dancing Script', cursive;
+    color: #5e412f;
+    text-align: center;
+    margin: 30px auto;
+    padding: 15px 20px; /* giảm padding */
+    max-width: 500px; /* thu nhỏ khung */
+    background: #fff9f5;
+    border: 1.5px dashed #c19a6b; /* viền mỏng hơn */
+    border-radius: 15px; /* bo góc mềm hơn */
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08); /* bóng đổ nhẹ hơn */
+    animation: fadeIn 2s ease-in-out;
+    position: relative;
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+.slogan::before {
+    content: "☕";
+    font-size: 2rem; /* icon nhỏ hơn */
+    position: absolute;
+    top: -15px;
+    left: -15px;
+}
+
+.slogan::after {
+    content: "☕";
+    font-size: 2rem;
+    position: absolute;
+    bottom: -15px;
+    right: -15px;
+}
+.decoration-space {
+    width: 100%;
+    height: 80px;
+    margin-top: 20px;
+    background: url('/path-to-your-leaf-or-coffee-pattern.png') center no-repeat;
+    background-size: contain;
+    opacity: 0.5;
+}
 </style>
 
 @section('content')
@@ -300,14 +344,12 @@
                     <!-- ket thuc div/button -->
                 </div>
                 <br>
-                <br>
-                <div class="flex items-center mt-1 text-black text-base">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" 
-                        stroke-width="1.5" stroke="red" class="w-5 h-5 mr-1">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M21.752 6.744a5.754 5.754 0 00-9.01-1.308L12 6.34l-.742-.904a5.754 5.754 0 00-9.01 1.308 6.196 6.196 0 001.282 7.684l7.042 6.442a1.5 1.5 0 002.036 0l7.042-6.442a6.196 6.196 0 001.282-7.684z" />
-                    </svg>
-                    <span>Đã thích (3,3K)</span>
+               
+                <div class="flex mt-1 items-center  text-black text-base">
+                ☕ <p style="font-size: 14px; color: rgba(0, 0, 0, 0.6);">
+                        Cảm ơn bạn đã lựa chọn quán cà phê của chúng tôi. Chúc bạn một ngày tuyệt vời!
+                    </p>
+
                 </div>
 
                 
@@ -416,11 +458,9 @@
            
         </div>
             <div class="mt-4">
-                <input 
-                    type="text"
-                    placeholder="Thêm nhận xét của bạn !"
-                    class="w-full px-5 py-3 bg-gray-100 border border-black rounded-xl placeholder-gray-500 text-base"
-                />
+                <div class="slogan" style="">
+                    Giọt cà phê rơi, lòng người bỗng nhẹ, ước mơ nảy nở bay xa.
+                </div>
             </div>
         </div>
 
