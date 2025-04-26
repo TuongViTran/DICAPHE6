@@ -190,9 +190,8 @@
 
             
             <div class="bg-white p-3 rounded shadow-sm text-center d-flex gap-4 justify-content-around" style="min-width: 500px;">
-                <div>
-                    <p class="fs-6 text-secondary mb-1">Bài viết</p>
-                    <p class="fs-5 fw-bold mb-0">7</p>
+                <div style="font-size:small">
+                    <img style="width:70px; height:70px; margin-top:-7px" src="https://img.tripi.vn/cdn-cgi/image/width=700,height=700/https://gcs.tripi.vn/public-tripi/tripi-feed/img/474074cAu/mau-logo-quan-cafe-don-gian_095347539.jpg" alt="">
                 </div>
                 <div>
                     <p class="fs-6 text-secondary mb-1">Đã lưu</p>
@@ -448,9 +447,7 @@
                         <!-- Đánh giá sao và nút Lưu -->
                         <div class="d-flex justify-content-between align-items-center mb-1">
                             <div>
-                                @for($i = 0; $i < 5; $i++)
-                                    <span class="card_nearme-star" style="color: {{ $i < $shop->reviews_avg_rating ? '#FFC107' : '#e4e5e9' }}; font-size: 1.2em;">★</span>
-                                @endfor
+                                <x-rating :score="$shop->reviews_avg_rating ?? 0" />
                             </div>
                             <div class="d-flex align-items-center">
                                
