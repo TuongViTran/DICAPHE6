@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -8,19 +9,28 @@ class StyleController extends Controller
 {
     public function index(Request $request)
     {
-        $query = $request->input('search');
-        $styles = Style::withCount('coffeeshops') // Đếm số lượng quán cho mỗi phong cách
-            ->when($query, function ($queryBuilder) use ($query) {
-                return $queryBuilder->where('style_name', 'like', '%' . $query . '%');
+        $search = $request->input('search');
+        $filter = $request->input('filter'); // Thêm filter
+
+        $styles = Style::withCount('coffeeshops')
+            ->when($search, function ($queryBuilder) use ($search) {
+                return $queryBuilder->where('style_name', 'like', '%' . $search . '%');
             })
-            ->get();
-    
+            ->when($filter, function ($queryBuilder) use ($filter) {
+                if ($filter == 'asc') {
+                    return $queryBuilder->orderBy('coffeeshops_count', 'asc');
+                } elseif ($filter == 'desc') {
+                    return $queryBuilder->orderBy('coffeeshops_count', 'desc');
+                }
+            })
+            ->get(); // Nếu bạn muốn phân trang thì thay bằng ->paginate(10)
+
         return view('backend.admin.styles.index', compact('styles'));
     }
 
     public function create()
     {
-        return view('backend.admin.styles.create'); // Đảm bảo rằng đường dẫn view là chính xác
+        return view('backend.admin.styles.create');
     }
 
     public function store(Request $request)
