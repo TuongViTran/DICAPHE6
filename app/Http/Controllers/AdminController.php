@@ -9,6 +9,7 @@ use App\Models\Post;
 
 class AdminController extends Controller
 {
+    
     public function dashboard()
     {
         // Quán có sao 5 sao
@@ -97,23 +98,36 @@ class AdminController extends Controller
             ->orderBy('month')
             ->pluck('count')
             ->toArray();
-    
+    // Lấy admin user
+$admin = User::where('role', 'admin')->first();
+$adminAvatar = $admin?->avatar_url;
+$adminName = $admin?->full_name;
+
         // Đảm bảo rằng mảng có đủ 7 phần tử (cho 7 tháng)
         $userCounts = array_pad($userCounts, 7, 0);
         $ownerCounts = array_pad($ownerCounts, 7, 0);
-    
-        return view('backend.admin.dashboard', compact(
-            'fiveStarShops',
-            'worstShops',
-            'totalCoffeeshops',
-            'totalUsers',
-            'customerCount',
-            'ownerCount',
-            'totalPosts',
-            'approvedPostsCount',
-            'unapprovedPostsCount',
-            'userCounts', // Truyền dữ liệu số lượng khách hàng theo tháng
-            'ownerCounts' // Truyền dữ liệu số lượng chủ quán theo tháng
-        ));
+    // Lấy 4 người dùng mới đăng ký gần nhất
+$latestUsers = User::orderBy('created_at', 'desc')
+->take(4)
+->get();
+
+return view('backend.admin.dashboard', compact(
+    'fiveStarShops',
+    'worstShops',
+    'totalCoffeeshops',
+    'totalUsers',
+    'customerCount',
+    'ownerCount',
+    'totalPosts',
+    'approvedPostsCount',
+    'unapprovedPostsCount',
+    'userCounts',
+    'ownerCounts',
+    'latestUsers',
+    'adminAvatar', // << thêm dòng này
+    'adminName'    // << và dòng này
+));
+
+
     }
 }

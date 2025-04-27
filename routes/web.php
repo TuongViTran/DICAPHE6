@@ -21,6 +21,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\StyleController;
 
+
 // Frontend --------------------------------------------
 Route::get('/test-session', function () {
     Session::put('test_key', 'Hello Session');
@@ -58,9 +59,7 @@ Route::get('/owner/reviews/{shopId}', [OwnerController::class, 'showShopReviews'
 Route::get('/search', [SearchController::class, 'search'])->name('search.result');
 Route::get('/autocomplete', [SearchController::class, 'autocomplete']);
 
-//Style 
-Route::get('/styles', [StyleController::class, 'index'])->name('style.index');
-Route::get('/styles/{id}', [StyleController::class, 'show'])->name('style.show');
+
 
 
 
@@ -164,3 +163,11 @@ Route::get('/post/{id}', [PostController::class, 'show'])->name('post.show');
 
 // Nếu bạn có file auth.php, có thể require ở đây
 // require __DIR__.'/auth.php';
+// Định nghĩa các route riêng lẻ
+Route::get('/styles', [StyleController::class, 'index'])->name('styles.index'); // Hiển thị danh sách phong cách
+Route::get('/styles/create', [StyleController::class, 'create'])->name('styles.create'); // Hiển thị form thêm phong cách
+Route::post('/styles', [StyleController::class, 'store'])->name('styles.store'); // Lưu phong cách mới
+Route::get('/style/{id}', [StyleController::class, 'show'])->name('style.show'); // Hiển thị chi tiết phong cách
+Route::get('/styles/{id}/edit', [StyleController::class, 'edit'])->name('styles.edit'); // Hiển thị form chỉnh sửa phong cách
+Route::put('/styles/{id}', [StyleController::class, 'update'])->name('styles.update'); // Cập nhật phong cách
+Route::delete('/styles/{id}', [StyleController::class, 'destroy'])->name('styles.destroy'); // Xóa phong cách
