@@ -276,7 +276,9 @@
     <div style="display:flex; flex-wrap: wrap; ">
 @endif
 @foreach ($reviews->items() as $review)
-            
+@php
+    $userLiked = auth()->check() && $review->likedUsers->contains(auth()->id());
+@endphp  
 <div class="card mb-1 p-3" style="border: none; position: relative; border-top-right-radius: 0; border-bottom-right-radius: 0;">
     <!-- Border phải giả, chiều cao giới hạn -->
     <div style="position: absolute; top: 15px; right: 0; height: 100%; max-height: 310px; width: 1px; background-color: #ccc;"></div>
@@ -291,9 +293,10 @@
          style="border-radius: 50%; box-shadow: 0 2px 8px rgba(0,0,0,0.15); object-fit: cover; margin-right:15px">
 
                     <div class="ft" style="margin-top:15px">
-                        <strong>{{ $review->user->full_name ?? 'Người dùng ẩn danh' }}</strong>
-                        <span style="max-width: 30px; "> đang ở tại <strong >{{ $review->shop->shop_name ?? 'Người dùng ẩn danh' }}</strong>
-                        </span>
+                        <div style="max-width: 95%; word-break: break-word;">
+                            <strong>{{ $review->user->full_name ?? 'Người dùng ẩn danh' }}</strong> 
+                            đang ở tại <strong>{{ $review->shop->shop_name ?? 'Người dùng ẩn danh' }}</strong>
+                        </div>
     
                         <div style="display:flex">
                         <p class="text-muted small">{{ $review->created_at ? $review->created_at->format('d/m/Y') : 'Không có ngày' }}</p>&ensp;
@@ -304,13 +307,12 @@
                                     @endfor
                             </p>
     
-                            <button 
-                class="btn-like btn border-0 bg-transparent p-0 me-2" 
-                data-review-id="{{ $review->id }}"
-                style="color: {{ $review->likedUsers->contains(auth()->id()) ? '#e25555' : '#ccc' }};"
-            >
-                <i class="fa-solid fa-heart"></i>
-            </button>
+                            <button class="like-button" 
+                                data-id="{{ $review->id }}" 
+                                style="border: none; background: none; cursor: pointer; position: absolute; top: 35px; right: 15px;">
+                                <i class="fa{{ $userLiked ? 's' : 'r' }} fa-heart text-{{ $userLiked ? 'danger' : 'dark' }}"></i>
+                            </button>
+
                             
                         </div>
                     </div>           
@@ -564,44 +566,47 @@
 <script src="{{ asset('frontend/js/save-favorite.js') }}"></script>
 
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const buttons = document.querySelectorAll('.like-button');
+document.addEventListener('DOMContentLoaded', function() {
+    const likeButtons = document.querySelectorAll('.like-button');
 
-    buttons.forEach(button => {
-        button.addEventListener('click', function () {
-            console.log('Click detected'); // <--- THÊM DÒNG NÀY
-
-            const reviewId = this.dataset.id;
-            const likeCountSpan = this.closest('.d-flex').querySelector('.like-count');
-            const icon = this.querySelector('i');
+    likeButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const reviewId = button.getAttribute('data-id');
 
             fetch(`/review/${reviewId}/like`, {
                 method: 'POST',
                 headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
                     'Content-Type': 'application/json'
                 },
+                body: JSON.stringify({})
             })
-            .then(res => res.json())
+            .then(response => response.json())
             .then(data => {
-                console.log(data); // <--- IN RA RESPONSE
-
                 if (data.success) {
-                    likeCountSpan.textContent = data.likes_count;
+                    const icon = button.querySelector('i');
+                    const likeCount = button.parentElement.querySelector('.like-count');
 
                     if (data.liked) {
-                        icon.classList.remove('fa-regular', 'text-dark');
-                        icon.classList.add('fa-solid', 'text-danger');
+                        icon.classList.remove('far');
+                        icon.classList.add('fas', 'text-danger');
+                        icon.classList.remove('text-dark');
                     } else {
-                        icon.classList.remove('fa-solid', 'text-danger');
-                        icon.classList.add('fa-regular', 'text-dark');
+                        icon.classList.remove('fas', 'text-danger');
+                        icon.classList.add('far', 'text-dark');
+                    }
+
+                    if (likeCount) {
+                        likeCount.textContent = data.likes_count;
                     }
                 }
+            })
+            .catch(error => {
+                console.error('Error:', error);
             });
         });
     });
 });
-
 </script>
 
 

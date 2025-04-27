@@ -140,7 +140,9 @@ Route::middleware('auth')->group(function () {
 
 // Review like
 // Route::post('/review/{id}/like', [ReviewController::class, 'likeReview']);
-Route::post('/review/{review}/like', [ReviewController::class, 'toggleLike'])->middleware('auth');
+// Route::post('/review/{review}/like', [ReviewController::class, 'toggleLike'])->middleware('auth');
+Route::post('/review/{id}/like', [ReviewController::class, 'toggleLike']);
+
 
 
 // Shop

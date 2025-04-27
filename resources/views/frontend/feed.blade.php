@@ -117,7 +117,7 @@
     <div class="row">
         <!-- Danh sách review -->
         <div class="col-md-7">
-            <h4 style="margin-bottom:20px"><strong>Xem review để chọn quán nè</strong></h4>
+            <p style="margin-bottom:20px;font-size:x-large"><strong>Xem review để chọn quán nè</strong></p>
             <div class="review-scroll-container">
             @foreach ($reviews->items() as $review)
             @php
@@ -150,10 +150,11 @@
                             </p>
     
                             <button class="like-button" 
-        data-id="{{ $review->id }}" 
-        style="border: none; background: none; cursor: pointer; margin-top:-19px;position: relative; left: 200px; top:-23px">
-    <i class="fa{{ $userLiked ? 's' : 'r' }} fa-heart text-{{ $userLiked ? 'danger' : 'dark' }}"></i>
-</button>
+                                data-id="{{ $review->id }}" 
+                                style="border: none; background: none; cursor: pointer; margin-top:-19px;position: relative; left: 200px; top:-23px">
+                                <i class="fa{{ $userLiked ? 's' : 'r' }} fa-heart text-{{ $userLiked ? 'danger' : 'dark' }}"></i>
+                            </button>
+
 
 
                         </div>
@@ -275,30 +276,46 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-        const likeButtons = document.querySelectorAll('.like-button');
-        
-        likeButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const reviewId = button.getAttribute('data-review-id');
+    const likeButtons = document.querySelectorAll('.like-button');
 
-                fetch(`/review/${reviewId}/like`, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({})
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // Cập nhật số lượt like
-                        button.querySelector('.like-count').textContent = data.likes_count;
+    likeButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const reviewId = button.getAttribute('data-id');
+
+            fetch(`/review/${reviewId}/like`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({})
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const icon = button.querySelector('i');
+                    const likeCount = button.parentElement.querySelector('.like-count');
+
+                    if (data.liked) {
+                        icon.classList.remove('far');
+                        icon.classList.add('fas', 'text-danger');
+                        icon.classList.remove('text-dark');
+                    } else {
+                        icon.classList.remove('fas', 'text-danger');
+                        icon.classList.add('far', 'text-dark');
                     }
-                });
+
+                    if (likeCount) {
+                        likeCount.textContent = data.likes_count;
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
             });
         });
     });
+});
 </script>
 
 

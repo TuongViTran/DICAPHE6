@@ -83,31 +83,33 @@ class ReviewController extends Controller
 
         return redirect()->back()->with('jsAlert', 'Đánh giá đã được xoá.');
     }
-    public function toggleLike(Review $review)
-    {
-        $user = auth()->user();
-    
-        // Kiểm tra xem user đã like hay chưa
-        $existingLike = $review->likedUsers()->where('user_id', $user->id)->first();
-    
-        if ($existingLike) {
-            // Nếu đã like thì un-like
-            $review->likedUsers()->detach($user->id);
-            $liked = false;
-            $review->decrement('likes_count');
-        } else {
-            // Nếu chưa like thì like
-            $review->likedUsers()->attach($user->id);
-            $liked = true;
-            $review->increment('likes_count');
-        }
-    
-        return response()->json([
-            'success' => true,
-            'liked' => $liked,
-            'likes_count' => $review->likes_count
-        ]);
+   // ReviewController.php
+public function toggleLike($id)
+{
+    $review = Review::findOrFail($id);
+    $user = auth()->user();
+
+    if (!$user) {
+        return response()->json(['success' => false, 'message' => 'Chưa đăng nhập']);
     }
+
+    if ($review->likedUsers()->where('user_id', $user->id)->exists()) {
+        $review->likedUsers()->detach($user->id);
+        $review->decrement('likes_count');
+        $liked = false;
+    } else {
+        $review->likedUsers()->attach($user->id);
+        $review->increment('likes_count');
+        $liked = true;
+    }
+
+    return response()->json([
+        'success' => true,
+        'likes_count' => $review->likes_count,
+        'liked' => $liked,
+    ]);
+}
+
     
     
     
