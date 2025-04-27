@@ -59,6 +59,13 @@ class HomeController extends Controller
         });
 
         
+         // Lấy các quán đã lưu của user
+         $user = auth()->user();
+         $savedShops = [];
+         
+         if ($user) {
+             $savedShops = $user->favoriteShops()->with('address')->get();
+         }
         
         // Lấy danh sách các quán có rating 5 sao
         $fiveStarShops = CoffeeShop::with('address')
@@ -75,7 +82,7 @@ class HomeController extends Controller
         });
         
         // Trả về view và truyền dữ liệu
-        return view('frontend.trangchu', compact('sliderPosts', 'shops', 'posts', 'fiveStarShops','styles'));
+        return view('frontend.trangchu', compact('sliderPosts', 'shops', 'posts', 'fiveStarShops','styles','savedShops'));
     }
     public function saveFavorite($shopId)
     {

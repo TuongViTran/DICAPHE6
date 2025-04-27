@@ -33,7 +33,20 @@ class OwnerController extends Controller
         ->latest()
         ->get();
     
-        return view('frontend.owner', compact('coffeeShop','posts', 'reviews', 'postCount', 'reviewCount'));
+          // Lấy các quán đã lưu của user
+          $user = auth()->user();
+          $savedShops = [];
+          
+          if ($user) {
+              $savedShops = $user->favoriteShops()->with('address')->get();
+          }
+
+          $saveCount = \DB::table('favoriteshop')
+          ->where('shop_id', $coffeeShop->id)
+          ->count();
+      
+
+        return view('frontend.owner', compact('coffeeShop','posts', 'reviews', 'postCount', 'reviewCount','savedShops','saveCount'));
     }
     
     public function update(Request $request, $id)

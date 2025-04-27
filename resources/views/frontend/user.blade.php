@@ -190,9 +190,8 @@
 
             
             <div class="bg-white p-3 rounded shadow-sm text-center d-flex gap-4 justify-content-around" style="min-width: 500px;">
-                <div>
-                    <p class="fs-6 text-secondary mb-1">Bài viết</p>
-                    <p class="fs-5 fw-bold mb-0">7</p>
+                <div style="font-size:small">
+                    <img style="width:70px; height:70px; margin-top:-7px" src="https://img.tripi.vn/cdn-cgi/image/width=700,height=700/https://gcs.tripi.vn/public-tripi/tripi-feed/img/474074cAu/mau-logo-quan-cafe-don-gian_095347539.jpg" alt="">
                 </div>
                 <div>
                     <p class="fs-6 text-secondary mb-1">Đã lưu</p>
@@ -207,7 +206,7 @@
 
 
         <body>
-  <div class="section-title"><p style="font-weight:700;font-size: 22px;"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-list-task" viewBox="0 0 16 16">
+  <div class="section-title"><p style="font-weight:700;font-size: 22px; display: flex;"><svg style=" margin: 9px 10px 0 0" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-list-task" viewBox="0 0 16 16">
   <path fill-rule="evenodd" d="M2 2.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5V3a.5.5 0 0 0-.5-.5zM3 3H2v1h1z"/>
   <path d="M5 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5M5.5 7a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1zm0 4a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1z"/>
   <path fill-rule="evenodd" d="M1.5 7a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H2a.5.5 0 0 1-.5-.5zM2 7h1v1H2zm0 3.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm1 .5H2v1h1z"/>
@@ -265,7 +264,7 @@
 <!-- <hr style="margin:30px"> -->
 
   <div class="row">
-  <h5 style="font-weight:700;font-size: 22px;"><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+  <h5 style="font-weight:700;font-size: 22px;display: flex;"><svg style=" margin: 9px 10px 0 0" xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
   <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
   <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
 </svg> Feedback của bạn</h5>
@@ -430,7 +429,7 @@
 </div>
    
 </div>
-<h4 class="mt-5 mb-3 fw-bold">📌 Quán đã lưu</h4>
+<h4 class="mt-5 mb-3 fw-bold" style="font-size:x-large">📌 Các quán đã lưu</h4>
 
 @if($savedShops->isEmpty())
     <p class="text-muted">Chưa có quán nào được lưu.</p>
@@ -448,9 +447,7 @@
                         <!-- Đánh giá sao và nút Lưu -->
                         <div class="d-flex justify-content-between align-items-center mb-1">
                             <div>
-                                @for($i = 0; $i < 5; $i++)
-                                    <span class="card_nearme-star" style="color: {{ $i < $shop->reviews_avg_rating ? '#FFC107' : '#e4e5e9' }}; font-size: 1.2em;">★</span>
-                                @endfor
+                                <x-rating :score="$shop->reviews_avg_rating ?? 0" />
                             </div>
                             <div class="d-flex align-items-center">
                                
