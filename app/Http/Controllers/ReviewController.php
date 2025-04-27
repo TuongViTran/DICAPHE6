@@ -83,4 +83,35 @@ class ReviewController extends Controller
 
         return redirect()->back()->with('jsAlert', 'Đánh giá đã được xoá.');
     }
+   // ReviewController.php
+public function toggleLike($id)
+{
+    $review = Review::findOrFail($id);
+    $user = auth()->user();
+
+    if (!$user) {
+        return response()->json(['success' => false, 'message' => 'Chưa đăng nhập']);
+    }
+
+    if ($review->likedUsers()->where('user_id', $user->id)->exists()) {
+        $review->likedUsers()->detach($user->id);
+        $review->decrement('likes_count');
+        $liked = false;
+    } else {
+        $review->likedUsers()->attach($user->id);
+        $review->increment('likes_count');
+        $liked = true;
+    }
+
+    return response()->json([
+        'success' => true,
+        'likes_count' => $review->likes_count,
+        'liked' => $liked,
+    ]);
+}
+
+    
+    
+    
+
 }

@@ -26,9 +26,18 @@ class AdminController extends Controller
     
                 // Gán vào để hiển thị
                 $shop->reviews_avg_rating = $avgRating;
+
+
+                // Gán vào cột thật sự trong DB và lưu lại
+                $shop->setAttribute('reviews_avg_rating', $avgRating);
+                $shop->save();
+
+                
+                
+
     
                 // Kiểm tra like
-                $shop->liked = auth()->check() && $shop->likes()->where('user_id', auth()->id())->exists();
+                
             });
     
         // Quán có sao tệ nhất
@@ -47,9 +56,17 @@ class AdminController extends Controller
     
                 // Cập nhật lại điểm đánh giá sau khi làm tròn
                 $shop->reviews_avg_rating = $avgRating;
+
+                $shop->setAttribute('reviews_avg_rating', $avgRating);
+                $shop->save();
+
+                
+                
+
     
                 // Kiểm tra like
-                $shop->liked = auth()->check() && $shop->likes()->where('user_id', auth()->id())->exists();
+                
+
             });
     
         // Thông tin tổng quan

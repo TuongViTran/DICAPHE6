@@ -21,6 +21,16 @@ class Review extends Model
      {
          return $this->belongsTo(User::class, 'user_id');
      }
+     public function likedUsers()
+     {
+         return $this->belongsToMany(User::class, 'likes', 'review_id', 'user_id'); // Chỉ định bảng 'likes'
+     }
+ 
+     public function likesCount()
+     {
+         return $this->likedUsers()->count();
+     }
+
      
 }
 

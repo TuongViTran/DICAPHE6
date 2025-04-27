@@ -18,7 +18,7 @@
         margin-bottom:5px;
     }
     .tt2 div svg{
-        margin: 5px 15px 0 10px
+        margin: 5px 15px 0 20px
     }
     #tt3{
         font-size:20px;
@@ -45,6 +45,50 @@
     .hide-scrollbar::-webkit-scrollbar {
         display: none; /* Chrome, Safari and Opera */
     }
+    .slogan {
+    font-size: 1.5rem; /* nhỏ lại từ 2rem còn 1.5rem */
+    font-family: 'Dancing Script', cursive;
+    color: #5e412f;
+    text-align: center;
+    margin: 30px auto;
+    padding: 15px 20px; /* giảm padding */
+    max-width: 500px; /* thu nhỏ khung */
+    background: #fff9f5;
+    border: 1.5px dashed #c19a6b; /* viền mỏng hơn */
+    border-radius: 15px; /* bo góc mềm hơn */
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08); /* bóng đổ nhẹ hơn */
+    animation: fadeIn 2s ease-in-out;
+    position: relative;
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+.slogan::before {
+    content: "☕";
+    font-size: 2rem; /* icon nhỏ hơn */
+    position: absolute;
+    top: -15px;
+    left: -15px;
+}
+
+.slogan::after {
+    content: "☕";
+    font-size: 2rem;
+    position: absolute;
+    bottom: -15px;
+    right: -15px;
+}
+.decoration-space {
+    width: 100%;
+    height: 80px;
+    margin-top: 20px;
+    background: url('/path-to-your-leaf-or-coffee-pattern.png') center no-repeat;
+    background-size: contain;
+    opacity: 0.5;
+}
 </style>
 
 @section('content')
@@ -300,15 +344,13 @@
                     <!-- ket thuc div/button -->
                 </div>
                 <br>
-                <br>
-                <div class="flex items-center mt-1 text-black text-base">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" 
-                        stroke-width="1.5" stroke="red" class="w-5 h-5 mr-1">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M21.752 6.744a5.754 5.754 0 00-9.01-1.308L12 6.34l-.742-.904a5.754 5.754 0 00-9.01 1.308 6.196 6.196 0 001.282 7.684l7.042 6.442a1.5 1.5 0 002.036 0l7.042-6.442a6.196 6.196 0 001.282-7.684z" />
-                    </svg>
-                    <span>Đã thích (3,3K)</span>
-                </div>
+               
+                <div class="flex mt-1 items-center  text-black text-base">
+                ☕ <p style="font-size: 14px; color: rgba(0, 0, 0, 0.6);">
+                        Cảm ơn bạn đã lựa chọn quán cà phê của chúng tôi. Chúc bạn một ngày tuyệt vời!
+                    </p>
+
+                </div>  
 
                 
             </div>
@@ -332,17 +374,43 @@
       
         <div class="mt-1 max-h-[400px] overflow-y-auto pr-2 scroll-smooth hide-scrollbar">       
             @foreach($coffeeShop->reviews as $review)
+            @php
+    $userLiked = auth()->check() && $review->likedUsers->contains(auth()->id());
+@endphp 
     <div class=" pt-2" x-data="{ expanded: false }" style="margin-bottom:10px">
         <div class="flex justify-between relative">
             <div class="flex items-center">
                 <img src="{{ asset('frontend/images/' . basename($review->user->avatar_url)) }}"
                   class="rounded-full object-cover shadow-md" width="60" height="60" alt="Avatar">
                 <div class="ml-3" style="margin-left:30px">
-                <div class="flex justify-between items-start" >
-                    <p class="font-semi text-gray-500">
-                        <span>{{ $review->user->full_name ?? 'Người dùng' }}</span>
-                    </p>        
+                <div class="f justify-between items-start" >
+                    <p class="mb-1" style="font-size: 14px;">
+                        <strong>{{ $review->user->full_name ?? 'Người dùng ẩn danh' }}</strong>
+                        <span class="text-muted"> đang ở tại </span>
+                        <strong>{{ $review->shop->shop_name ?? 'Quán ẩn danh' }}</strong>
+                    </p>   
+                    
+                    <div style="display:flex;">
+                        <p class="text-sm text-gray-500">{{ $review->created_at->format('d/m/Y') }}</p>
+                        <span style="margin: -3px 0px 0 10px" class="like-count ">{{ $review->likes_count }}  </span>  <span style="margin-top:-3px; margin-left:2px"> lượt thích</span>   <!-- Hiển thị số sao -->
+
+                            <p class="text-warning" style="margin-left:25px; margin-top:-3px">    
+                            @for ($i = 1; $i <= 5; $i++)
+                                <i class="fa{{ $i <= $review->rating ? 's' : 'r' }} fa-star" style="font-size: 0.75rem;margin-right: 3px;"></i>
+                            @endfor
+                        </p>
+                    </div>
+
+                 <button class="like-button" 
+                        data-id="{{ $review->id }}" 
+                        style="border: none; background: none; cursor: pointer; position: absolute; top: 35px; right: 15px; font-size: 0.6rem;">
+                    <i class="fa{{ $userLiked ? 's' : 'r' }} fa-heart text-{{ $userLiked ? 'danger' : 'dark' }}" style="font-size: 1.0rem;"></i>
+                </button>
+
+                   
                 </div>
+             
+
                     <!-- Nội dung đánh giá -->
                 <div class="text-gray-700 text-sm relative font-semibold transition-all duration-300 ease-in-out">
                     <p
@@ -372,16 +440,7 @@
             </div>
         </div>
         <!-- Hình ảnh (ẩn khi chưa mở) -->
-        <div  x-show="expanded" x-cloak >
-              <div style="display:flex;margin-left:90px">
-              <p class="text-sm text-gray-500">{{ $review->created_at->format('d/m/Y') }}</p>
-                <p class="text-warning" style="margin-left:25px; margin-top:-3">    
-                @for ($i = 1; $i <= 5; $i++)
-                    <i class="fa{{ $i <= $review->rating ? 's' : 'r' }} fa-star" style="font-size: 0.75rem;margin-right: 3px;"></i>
-                @endfor
-             </p>
-              </div>
-        </div>
+        
 
         <div x-show="expanded" x-cloak class="mt-2 flex flex-wrap gap-4">
             @php
@@ -416,11 +475,9 @@
            
         </div>
             <div class="mt-4">
-                <input 
-                    type="text"
-                    placeholder="Thêm nhận xét của bạn !"
-                    class="w-full px-5 py-3 bg-gray-100 border border-black rounded-xl placeholder-gray-500 text-base"
-                />
+                <div class="slogan" style="">
+                    Giọt cà phê rơi, lòng người bỗng nhẹ, ước mơ nảy nở bay xa.
+                </div>
             </div>
         </div>
 
@@ -463,7 +520,49 @@
 <script src="//unpkg.com/alpinejs" defer></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="{{ asset('frontend/js/save-favorite.js') }}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const likeButtons = document.querySelectorAll('.like-button');
 
+    likeButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const reviewId = button.getAttribute('data-id');
+
+            fetch(`/review/${reviewId}/like`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({})
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const icon = button.querySelector('i');
+                    const likeCount = button.parentElement.querySelector('.like-count');
+
+                    if (data.liked) {
+                        icon.classList.remove('far');
+                        icon.classList.add('fas', 'text-danger');
+                        icon.classList.remove('text-dark');
+                    } else {
+                        icon.classList.remove('fas', 'text-danger');
+                        icon.classList.add('far', 'text-dark');
+                    }
+
+                    if (likeCount) {
+                        likeCount.textContent = data.likes_count;
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    });
+});
+</script>
 
 
 

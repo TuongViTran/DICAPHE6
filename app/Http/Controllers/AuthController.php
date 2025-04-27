@@ -21,68 +21,89 @@ class AuthController extends Controller
     }
 
     // Xử lý đăng nhập
-    public function login(Request $request) {
-        $credentials = $request->only('email', 'password');
+    public function login(Request $request)
+{
+    $credentials = $request->only('email', 'password');
 
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
+    if (Auth::attempt($credentials)) {
+        $request->session()->regenerate();
+        $user = Auth::user();
+        $ip = $request->ip();
+        
+        $client = new Client();
+        try {
+            $response = $client->get("https://ipinfo.io/{$ip}?token=2956ed85a25bba");
+            $data = json_decode($response->getBody(), true);
 
-            // Lấy thông tin người dùng đã đăng nhập
-            $user = Auth::user();
-
-            // Lấy địa chỉ IP của người dùng
-            $ip = $request->ip();
-
-            // Gọi API ipinfo.io để lấy tọa độ
-            $client = new Client();
-            try {
-                $response = $client->get("https://ipinfo.io/{$ip}?token=2956ed85a25bba");
-                $data = json_decode($response->getBody(), true);
-
-                // Kiểm tra nếu key 'loc' tồn tại
-                if (isset($data['loc'])) {
-                    // Lấy tọa độ từ API trả về (vĩ độ và kinh độ)
-                    $location = explode(',', $data['loc']);
-                    $latitude = $location[0];
-                    $longitude = $location[1];
-                    // Ghi log giá trị latitude và longitude
-                      Log::info('Latitude: ' . $latitude . ' Longitude: ' . $longitude);
-
-                    // Cập nhật tọa độ vào bảng users
-                    $user->latitude = $latitude;
-                    $user->longitude = $longitude;
-                    $user->save();
-                }
-            } catch (\Exception $e) {
-                // Nếu có lỗi khi gọi API, bạn có thể log lỗi hoặc xử lý theo cách khác
-                \Log::error("Error fetching location: " . $e->getMessage());
+            if (isset($data['loc'])) {
+                $location = explode(',', $data['loc']);
+                $latitude = $location[0];
+                $longitude = $location[1];
+                $user->latitude = $latitude;
+                $user->longitude = $longitude;
+                $user->save();
             }
-
-            // Chuyển hướng người dùng theo vai trò
-            switch ($user->role) {
-                case 'admin':
-                    return redirect()->route('dashboard'); // bạn có thể thêm route riêng nếu có
-                case 'owner':
-                    return redirect()->route('trangchu', ['id' => $user->id]);
-                default:
-                    return redirect()->route('trangchu', ['id' => $user->id]);
-            }
+        } catch (\Exception $e) {
+            \Log::error("Error fetching location: " . $e->getMessage());
         }
 
-        return back()->withErrors(['email' => 'Thông tin không chính xác.']);
+        // Điều hướng
+        switch ($user->role) {
+            case 'admin':
+                $url = route('dashboard');
+                break;
+            case 'owner':
+            case 'user':
+                $url = route('trangchu', ['id' => $user->id]);
+                break;
+            default:
+                Auth::logout();
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Tài khoản không hợp lệ.'
+                ], 422);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'redirect' => $url
+        ]);
     }
 
+    return response()->json([
+        'status' => 'error',
+        'errors' => [
+            'email' => ['Thông tin đăng nhập không chính xác.']
+        ]
+    ], 422);
+}
+
     // Xử lý đăng ký
-    public function register(Request $request) {
-        $request->validate([
-            'full_name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',
-            'role' => 'required|in:user,owner',
-            'gender' => 'nullable|in:male,female,other', // Kiểm tra giới tính
-            'avatar_url' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'phone' => 'nullable|string|max:15|unique:users',
-        ]);
+    public function register(Request $request)
+        {
+            $request->validate([
+                'full_name' => 'required|string|max:255|unique:users,full_name',
+                'email' => 'required|email|max:255|unique:users,email',
+                'phone' => 'required|regex:/^([0-9]{10,11})$/|unique:users,phone',
+                'password' => 'required|string|min:6|confirmed',
+                'gender' => 'required|in:male,female',
+                'role' => 'required|in:user,owner',
+                'avatar_url' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            ], [
+                'full_name.required' => 'Vui lòng nhập tên tài khoản.',
+                'full_name.unique' => 'Tên tài khoản đã tồn tại.',
+                'email.required' => 'Vui lòng nhập email.',
+                'email.email' => 'Email không đúng định dạng.',
+                'email.unique' => 'Email đã được sử dụng.',
+                'phone.required' => 'Vui lòng nhập số điện thoại.',
+                'phone.regex' => 'Số điện thoại không hợp lệ.',
+                'phone.unique' => 'Số điện thoại đã được sử dụng.',
+                'password.required' => 'Vui lòng nhập mật khẩu.',
+                'password.confirmed' => 'Xác nhận mật khẩu không khớp.',
+                'gender.required' => 'Vui lòng chọn giới tính.',
+                'role.required' => 'Vui lòng chọn loại tài khoản.',
+                'avatar_url.image' => 'File tải lên phải là hình ảnh.',
+            ]);
 
         $avatarPath = null;
 

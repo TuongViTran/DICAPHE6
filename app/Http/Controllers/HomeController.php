@@ -44,9 +44,8 @@ class HomeController extends Controller
         // Lấy bài viết cho slider (5 bài gần đây nhất)
         $sliderPosts = $posts->take(5);
     
-        // Lấy danh sách quán cà phê kèm địa chỉ, số like, trạng thái like của người dùng
+        // Lấy danh sách quán cà phê kèm địa chỉ, trạng thái like của người dùng
         $shops = CoffeeShop::with('address', 'style')
-        ->withCount('likes')
         ->take(4)
         ->get()
         ->each(function ($shop) {
@@ -60,6 +59,13 @@ class HomeController extends Controller
         });
 
         
+         // Lấy các quán đã lưu của user
+         $user = auth()->user();
+         $savedShops = [];
+         
+         if ($user) {
+             $savedShops = $user->favoriteShops()->with('address')->get();
+         }
         
         // Lấy danh sách các quán có rating 5 sao
         $fiveStarShops = CoffeeShop::with('address')
@@ -76,7 +82,7 @@ class HomeController extends Controller
         });
         
         // Trả về view và truyền dữ liệu
-        return view('frontend.trangchu', compact('sliderPosts', 'shops', 'posts', 'fiveStarShops','styles'));
+        return view('frontend.trangchu', compact('sliderPosts', 'shops', 'posts', 'fiveStarShops','styles','savedShops'));
     }
     public function saveFavorite($shopId)
     {
