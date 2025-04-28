@@ -1,5 +1,6 @@
 <?php
-
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ReviewController;
@@ -20,7 +21,7 @@ use App\Http\Controllers\ShopController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\StyleController;
-
+use App\Http\Controllers\Auth\PasswordController;
 // Frontend --------------------------------------------
 Route::get('/test-session', function () {
     Session::put('test_key', 'Hello Session');
@@ -58,9 +59,7 @@ Route::get('/owner/reviews/{shopId}', [OwnerController::class, 'showShopReviews'
 Route::get('/search', [SearchController::class, 'search'])->name('search.result');
 Route::get('/autocomplete', [SearchController::class, 'autocomplete']);
 
-//Style 
-Route::get('/styles', [StyleController::class, 'index'])->name('style.index');
-Route::get('/styles/{id}', [StyleController::class, 'show'])->name('style.show');
+
 
 
 
@@ -117,6 +116,7 @@ Route::prefix('feed-management')->name('feed.')->group(function () {
 });
 
 // Quản lý quán cà phê
+
 Route::get('/coffeeshops', [CoffeeShopController::class, 'index'])->name('coffeeshops_management');
 Route::get('/promotions', [PromotionController::class, 'index'])->name('promotions_management');
 Route::resource('cafes', CafeManagementController::class);
@@ -131,16 +131,22 @@ Route::delete('/coffeeshops/{coffeeshop}', [CoffeeShopController::class, 'destro
 // Quản lý khuyến mãi
 Route::get('/promotions', [PromotionController::class, 'index'])->name('promotions_management');
 
-// Profile (bảo vệ bằng middleware auth)
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+// Điều hướng trang cá nhân đến trang chỉnh sửa
+Route::middleware(['auth'])->group(function () {
+    Route::get('/profile', function () {
+        return redirect()->route('profile.edit'); // Điều hướng về trang chỉnh sửa
+    })->name('profile');
+
+    Route::get('/profile/edit', [UserController::class, 'editProfile'])->name('profile.edit');
+    Route::post('/profile/update', [UserController::class, 'updateProfile'])->name('profile.update');
+    Route::delete('/profile', [UserController::class, 'destroyProfile'])->name('profile.destroy'); 
 });
 
 // Review like
 // Route::post('/review/{id}/like', [ReviewController::class, 'likeReview']);
-Route::post('/review/{review}/like', [ReviewController::class, 'toggleLike'])->middleware('auth');
+// Route::post('/review/{review}/like', [ReviewController::class, 'toggleLike'])->middleware('auth');
+Route::post('/review/{id}/like', [ReviewController::class, 'toggleLike']);
+
 
 
 // Shop
@@ -160,5 +166,43 @@ Route::post('/coffeeshop/favorite/{shopId}', [HomeController::class, 'saveFavori
 // bài viết
 Route::get('/post/{id}', [PostController::class, 'show'])->name('post.show');
 
+// trang thong tin
+Auth::routes(['verify' => true]);
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::middleware('auth')->group(function () {
+    Route::post('/email/verification-notification', function (Request $request) {
+        $request->user()->sendEmailVerificationNotification();
+
+        return back()->with('status', 'verification-link-sent');
+    })->middleware('throttle:6,1')->name('verification.send');
+});
+
+Route::middleware('auth')->group(function () {
+    // Route này để người dùng cập nhật mật khẩu của mình
+    Route::put('password', [PasswordController::class, 'update'])->name('password.update');
+});
+
+// Route cho đăng nhập và đăng ký (dành cho người dùng chưa đăng nhập)
+Route::middleware('guest')->group(function () {
+    Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
+    Route::post('login', [AuthController::class, 'login']);
+    Route::get('register', [AuthController::class, 'showRegisterForm'])->name('register');
+    Route::post('register', [AuthController::class, 'register']);
+});
+
+// Route cho những người đã đăng nhập
+Route::middleware('auth')->group(function () {
+    Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+});
 // Nếu bạn có file auth.php, có thể require ở đây
 // require __DIR__.'/auth.php';
+// Định nghĩa các route riêng lẻ
+Route::get('/styles', [StyleController::class, 'index'])->name('styles.index'); // Hiển thị danh sách phong cách
+Route::get('/styles/create', [StyleController::class, 'create'])->name('styles.create'); // Hiển thị form thêm phong cách
+Route::post('/styles', [StyleController::class, 'store'])->name('styles.store'); // Lưu phong cách mới
+Route::get('/style/{id}', [StyleController::class, 'show'])->name('style.show'); // Hiển thị chi tiết phong cách
+Route::get('/styles/{id}/edit', [StyleController::class, 'edit'])->name('styles.edit'); // Hiển thị form chỉnh sửa phong cách
+Route::put('/styles/{id}', [StyleController::class, 'update'])->name('styles.update'); // Cập nhật phong cách
+Route::delete('/styles/{id}', [StyleController::class, 'destroy'])->name('styles.destroy'); // Xóa phong cách

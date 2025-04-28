@@ -601,6 +601,9 @@
         <p class="text-center text-muted mt-4" style="font-style: italic;">Chưa có đánh giá nào.</p>
     @else
         @foreach ($reviews as $review)
+        @php
+    $userLiked = auth()->check() && $review->likedUsers->contains(auth()->id());
+@endphp  
         <div class="d-flex align-items-start gap-3 mb-4">
         <!-- Avatar -->
         <img src="{{ asset('frontend/images/' . basename($review->user->avatar_url)) }}"
@@ -613,7 +616,11 @@
             <p class="mb-1" style="font-size: 14px;">
                 <strong>{{ $review->user->full_name ?? 'Người dùng ẩn danh' }}</strong>
                 <span class="text-muted"> đang ở tại </span>
-                <strong>{{ $review->shop->shop_name ?? 'Quán ẩn danh' }}</strong>
+                <strong>
+                    <a href="{{ route('frontend.shop', ['id' => $review->shop->id]) }}">
+                        <strong>{{ $review->shop->shop_name }}</strong>
+                    </a>
+                </strong>
             </p>
 
             <p class="mb-1" style="font-size: 14px;">{{ $review->content }}</p>
@@ -633,11 +640,11 @@
             </div>
 
             <!-- Nút like cố định -->
-            <button class="like-button"
-                    data-id="{{ $review->id }}"
-                    style="position: absolute; top: 0; right: 0; border: none; background: none; cursor: pointer;">
-                <i class="far fa-heart"></i>
-            </button>
+            <button class="like-button" 
+                                data-id="{{ $review->id }}" 
+                                style="border: none; background: none; cursor: pointer; position: absolute; top: 35px; right: 15px;">
+                                <i class="fa{{ $userLiked ? 's' : 'r' }} fa-heart text-{{ $userLiked ? 'danger' : 'dark' }}"></i>
+                            </button>
         </div>
     </div>
 
@@ -648,4 +655,36 @@
 </div>
     </div>
 @endsection
-          
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{{ asset('frontend/js/save-favorite.js') }}"></script>    
+<style>
+/* Trạng thái mặc định (Lưu) */
+.save-btn {
+    background-color: white;
+    color: black;
+    border: 1px solid black;
+    padding: 5px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+/* Trạng thái đã lưu */
+.save-btn.liked {
+    background-color: red;
+    color: white;
+    border: none;
+}
+
+/* Thêm một chút khoảng cách cho icon */
+.save-icon {
+    fill: black; /* Màu của SVG khi chưa lưu */
+}
+
+/* Thay đổi màu của icon khi nút đã được lưu */
+.save-btn.liked .save-icon {
+    fill: white; /* Màu của SVG khi đã lưu */
+}
+
+</style>

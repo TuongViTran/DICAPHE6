@@ -117,6 +117,9 @@
                           <li><a href="{{ route('user', ['id' => Auth::user()->id]) }}">Trang cá nhân</a></li>
 
                     @endif
+
+                    <li><a href="{{ route('profile') }}">chỉnh sửa thông tin</a></li>
+
                     <li>
                         <a href="{{ route('logout') }}" 
                         onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
