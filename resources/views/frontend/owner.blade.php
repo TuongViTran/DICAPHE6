@@ -640,7 +640,7 @@
             <div class="d-flex align-items-center" style="font-size: 13px; color: #555;">
                 <span>{{ $review->created_at ? $review->created_at->format('d/m/Y') : 'Không có ngày' }}</span>
                 &nbsp;&nbsp;&nbsp;&nbsp;
-                <span class="like-count">{{ $review->likes_count }} lượt thích</span>
+                <span class="like-count">{{ $review->likes_count }} </span>  &ensp;lượt thích
                 &nbsp;&nbsp;&nbsp;&nbsp;
 
                 <!-- Rating sao -->
@@ -668,7 +668,7 @@
     </div>
     <h4 class="mt-5 mb-3 fw-bold" style="font-size:x-large">📌 Các quán đã lưu</h4>
 
-@if($savedShops->isEmpty())
+    @if(empty($savedShops))
     <p class="text-muted">Chưa có quán nào được lưu.</p>
 @else
     <div class="row">
