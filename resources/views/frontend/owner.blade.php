@@ -2,6 +2,9 @@
 @section('title','Owner')
 
 @section('content')
+<head>
+<meta name="csrf-token" content="{{ csrf_token() }}">
+</head>
 
 @if(session('success'))
     <script>
@@ -31,8 +34,8 @@
                     <p class="fs-5 fw-bold mb-0">{{ $postCount }}</p>
                 </div>
                 <div>
-                    <p class="fs-6 text-secondary mb-1">Đã lưu</p>
-                    <p class="fs-5 fw-bold mb-0">607</p>
+                    <p class="fs-6 text-secondary mb-1">Người lưu</p>
+                    <p class="fs-5 fw-bold mb-0">{{ $saveCount }}</p>
                 </div>
                 <div>
                     <p class="fs-6 text-secondary mb-1">Feedback</p>
@@ -504,17 +507,17 @@
                             <i class="fa-regular fa-user"></i> Tác giả: {{ $post->user->full_name }}
                         </p>
 
-                        <div class="d-flex gap-2 align-items-center">
-                            <form action="{{ route('posts.destroy', ['postId' => $post->id]) }}" method="POST" class="d-inline delete-post-form">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm">❌ Xóa</button>
-                            </form>
+                        <div class="d-flex gap-2">
+    <form action="{{ route('posts.destroy', [ 'postId' => $post->id]) }}" method="POST" onsubmit="return confirm('Bạn có chắc muốn xóa bài viết này?');" class="d-inline-flex align-items-center">
+        @csrf
+        @method('DELETE')
+        <button type="submit" class="btn btn-danger btn-sm d-inline-flex align-items-center">❌ Xóa</button>
+    </form>
 
-
-                            <button type="button" class="btn btn-warning btn-sm text-white" data-bs-toggle="modal" data-bs-target="#editPostModal{{ $post->id }}">
-                                ✏️ Chỉnh sửa
-                            </button>
+    <!-- Nút mở modal -->
+    <button type="button" class="btn btn-warning btn-sm text-white d-inline-flex align-items-center" data-bs-toggle="modal" data-bs-target="#editPostModal{{ $post->id }}">
+        ✏️ Chỉnh sửa
+    </button>
 
                             <!-- Modal chỉnh sửa -->
                             <div class="modal fade" id="editPostModal{{ $post->id }}" tabindex="-1" aria-labelledby="editPostLabel{{ $post->id }}" aria-hidden="true">
@@ -654,9 +657,123 @@
     </ul>
 </div>
     </div>
+    <h4 class="mt-5 mb-3 fw-bold" style="font-size:x-large">📌 Các quán đã lưu</h4>
+
+@if(empty($savedShops))
+<p class="text-muted">Chưa có quán nào được lưu.</p>
+@else
+<div class="row">
+    @foreach($savedShops as $shop)
+        <div class="col-md-3 mb-4">
+            <div class="card_nearme shadow-sm">
+                <!-- Ảnh quán cafe -->
+                <div class="position-relative">
+                    <img src="{{ asset('frontend/images/' . $shop->cover_image) }}" class="card_nearme-img" alt="Coffee Shop">
+                </div>
+                <!-- Nội dung quán -->
+                <div class="card_nearme-body p-2">
+                    <!-- Đánh giá sao và nút Lưu -->
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <div>
+                            <x-rating :score="$shop->reviews_avg_rating ?? 0" />
+                        </div>
+                        <div class="d-flex align-items-center">
+                           
+                            <button class="save-btn {{ $savedShops->contains('id', $shop->id) ? 'liked' : '' }}" data-shop-id="{{ $shop->id }}">
+                                <svg class="save-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                     viewBox="0 0 16 16" style="width: 20px; height: 20px; margin-right: 5px;">
+                                    <path fill-rule="evenodd" d="M10.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0"/>
+                                    <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1z"/>
+                                </svg>
+                                <span class="save-text">
+                                    @if($savedShops->contains('id', $shop->id))
+                                        Đã Lưu
+                                    @else
+                                        Lưu
+                                    @endif
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Tên quán -->
+                    <h5 class="card_nearme-title fw-bold">
+                        <a href="{{ url('/shop/' . $shop->id) }}" class="text-dark text-decoration-none">
+                            {{ $shop->shop_name }}
+                        </a>
+                    </h5>
+                    <!-- Thông tin chi tiết -->
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="card_nearme-avatar text-center mt-2">
+                                <img src="{{ $shop->avatar_url ?? asset('frontend/images/default_avatar.jpg') }}" class="avatar-img" alt="Avatar">
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <p class="card_nearme-text mb-1">
+                                <span class="icon_nearme"><img src="{{ asset('frontend/images/mc.svg') }}" alt="Trang chủ"> Giờ: {{ date('H:i', strtotime($shop->opening_time)) }} am - {{ date('H:i', strtotime($shop->closing_time)) }} pm</span>
+                            </p>
+                            <p class="card_nearme-text mb-1">
+                                <span class="icon_nearme"><img src="{{ asset('frontend/images/gia.svg') }}" alt="Trang chủ"> Giá: {{ number_format($shop->min_price, 2, ',', '.') }}k - {{ number_format($shop->max_price, 2, ',', '.') }}k</span>
+                            </p>
+                            <p class="card_nearme-text">
+                                <span class="icon_nearme"><img src="{{ asset('frontend/images/đc.svg') }}" alt="Trang chủ"> Địa chỉ: {{ $shop->address->street ?? 'Đang cập nhật' }}</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endforeach
+</div>
+@endif
+
 @endsection
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="{{ asset('frontend/js/save-favorite.js') }}"></script>    
+<script src="{{ asset('frontend/js/save-favorite.js') }}"></script>  
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const likeButtons = document.querySelectorAll('.like-button');
+
+    likeButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const reviewId = button.getAttribute('data-id');
+
+            fetch(`/review/${reviewId}/like`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({})
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const icon = button.querySelector('i');
+                    const likeCount = button.parentElement.querySelector('.like-count');
+
+                    if (data.liked) {
+                        icon.classList.remove('far');
+                        icon.classList.add('fas', 'text-danger');
+                        icon.classList.remove('text-dark');
+                    } else {
+                        icon.classList.remove('fas', 'text-danger');
+                        icon.classList.add('far', 'text-dark');
+                    }
+
+                    if (likeCount) {
+                        likeCount.textContent = data.likes_count;
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    });
+});
+</script>  
+
 <style>
 /* Trạng thái mặc định (Lưu) */
 .save-btn {
