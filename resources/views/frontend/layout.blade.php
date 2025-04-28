@@ -278,6 +278,7 @@
 </script>
 <script src="{{ asset('frontend/js/seacher.js') }}"></script>
 <script src="{{ asset('frontend/js/date_weather.js') }}"></script>
+<script src="{{ asset('frontend/js/postform.js') }}"></script>
 <script>
     // Tự động lấy vị trí khi người dùng mở trang
     if (navigator.geolocation) {

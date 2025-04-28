@@ -2,25 +2,12 @@
 @section('title','Owner')
 
 @section('content')
-<head>
-<meta name="csrf-token" content="{{ csrf_token() }}">
-</head>
+
 @if(session('success'))
+    <script>
+        alert("{{ session('success') }}");
+    </script>
 
-<div class="alert alert-success alert-dismissible fade show text-center" role="alert" id="successAlert">
-    {{ session('success') }}
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
-
-<script>
-    // Tự động tắt thông báo sau 4 giây
-    setTimeout(function() {
-        var alert = document.getElementById('successAlert');
-        if (alert) {
-            alert.classList.remove('show');
-        }
-    }, 4000); // 4000ms = 4s
-</script>
 @endif
 
 <div class="container mt-4">
@@ -44,8 +31,8 @@
                     <p class="fs-5 fw-bold mb-0">{{ $postCount }}</p>
                 </div>
                 <div>
-                    <p class="fs-6 text-secondary mb-1">Người lưu</p>
-                    <p class="fs-5 fw-bold mb-0">{{ $saveCount }}</p>
+                    <p class="fs-6 text-secondary mb-1">Đã lưu</p>
+                    <p class="fs-5 fw-bold mb-0">607</p>
                 </div>
                 <div>
                     <p class="fs-6 text-secondary mb-1">Feedback</p>
@@ -95,8 +82,17 @@
                                 <!-- Đánh giá & style -->
                                 <div class="flex items-center flex-wrap gap-2 mt-2">
                                     <!-- Sao đánh giá -->
-                                    <div>
-                                    <x-rating :score="$coffeeShop->reviews_avg_rating ?? 0" />
+                                    <div class="flex text-yellow-500 text-[20px]">
+                                        @php $rating = $coffeeShop->reviews_avg_rating; @endphp
+                                        @for ($i = 1; $i <= 5; $i++)
+                                            @if ($rating >= $i)
+                                                <i class="fas fa-star text-yellow-500 text-[20px]"></i>
+                                            @elseif ($rating >= ($i - 0.5))
+                                                <i class="fas fa-star-half-alt text-yellow-500 text-[20px]"></i>
+                                            @else
+                                                <i class="far fa-star text-yellow-400 text-[20px]"></i>
+                                            @endif
+                                        @endfor
                                     </div>
 
 
@@ -403,7 +399,7 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <form action="{{ route('posts.store', ['id' => $coffeeShop->user_id]) }}" method="POST" enctype="multipart/form-data">
+                            <form action="{{ route('posts.store', ['id' => $coffeeShop->user_id]) }}" method="POST" enctype="multipart/form-data" id="createPostForm">
                                 @csrf
 
                                 {{-- Hiển thị lỗi validate tổng quát --}}
@@ -508,13 +504,14 @@
                             <i class="fa-regular fa-user"></i> Tác giả: {{ $post->user->full_name }}
                         </p>
 
-                        <div class="d-flex gap-2">
-                            <form action="{{ route('posts.destroy', [ 'postId' => $post->id]) }}" method="POST" onsubmit="return confirm('Bạn có chắc muốn xóa bài viết này?');">
+                        <div class="d-flex gap-2 align-items-center">
+                            <form action="{{ route('posts.destroy', ['postId' => $post->id]) }}" method="POST" class="d-inline delete-post-form">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger btn-sm">❌ Xóa</button>
                             </form>
-                            <!-- Nút mở modal -->
+
+
                             <button type="button" class="btn btn-warning btn-sm text-white" data-bs-toggle="modal" data-bs-target="#editPostModal{{ $post->id }}">
                                 ✏️ Chỉnh sửa
                             </button>
@@ -523,7 +520,7 @@
                             <div class="modal fade" id="editPostModal{{ $post->id }}" tabindex="-1" aria-labelledby="editPostLabel{{ $post->id }}" aria-hidden="true">
                                 <div class="modal-dialog modal-xl">
                                     <div class="modal-content">
-                                        <form action="{{ route('posts.update', $post->id) }}" method="POST" enctype="multipart/form-data">
+                                        <form action="{{ route('posts.update', $post->id) }}" method="POST" enctype="multipart/form-data" id="editPostForm{{ $post->id }}">
                                             @csrf
                                             @method('PUT')
                                             <div class="modal-header">
@@ -591,16 +588,7 @@
             </div>
            
         @endforeach
-        {{-- Tự mở modal edit nếu lỗi từ chỉnh sửa --}}
-            @if (session('edit_modal_id'))
-            <script>
-                document.addEventListener("DOMContentLoaded", function () {
-                    let modalId = "editPostModal{{ session('edit_modal_id') }}";
-                    let editModal = new bootstrap.Modal(document.getElementById(modalId));
-                    editModal.show();
-                });
-            </script>
-            @endif
+
 
     </div>
     </div>
@@ -659,106 +647,5 @@
     </ul>
 </div>
     </div>
-    <h4 class="mt-5 mb-3 fw-bold" style="font-size:x-large">📌 Các quán đã lưu</h4>
-
-@if($savedShops->isEmpty())
-    <p class="text-muted">Chưa có quán nào được lưu.</p>
-@else
-    <div class="row">
-        @foreach($savedShops as $shop)
-            <div class="col-md-3 mb-4">
-                <div class="card_nearme shadow-sm">
-                    <!-- Ảnh quán cafe -->
-                    <div class="position-relative">
-                        <img src="{{ asset('frontend/images/' . $shop->cover_image) }}" class="card_nearme-img" alt="Coffee Shop">
-                    </div>
-                    <!-- Nội dung quán -->
-                    <div class="card_nearme-body p-2">
-                        <!-- Đánh giá sao và nút Lưu -->
-                        <div class="d-flex justify-content-between align-items-center mb-1">
-                            <div>
-                                <x-rating :score="$shop->reviews_avg_rating ?? 0" />
-                            </div>
-                            <div class="d-flex align-items-center">
-                               
-                                <button class="save-btn {{ $savedShops->contains('id', $shop->id) ? 'liked' : '' }}" data-shop-id="{{ $shop->id }}">
-                                    <svg class="save-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                         viewBox="0 0 16 16" style="width: 20px; height: 20px; margin-right: 5px;">
-                                        <path fill-rule="evenodd" d="M10.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0"/>
-                                        <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1z"/>
-                                    </svg>
-                                    <span class="save-text">
-                                        @if($savedShops->contains('id', $shop->id))
-                                            Đã Lưu
-                                        @else
-                                            Lưu
-                                        @endif
-                                    </span>
-                                </button>
-                            </div>
-                        </div>
-                        <!-- Tên quán -->
-                        <h5 class="card_nearme-title fw-bold">
-                            <a href="{{ url('/shop/' . $shop->id) }}" class="text-dark text-decoration-none">
-                                {{ $shop->shop_name }}
-                            </a>
-                        </h5>
-                        <!-- Thông tin chi tiết -->
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="card_nearme-avatar text-center mt-2">
-                                    <img src="{{ $shop->avatar_url ?? asset('frontend/images/default_avatar.jpg') }}" class="avatar-img" alt="Avatar">
-                                </div>
-                            </div>
-                            <div class="col-md-9">
-                                <p class="card_nearme-text mb-1">
-                                    <span class="icon_nearme"><img src="{{ asset('frontend/images/mc.svg') }}" alt="Trang chủ"> Giờ: {{ date('H:i', strtotime($shop->opening_time)) }} am - {{ date('H:i', strtotime($shop->closing_time)) }} pm</span>
-                                </p>
-                                <p class="card_nearme-text mb-1">
-                                    <span class="icon_nearme"><img src="{{ asset('frontend/images/gia.svg') }}" alt="Trang chủ"> Giá: {{ number_format($shop->min_price, 2, ',', '.') }}k - {{ number_format($shop->max_price, 2, ',', '.') }}k</span>
-                                </p>
-                                <p class="card_nearme-text">
-                                    <span class="icon_nearme"><img src="{{ asset('frontend/images/đc.svg') }}" alt="Trang chủ"> Địa chỉ: {{ $shop->address->street ?? 'Đang cập nhật' }}</span>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        @endforeach
-    </div>
-@endif
 @endsection
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="{{ asset('frontend/js/save-favorite.js') }}"></script>    
-<style>
-/* Trạng thái mặc định (Lưu) */
-.save-btn {
-    background-color: white;
-    color: black;
-    border: 1px solid black;
-    padding: 5px 8px;
-    border-radius: 6px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-}
-
-/* Trạng thái đã lưu */
-.save-btn.liked {
-    background-color: red;
-    color: white;
-    border: none;
-}
-
-/* Thêm một chút khoảng cách cho icon */
-.save-icon {
-    fill: black; /* Màu của SVG khi chưa lưu */
-}
-
-/* Thay đổi màu của icon khi nút đã được lưu */
-.save-btn.liked .save-icon {
-    fill: white; /* Màu của SVG khi đã lưu */
-}
-
-</style>
+          
