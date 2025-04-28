@@ -117,6 +117,9 @@
                           <li><a href="{{ route('user', ['id' => Auth::user()->id]) }}">Trang cá nhân</a></li>
 
                     @endif
+
+                    <li><a href="{{ route('profile') }}">chỉnh sửa thông tin</a></li>
+
                     <li>
                         <a href="{{ route('logout') }}" 
                         onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
@@ -278,6 +281,7 @@
 </script>
 <script src="{{ asset('frontend/js/seacher.js') }}"></script>
 <script src="{{ asset('frontend/js/date_weather.js') }}"></script>
+<script src="{{ asset('frontend/js/postform.js') }}"></script>
 <script>
     // Tự động lấy vị trí khi người dùng mở trang
     if (navigator.geolocation) {

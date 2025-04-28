@@ -102,8 +102,8 @@
                                                 @endif
 
 
-                                                    <span class="badge bg-{{ $shop->status === 'open' ? 'success' : 'secondary' }}">
-                                                        {{ $shop->status === 'open' ? 'Đang mở cửa' : 'Đã đóng cửa' }}
+                                                    <span class="badge bg-{{ $shop->status === 'Đang mở cửa' ? 'success' : 'secondary' }}">
+                                                        {{ $shop->status === 'Đang mở cửa' ? 'Đang mở cửa' : 'Đã đóng cửa' }}
                                                     </span>
 
                                                     <!-- <div class="text-danger small mb-1">

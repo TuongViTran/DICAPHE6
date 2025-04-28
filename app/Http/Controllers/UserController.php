@@ -75,9 +75,22 @@ class UserController extends Controller
 
     // Cập nhật thông tin người dùng
    // Cập nhật thông tin người dùng
+   public function latestUsers()
+{
+    $latestUsers = User::whereIn('role', ['user', 'owner'])
+                       ->orderBy('created_at', 'desc')
+                       ->take(4)
+                       ->get();
+
+    return view('backend.admin.latest_users', compact('latestUsers'));
+}
+
    public function update(Request $request, User $user)
    {
+       $user = Auth::user();
        // Xác thực dữ liệu
+       dd($request->all());
+       
        $request->validate([
            'full_name' => 'required|string|max:255',
            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,

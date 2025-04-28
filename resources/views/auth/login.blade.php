@@ -8,6 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <style>
         @keyframes bounce {
@@ -50,17 +51,22 @@
                 <h2 class="text-2xl font-bold">Cà Phê Đi Đâu ?</h2>
             </div>
             <h3 class="text-xl font-semibold mb-6">Đăng nhập</h3>
-            <form class="w-full max-w-sm" method="POST" action="{{ route('login') }}">
+            <form id="loginForm" class="w-full max-w-sm" method="POST" action="{{ route('login') }}">
                 @csrf
+                <!-- Email Input -->
                 <div class="mb-4">
                     <label class="block text-gray-700 text-sm font-bold mb-2" for="email">Email</label>
                     <div class="relative">
                         <span class="absolute inset-y-0 left-0 flex items-center pl-3">
                             <i class="fas fa-envelope text-gray-400"></i>
                         </span>
-                        <input class="shadow appearance-none border rounded w-full py-2 px-3 pl-10 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="email" name="email" placeholder="email@gmail.com" type="email" required/>
+                        <input class="shadow appearance-none border rounded w-full py-2 px-3 pl-10 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="email" name="email" placeholder="email@gmail.com" type="email" required value="{{ old('email') }}"/>
                     </div>
+                    @error('email')
+                        <p class="text-red-500 text-xs italic mt-2">{{ $message }}</p>
+                    @enderror
                 </div>
+                <!-- Password Input -->
                 <div class="mb-4">
                     <label class="block text-gray-700 text-sm font-bold mb-2" for="password">Mật khẩu</label>
                     <div class="relative">
@@ -69,10 +75,13 @@
                         </span>
                         <input class="shadow appearance-none border rounded w-full py-2 px-3 pl-10 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="password" name="password" placeholder="Nhập mật khẩu" type="password" required/>
                     </div>
+                    @error('password')
+                        <p class="text-red-500 text-xs italic mt-2">{{ $message }}</p>
+                    @enderror
                 </div>
-                <div class="flex items-center justify-between mb-6">
-                  
-                </div>
+
+                <div id="error-message" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 text-center"></div>
+
                 <div class="mb-6">
                     <button class="bg-[#f9c6a0] hover:bg-[#f9b58a] text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full" type="submit">Đăng nhập</button>
                 </div>
@@ -97,4 +106,47 @@
         </div>
     </div>
 </body>
+
+<script>
+    $(document).ready(function () {
+        $('#loginForm').on('submit', function (e) {
+            e.preventDefault(); // Ngăn form reload
+
+            $.ajax({
+                url: $(this).attr('action'),
+                method: 'POST',
+                data: $(this).serialize(),
+                success: function (response) {
+                    // Nếu đăng nhập thành công
+                    window.location.href = response.redirect;
+                },
+                error: function (xhr) {
+                    // Nếu có lỗi
+                    let res = xhr.responseJSON;
+                    let message = '';
+
+                    if (res.errors) {
+                        if (res.errors.email) {
+                            message = res.errors.email[0];
+                        } else if (res.errors.password) {
+                            message = res.errors.password[0];
+                        } else {
+                            message = 'Đã xảy ra lỗi. Vui lòng thử lại!';
+                        }
+                    } else {
+                        message = res.message || 'Đăng nhập thất bại.';
+                    }
+
+                    $('#error-message').removeClass('hidden').text(message);
+
+                    // Ẩn lỗi sau 5s
+                    setTimeout(() => {
+                        $('#error-message').addClass('hidden').text('');
+                    }, 5000);
+                }
+            });
+        });
+    });
+</script>
+
 </html>

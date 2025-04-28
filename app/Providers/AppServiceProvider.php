@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Notification;
 
+use App\Models\User;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -29,6 +31,14 @@ class AppServiceProvider extends ServiceProvider
                                     ->count();
                 $view->with('unreadCount', $unreadCount);
             }
+        });
+        View::composer('*', function ($view) {
+            $admin = User::where('role', 'admin')->first();
+            $adminAvatar = $admin?->avatar_url;
+            $adminName = $admin?->full_name;
+    
+            $view->with('adminAvatar', $adminAvatar);
+            $view->with('adminName', $adminName);
         });
     }
     

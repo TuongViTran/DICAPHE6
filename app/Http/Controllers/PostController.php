@@ -9,6 +9,7 @@ use App\Models\CoffeeShop;
 use App\Models\Comment;
 use App\Models\Notification;
 use App\Models\Review;
+use Illuminate\Support\Facades\Validator;
 class PostController extends Controller
 {
     // Hàm hiển thị trang Home với bài viết và slider
@@ -75,48 +76,52 @@ class PostController extends Controller
     
     // Hàm lưu bài viết mới trong owner
     public function store(Request $request, $userId)
-    {
-        $coffeeShop = CoffeeShop::where('user_id', $userId)->first();
+{
+    $coffeeShop = CoffeeShop::where('user_id', $userId)->first();
 
-        if (!$coffeeShop) {
-            return redirect()->back()->with('error', 'Không tìm thấy quán cà phê cho người dùng này.');
-        }
-
-        try {
-            $validated = $request->validate([
-                'title' => 'required|string|max:255',
-                'description' => 'required|string|max:500',
-                'content' => 'required',
-                'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            ], [
-                'title.required' => 'Tiêu đề không được để trống.',
-                'description.required' => 'Mô tả không được để trống.',
-                'content.required' => 'Nội dung không được để trống.',
-                'image.required' => 'Hình ảnh là bắt buộc.',
-                'image.image' => 'Tệp phải là hình ảnh.',
-                'image.mimes' => 'Ảnh phải thuộc định dạng: jpeg, png, jpg, gif.',
-            ]);
-    
-            // Upload ảnh
-            $imageName = time() . '_' . $request->file('image')->getClientOriginalName();
-            $request->file('image')->storeAs('uploads/posts', $imageName, 'public');
-    
-            Post::create([
-                'title' => $request->title,
-                'description' => $request->description,
-                'status' => 'Published',
-                'content' => $request->content,
-                'image_url' => $imageName,
-                'user_id' => $userId,
-            ]);
-    
-            return redirect()->route('posts.index', ['id' => $userId])->with('success', 'Tạo bài viết thành công!');
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            // ⚠️ Đánh dấu lỗi là của modal "create"
-            session()->flash('create_modal', true);
-            throw $e;
-        }
+    if (!$coffeeShop) {
+        return response()->json([
+            'message' => 'Không tìm thấy quán cà phê cho người dùng này.'
+        ], 404);
     }
+
+    $validator = Validator::make($request->all(), [
+        'title' => 'required|string|max:255',
+        'description' => 'required|string|max:500',
+        'content' => 'required',
+        'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+    ], [
+        'title.required' => 'Tiêu đề không được để trống.',
+        'description.required' => 'Mô tả không được để trống.',
+        'content.required' => 'Nội dung không được để trống.',
+        'image.required' => 'Hình ảnh là bắt buộc.',
+        'image.image' => 'Tệp phải là hình ảnh.',
+        'image.mimes' => 'Ảnh phải thuộc định dạng: jpeg, png, jpg, gif.',
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json([
+            'errors' => $validator->errors()
+        ], 422);
+    }
+
+    // Nếu không lỗi validate thì tiếp tục upload ảnh và tạo bài viết
+    $imageName = time() . '_' . $request->file('image')->getClientOriginalName();
+    $request->file('image')->storeAs('uploads/posts', $imageName, 'public');
+
+    Post::create([
+        'title' => $request->title,
+        'description' => $request->description,
+        'status' => 'Published',
+        'content' => $request->content,
+        'image_url' => $imageName,
+        'user_id' => $userId,
+    ]);
+
+    return response()->json([
+        'message' => 'Tạo bài viết thành công!'
+    ]);
+}
 
     // Hàm xóa bài viết
     public function destroy($postId)
@@ -136,42 +141,48 @@ class PostController extends Controller
 
     // Hàm cập nhật bài viết
     public function update(Request $request, $id)
-    {
-        $post = Post::findOrFail($id);
+{
+    $post = Post::findOrFail($id);
 
-        try {
-            $validated = $request->validate([
-                'title' => 'required|string|max:255',
-                'description' => 'required|string|max:500',
-                'content' => 'required',
-                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            ], [
-                'title.required' => 'Tiêu đề không được để trống.',
-                'description.required' => 'Mô tả không được để trống.',
-                'content.required' => 'Nội dung không được để trống.',
-                'image.required' => 'Hình ảnh là bắt buộc.',
-                'image.image' => 'Tệp phải là hình ảnh.',
-                'image.mimes' => 'Ảnh phải thuộc định dạng: jpeg, png, jpg, gif.',
-            ]);
+    try {
+        // Validate dữ liệu
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string|max:500',
+            'content' => 'required',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ], [
+            'title.required' => 'Tiêu đề không được để trống.',
+            'description.required' => 'Mô tả không được để trống.',
+            'content.required' => 'Nội dung không được để trống.',
+            'image.required' => 'Hình ảnh là bắt buộc.',
+            'image.image' => 'Tệp phải là hình ảnh.',
+            'image.mimes' => 'Ảnh phải thuộc định dạng: jpeg, png, jpg, gif.',
+        ]);
 
-            if ($request->hasFile('image')) {
-                $imageName = time() . '_' . $request->file('image')->getClientOriginalName();
-                $request->file('image')->storeAs('uploads/posts', $imageName, 'public');
-                $post->image_url = $imageName;
-            }
-
-            $post->update([
-                'title' => $validated['title'],
-                'description' => $validated['description'],
-                'content' => $validated['content'],
-            ]);
-
-            return redirect()->back()->with('success', 'Cập nhật thành công!');
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            session()->flash('edit_modal_id', $post->id); // 👈 để biết mở modal edit nào
-            throw $e;
+        // Xử lý ảnh nếu có
+        if ($request->hasFile('image')) {
+            $imageName = time() . '_' . $request->file('image')->getClientOriginalName();
+            $request->file('image')->storeAs('uploads/posts', $imageName, 'public');
+            $post->image_url = $imageName;
         }
+
+        // Cập nhật bài viết
+        $post->update([
+            'title' => $validated['title'],
+            'description' => $validated['description'],
+            'content' => $validated['content'],
+        ]);
+
+        // Nếu không có lỗi, trả về thông báo thành công
+        return response()->json(['message' => 'Cập nhật bài viết thành công!']);
+
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        // Trả về lỗi dưới dạng JSON khi có lỗi
+        return response()->json(['errors' => $e->errors()], 422);
     }
+}
+
 
     // upload anh cho ckeditor
     public function upload(Request $request)
