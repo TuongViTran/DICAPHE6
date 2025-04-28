@@ -71,6 +71,12 @@ class Coffeeshop extends Model
     {
         return $this->belongsToMany(User::class, 'favoriteshop', 'shop_id', 'user_id');
     }
-    
+    public function updateAverageRating()
+{
+    $average = $this->reviews()->avg('rating');
+
+    $this->reviews_avg_rating = $average ?? 0;
+    $this->save();
+}
 }
 ?>

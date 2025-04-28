@@ -15,6 +15,9 @@ class ShopController extends Controller
 
         $shop = Coffeeshop::with('address')->findOrFail($id);
 
+            // Cập nhật sao trung bình sau khi lấy dữ liệu quán
+            $shop->updateAverageRating();
+
         // Kiểm tra và gán giá trị cho latitude và longitude
         $latitude = $shop->address->latitude ?? null;
         $longitude = $shop->address->longitude ?? null;

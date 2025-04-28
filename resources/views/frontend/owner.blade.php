@@ -86,16 +86,7 @@
                                 <div class="flex items-center flex-wrap gap-2 mt-2">
                                     <!-- Sao đánh giá -->
                                     <div class="flex text-yellow-500 text-[20px]">
-                                        @php $rating = $coffeeShop->reviews_avg_rating; @endphp
-                                        @for ($i = 1; $i <= 5; $i++)
-                                            @if ($rating >= $i)
-                                                <i class="fas fa-star text-yellow-500 text-[20px]"></i>
-                                            @elseif ($rating >= ($i - 0.5))
-                                                <i class="fas fa-star-half-alt text-yellow-500 text-[20px]"></i>
-                                            @else
-                                                <i class="far fa-star text-yellow-400 text-[20px]"></i>
-                                            @endif
-                                        @endfor
+                                        <x-rating :score="$coffeeShop->reviews_avg_rating ?? 0" />
                                     </div>
 
 

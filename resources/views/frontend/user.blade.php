@@ -249,19 +249,7 @@
                             <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
                             </svg> Address: {{ $cafe->address->street}}, {{ $cafe->address->district}}, {{ $cafe->address->city}}</div>
                 <div class="cafe-info"> 
-                @php
-                        $rating = $cafe->reviews_avg_rating;
-                    @endphp
-
-                    @for ($i = 1; $i <= 5; $i++)
-                        @if ($rating >= $i)
-                            <i class="fas fa-star" style="color: #FFC107;"></i> <!-- sao đầy -->
-                        @elseif ($rating >= ($i - 0.5))
-                            <i class="fas fa-star-half-alt" style="color: #FFC107;"></i> <!-- sao nửa -->
-                        @else
-                           <i class="far fa-star " style="color: #FFC107;"></i>  <!-- sao rỗng -->
-                        @endif
-                    @endfor
+                     <x-rating :score="$cafe->reviews_avg_rating ?? 0" />
                 </div>
             </div>
         @endforeach
