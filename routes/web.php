@@ -46,6 +46,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/user/{id}', [UserController::class, 'showProfile'])->name('user');
 
 // Owner
+Route::middleware(['auth',  \App\Http\Middleware\OwnerMiddleware::class . ':owner'])->group(function () {
 Route::get('/owner/{id}', [OwnerController::class, 'owner'])->name('owner'); 
 Route::get('/owner/{id}/coffeeshops', [OwnerController::class, 'showByOwner'])->name('owner.coffeeshop'); 
 Route::put('/menu/update/{id}', [OwnerController::class, 'update'])->name('menu.update'); 
@@ -53,7 +54,7 @@ Route::get('/owner/{id}/info', [OwnerController::class, 'infor'])->name('coffees
 Route::put('/owner/update/{id}', [OwnerController::class, 'updateinfor'])->name('owner.updateinfor'); 
 Route::post('/reviews', [ReviewController::class, 'store'])->name('review.store');
 Route::get('/owner/reviews/{shopId}', [OwnerController::class, 'showShopReviews'])->name('owner.reviews.byshop');
-
+});
 
 // Search 
 Route::get('/search', [SearchController::class, 'search'])->name('search.result');
@@ -92,7 +93,7 @@ Route::put('/comments/{id}', [PostController::class, 'updateComment'])->middlewa
 // Route /dashboard gọi AdminController@dashboard, truyền biến đầy đủ cho view
 Route::get('/dashboard', [AdminController::class, 'dashboard'])
     ->name('dashboard')
-    ->middleware('auth');
+    ->middleware(['auth',  \App\Http\Middleware\AdminMiddleware::class . ':admin']);
 
 Route::post('/like-shop/{id}', [CoffeeShopController::class, 'like'])->name('shop.like');
 
