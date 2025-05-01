@@ -169,7 +169,7 @@ Route::post('/coffeeshop/favorite/{shopId}', [HomeController::class, 'saveFavori
 Route::get('/post/{id}', [PostController::class, 'show'])->name('post.show');
 
 // trang thong tin
-Auth::routes(['verify' => true]);
+// Auth::routes(['verify' => true]);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
@@ -186,13 +186,13 @@ Route::middleware('auth')->group(function () {
     Route::put('password', [PasswordController::class, 'update'])->name('password.update');
 });
 
-// Route cho đăng nhập và đăng ký (dành cho người dùng chưa đăng nhập)
-Route::middleware('guest')->group(function () {
-    Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
-    Route::post('login', [AuthController::class, 'login']);
-    Route::get('register', [AuthController::class, 'showRegisterForm'])->name('register');
-    Route::post('register', [AuthController::class, 'register']);
-});
+// // Route cho đăng nhập và đăng ký (dành cho người dùng chưa đăng nhập)
+// Route::middleware('guest')->group(function () {
+//     Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
+//     Route::post('login', [AuthController::class, 'login']);
+//     Route::get('register', [AuthController::class, 'showRegisterForm'])->name('register');
+//     Route::post('register', [AuthController::class, 'register']);
+// });
 
 // Route cho những người đã đăng nhập
 Route::middleware('auth')->group(function () {
