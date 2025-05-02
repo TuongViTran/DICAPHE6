@@ -6,82 +6,98 @@
 
 @section('content')
     <div class="flex justify-between items-center mb-6">
-        <div class="flex items-center">
-            <a href="{{ route('coffeeshop.create') }}" class="bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition duration-200 shadow-md">
-                + THÊM MỚI QUÁN CÀ PHÊ
-            </a>
-        </div>
+        <a href="{{ route('coffeeshop.create') }}" class="bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 shadow-md transition">
+            + THÊM MỚI QUÁN CÀ PHÊ
+        </a>
     </div>
 
     @if (session('success'))
-        <div class="bg-green-500 text-white p-4 rounded-lg mb-4 shadow-md">
+        <div class="bg-green-500 text-white p-4 rounded mb-4 shadow-md">
             {{ session('success') }}
         </div>
     @endif
 
     @if (session('error'))
-        <div class="bg-red-500 text-white p-4 rounded-lg mb-4 shadow-md">
+        <div class="bg-red-500 text-white p-4 rounded mb-4 shadow-md">
             {{ session('error') }}
         </div>
     @endif
 
-    <div class="bg-white p-4 rounded-lg shadow-md overflow-x-auto">
-        <table class="min-w-full bg-white">
-            <thead>
-                <tr class="bg-gray-200 text-gray-800">
-                    <th class="py-3 px-4 border-b text-center">ID</th>
-                    <th class="py-3 px-4 border-b text-center">Tên quán</th>
-                    <th class="py-3 px-4 border-b text-center">Số điện thoại</th>
-                    <th class="py-3 px-4 border-b text-center">Người quản lý</th>
-                    <th class="py-3 px-4 border-b text-center">Địa chỉ</th>
-                    <th class="py-3 px-4 border-b text-center">Trạng thái</th>
-                    <th class="py-3 px-4 border-b text-center">Đánh giá trung bình</th>
-                    <th class="py-3 px-4 border-b text-center">Ảnh bìa</th>
-                    <th class="py-3 px-4 border-b text-center">Hành động</th>
+    <div class="bg-white p-4 rounded shadow-md overflow-x-auto">
+    <table class="min-w-full text-sm text-center">
+        <thead class="bg-gray-200 text-gray-800">
+            <tr>
+                <th class="py-3 px-4">ID</th>
+                <th class="py-3 px-4">Tên quán</th>
+                <th class="py-3 px-4">SĐT</th>
+                <th class="py-3 px-4">Người quản lý</th>
+                <th class="py-3 px-4">Phong cách</th>
+                <th class="py-3 px-4">Trạng thái</th>
+                <th class="py-3 px-4">Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($coffeeShops as $shop)
+                <tr class="bg-white border-b">
+                    <td class="py-2 px-4">{{ $shop->id }}</td>
+                    <td class="py-2 px-4">{{ $shop->shop_name }}</td>
+                    <td class="py-2 px-4">{{ $shop->phone ?? 'Chưa có' }}</td>
+                    <td class="py-2 px-4">{{ $shop->user->full_name ?? 'Chưa có' }}</td>
+                    <td class="py-2 px-4">{{ $shop->style->style_name ?? 'Không rõ' }}</td>
+                    <td class="py-2 px-4">{{ ucfirst($shop->status) }}</td>
+                    <td class="py-2 px-4">
+                        <button onclick="toggleDetails({{ $shop->id }})"
+                            class="text-blue-600 underline hover:text-blue-800">Xem thêm</button>
+                    </td>
                 </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-200">
-                @forelse ($coffeeShops as $coffeeshop)
-                    <tr class="hover:bg-gray-50 transition duration-200 ease-in-out">
-                        <td class="py-2 px-4 border-b text-center">{{ $coffeeshop->id }}</td>
-                        <td class="py-2 px-4 border-b text-center">{{ $coffeeshop->shop_name }}</td>
-                        <td class="py-2 px-4 border-b text-center">{{ $coffeeshop->phone ?? 'Chưa có số điện thoại' }}</td>
-                        <td class="py-2 px-4 border-b text-center">{{ $coffeeshop->user->full_name ?? 'Chưa có người quản lý' }}</td>
-                        <td class="py-2 px-4 border-b text-center">{{ $coffeeshop->address->street ?? 'Chưa có địa chỉ' }}</td>
-                        <td class="py-2 px-4 border-b text-center">{{ ucfirst($coffeeshop->status) }}</td>
-                        <td class="py-2 px-4 border-b text-center">
-    <div class="flex justify-center">
-        <x-rating :score="$coffeeshop->reviews_avg_rating ?? 0" />
-    </div>
-</td>
-                        <td class="py-2 px-4 border-b text-center">
-                            @if($coffeeshop->cover_image)
-                                <img src="{{ asset('frontend/images/' . $coffeeshop->cover_image) }}" alt="Ảnh bìa" class="w-16 h-16 object-cover rounded">
-                            @else
-                                <span class="text-gray-500">Chưa có ảnh bìa</span>
-                            @endif
-                        </td>
-                        <td class="py-2 px-4 border-b text-center">
-                            <div class="flex justify-center items-center space-x-2">
-                            <a href="{{ route('coffeeshop.edit', $coffeeshop) }}" class="flex items-center" title="Sửa">
-                                    <img src="{{ asset('backend/img/Icon (admin)/Sửa.svg') }}" alt="Edit" class="w-6 h-6 hover:opacity-80 transition duration-200">
-                                </a>
-                                <form action="{{ route('coffeeshop.destroy', $coffeeshop) }}" method="POST" style="display:inline;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="flex items-center" onclick="return confirm('Bạn có chắc chắn muốn xóa quán cà phê này?');" title="Xóa">
-                                        <img src="{{ asset('backend/img/Icon (admin)/Xóa.svg') }}" alt="Delete" class="w-6 h-6 hover:opacity-80 transition duration-200">
-                                    </button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="9" class="py-2 px-4 border-b text-center text-gray-500">Không có quán cà phê nào.</td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
+
+                <tr id="details-{{ $shop->id }}" class="hidden bg-gray-100">
+                    <td colspan="7" class="p-4 text-left">
+                        <div><strong>Địa chỉ:</strong> {{ $shop->address->street ?? 'Chưa có địa chỉ' }}</div>
+                        <div><strong>Mô tả:</strong> {{ $shop->description ?? 'Không có mô tả' }}</div>
+                        <div><strong>Giờ mở cửa:</strong> {{ $shop->opening_time ?? '-' }}</div>
+                        <div><strong>Giờ đóng cửa:</strong> {{ $shop->closing_time ?? '-' }}</div>
+                        <div><strong>Bãi đỗ xe:</strong> {{ $shop->parking ?? '-' }}</div>
+                        <div><strong>WiFi:</strong> {{ $shop->wifi_password ?? '-' }}</div>
+                        <div><strong>Hotline:</strong> {{ $shop->hotline ?? '-' }}</div>
+                        <div><strong>Giá:</strong> {{ $shop->min_price }}đ - {{ $shop->max_price }}đ</div>
+                        <div class="mt-2"><strong>Đánh giá trung bình:</strong>
+                            <x-rating :score="$shop->reviews_avg_rating ?? 0" />
+                        </div>
+                        <div class="mt-2"><strong>Ảnh:</strong></div>
+                        <div class="flex gap-2 mt-1">
+                            @foreach (['cover_image', 'image_1', 'image_2', 'image_3'] as $img)
+                                @if($shop->$img)
+                                    <img src="{{ asset('frontend/images/' . $shop->$img) }}" class="w-16 h-16 object-cover rounded" />
+                                @endif
+                            @endforeach
+                        </div>
+                        <div class="mt-3">
+                            <a href="{{ route('coffeeshop.edit', $shop) }}" class="inline-block text-blue-500 hover:underline mr-4">Sửa</a>
+                            <form action="{{ route('coffeeshop.destroy', $shop) }}" method="POST" class="inline-block" onsubmit="return confirm('Bạn có chắc chắn muốn xóa?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="text-red-500 hover:underline">Xóa</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            @endforeach
+
+            @if($coffeeShops->isEmpty())
+                <tr>
+                    <td colspan="7" class="text-center py-4 text-gray-500">Không có quán cà phê nào.</td>
+                </tr>
+            @endif
+        </tbody>
+    </table>
+</div>
+
+
+    <script>
+        function toggleDetails(id) {
+            const row = document.getElementById('details-' + id);
+            row.classList.toggle('hidden');
+        }
+    </script>
 @endsection

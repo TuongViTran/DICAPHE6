@@ -1,121 +1,146 @@
 @extends('backend.admin.layout')
 
-@section('title', 'Thêm Mới Quán Cà Phê')
-
-@section('header', 'Thêm Mới Quán Cà Phê')
+@section('title', 'Thêm mới quán cà phê')
+@section('header', 'Thêm mới quán cà phê')
 
 @section('content')
-    <h1 class="text-xl font-semibold mb-4">Thêm Mới Quán Cà Phê</h1>
+<form action="{{ route('coffeeshop.store') }}" method="POST" enctype="multipart/form-data">
+    @csrf
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+            <label class="block mb-1">Tên quán</label>
+            <input type="text" name="shop_name" class="w-full border rounded px-3 py-2" required>
+        </div>
 
-    @if (session('success'))
-        <div class="bg-green-500 text-white p-4 rounded-lg mb-4">
+        <div>
+            <label class="block mb-1">Số điện thoại</label>
+            <input type="text" name="phone" class="w-full border rounded px-3 py-2">
+        </div>
+
+        <div>
+            <label class="block mb-1">Người quản lý</label>
+            <select name="user_id" class="w-full border rounded px-3 py-2">
+                @foreach($users as $user)
+                    <option value="{{ $user->id }}">{{ $user->full_name }}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <div>
+            <label class="block mb-1">Phong cách</label>
+            <select name="styles_id" class="w-full border rounded px-3 py-2" required>
+                @foreach($styles as $style)
+                    <option value="{{ $style->id }}">{{ $style->style_name }}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <div>
+    <label class="block mb-1">Trạng thái</label>
+    <select name="status" class="w-full border rounded px-3 py-2" required>
+        <option value="Đang mở cửa">Đang mở cửa</option>
+        <option value="Đã đóng cửa">Đã đóng cửa</option>
+    </select>
+</div>
+
+
+        <div>
+            <label class="block mb-1">Giờ mở cửa</label>
+            <input type="time" name="opening_time" class="w-full border rounded px-3 py-2">
+        </div>
+
+        <div>
+            <label class="block mb-1">Giờ đóng cửa</label>
+            <input type="time" name="closing_time" class="w-full border rounded px-3 py-2">
+        </div>
+
+        <div>
+            <label class="block mb-1">Giá tối thiểu</label>
+            <input type="number" name="min_price" class="w-full border rounded px-3 py-2">
+        </div>
+
+        <div>
+            <label class="block mb-1">Giá tối đa</label>
+            <input type="number" name="max_price" class="w-full border rounded px-3 py-2">
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <label class="block mb-1">Mô tả</label>
+        <textarea name="description" class="w-full border rounded px-3 py-2" rows="4"></textarea>
+    </div>
+
+   <div class="mt-4">
+    <label class="block mb-1" for="street">Địa chỉ (Số nhà, Đường)</label>
+    <input type="text" name="street" id="street" class="w-full border rounded px-3 py-2" placeholder="Nhập địa chỉ số nhà, đường" required>
+</div>
+
+<div class="mt-4">
+    <label class="block mb-1" for="ward">Phường/Xã</label>
+    <input type="text" name="ward" id="ward" class="w-full border rounded px-3 py-2" placeholder="Nhập phường/xã" required>
+</div>
+
+<div class="mt-4">
+    <label class="block mb-1" for="district">Quận/Huyện</label>
+    <input type="text" name="district" id="district" class="w-full border rounded px-3 py-2" placeholder="Nhập quận/huyện" required>
+</div>
+
+<div class="mt-4">
+    <label class="block mb-1" for="city">Thành phố</label>
+    <input type="text" name="city" id="city" class="w-full border rounded px-3 py-2" placeholder="Nhập thành phố" required>
+</div>
+
+    <!-- Thêm các trường bị thiếu -->
+    
+    <div class="mt-4">
+        <label class="block mb-1">WiFi</label>
+        <input type="text" name="wifi_password" class="w-full border rounded px-3 py-2">
+    </div>
+
+    <div class="mt-4">
+        <label class="block mb-1">Hotline</label>
+        <input type="text" name="hotline" class="w-full border rounded px-3 py-2">
+    </div>
+
+    <div class="mt-4">
+        <label class="block mb-1">Bãi đỗ xe</label>
+        <input type="text" name="parking" class="w-full border rounded px-3 py-2">
+    </div>
+
+    <div class="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4">
+        @foreach(['cover_image', 'image_1', 'image_2', 'image_3'] as $img)
+            <div>
+                <label class="block mb-1">{{ strtoupper($img) }}</label>
+                <input type="file" name="{{ $img }}" class="w-full border rounded px-3 py-2">
+            </div>
+        @endforeach
+    </div>
+
+    <!-- Hiển thị thông báo thành công hoặc lỗi -->
+    @if(session('success'))
+        <div class="bg-green-100 text-green-700 px-4 py-2 mt-4 rounded">
             {{ session('success') }}
         </div>
     @endif
 
-    @if (session('error'))
-        <div class="bg-red-500 text-white p-4 rounded-lg mb-4">
+    @if(session('error'))
+        <div class="bg-red-100 text-red-700 px-4 py-2 mt-4 rounded">
             {{ session('error') }}
         </div>
     @endif
 
-    <form action="{{ route('coffeeshop.store') }}" method="POST" enctype="multipart/form-data">
-        @csrf
-        <div class="mb-4">
-            <label for="shop_name" class="block text-sm font-medium text-gray-700">Tên quán:</label>
-            <input type="text" name="shop_name" id="shop_name" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-500" value="{{ old('shop_name') }}">
-            @error('shop_name')
-                <div class="text-red-500 text-sm">{{ $message }}</div>
-            @enderror
-        </div>
-
-        <div class="mb-4">
-            <label for="phone" class="block text-sm font-medium text-gray-700">Số điện thoại:</label>
-            <input type="text" name="phone" id="phone" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-500" value="{{ old('phone') }}">
-            @error('phone')
-                <div class="text-red-500 text-sm">{{ $message }}</div>
-            @enderror
-        </div>
-
-        <div class="mb-4">
-            <label for="user_id" class="block text-sm font-medium text-gray-700">Người quản lý:</label>
-            <select name="user_id" id="user_id" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-500">
-                <option value="">Chọn người quản lý</option>
-                @foreach ($users as $user)
-                    <option value="{{ $user->id }}" {{ old('user_id') == $user->id ? 'selected' : '' }}>{{ $user->full_name }}</option>
+    @if($errors->any())
+        <div class="bg-red-100 text-red-700 px-4 py-2 mt-4 rounded">
+            <ul class="list-disc list-inside">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
                 @endforeach
-            </select>
-            @error('user_id')
-                <div class="text-red-500 text-sm">{{ $message }}</div>
-            @enderror
+            </ul>
         </div>
+    @endif
 
-        <div class="mb-4">
-            <label for="styles_id" class="block text-sm font-medium text-gray-700">Phong cách:</label>
-            <select name="styles_id" id="styles_id" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-500">
-                <option value="">Chọn phong cách</option>
-                @foreach ($styles as $style)
-                    <option value="{{ $style->id }}" {{ old('styles_id') == $style->id ? 'selected' : '' }}>{{ $style->name }}</option>
-                @endforeach
-            </select>
-            @error('styles_id')
-                <div class="text-red-500 text-sm">{{ $message }}</div>
-            @enderror
-        </div>
-
-        <div class="mb-4">
-    <label class="block text-sm font-medium text-gray-700">Địa chỉ:</label>
-    
-    <input type="text" name="street" placeholder="Đường" class="mt-1 block w-full border rounded-md shadow-sm mb-2" value="{{ old('street') }}">
-    @error('street')
-        <div class="text-red-500 text-sm">{{ $message }}</div>
-    @enderror
-
-    <input type="text" name="ward" placeholder="Phường/Xã" class="mt-1 block w-full border rounded-md shadow-sm mb-2" value="{{ old('ward') }}">
-    @error('ward')
-        <div class="text-red-500 text-sm">{{ $message }}</div>
-    @enderror
-
-    <input type="text" name="district" placeholder="Quận/Huyện" class="mt-1 block w-full border rounded-md shadow-sm mb-2" value="{{ old('district') }}">
-    @error('district')
-        <div class="text-red-500 text-sm">{{ $message }}</div>
-    @enderror
-
-    <input type="text" name="city" placeholder="Thành phố/Tỉnh" class="mt-1 block w-full border rounded-md shadow-sm" value="{{ old('city') }}">
-    @error('city')
-        <div class="text-red-500 text-sm">{{ $message }}</div>
-    @enderror
-</div>
-
-
-        <div class="mb-4">
-            <label for="status" class="block text-sm font-medium text-gray-700">Trạng thái:</label>
-            <select name="status" id="status" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-500">
-                <option value="open" {{ old('status') == 'open' ? 'selected' : '' }}>Mở</option>
-                <option value="closed" {{ old('status') == 'closed' ? 'selected' : '' }}>Đóng</option>
-            </select>
-            @error('status')
-                <div class="text-red-500 text-sm">{{ $message }}</div>
-            @enderror
-        </div>
-
-        <div class="mb-4">
-            <label for="rating" class="block text-sm font-medium text-gray-700">Đánh giá:</label>
-            <input type="number" name="rating" id="rating" min="0" max="5" step="0.1" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-500" value="{{ old('rating') }}">
-            @error('rating')
-                <div class="text-red-500 text-sm">{{ $message }}</div>
-            @enderror
-            <form action="{{ route('coffeeshop.store') }}" method="POST" enctype="multipart/form-data">
-    @csrf
-   
-    <div>
-        <label for="cover_image">Ảnh bìa:</label>
-        <input type="file" name="cover_image" accept="image/*" required>
+    <div class="mt-6">
+        <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Lưu</button>
     </div>
-    <button type="submit">Thêm quán</button>
 </form>
-
-
-        <button type="submit" class="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition duration-200">Thêm mới</button>
-    </form>
 @endsection
