@@ -67,7 +67,11 @@ class PostController extends Controller
         ->latest()
         ->get();
 
-        return view('frontend.owner', compact('posts','coffeeShop', 'reviews', 'postCount', 'reviewCount'));
+        $saveCount = \DB::table('favoriteshop')
+        ->where('shop_id', $coffeeShop->id)
+        ->count();
+
+        return view('frontend.owner', compact('posts','coffeeShop', 'reviews', 'postCount', 'reviewCount', 'saveCount'));
     }
     
     // Hàm lưu bài viết mới trong owner

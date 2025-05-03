@@ -6,128 +6,105 @@ use Illuminate\Http\Request;
 use App\Models\CoffeeShop;
 use App\Models\User;
 use App\Models\Post;
+use App\Models\Review; // << THÊM DÒNG NÀY
 
 class AdminController extends Controller
 {
-    
     public function dashboard()
     {
-        // Quán có sao 5 sao
+        // Quán 5 sao
         $fiveStarShops = CoffeeShop::with('address')
-            ->withCount('reviews as total_reviews_count') // Đếm tổng các đánh giá
-            ->withAvg('reviews', 'rating') // Tính điểm đánh giá trung bình
-            ->orderByDesc('reviews_avg_rating') // Sắp xếp theo điểm trung bình giảm dần
+            ->withCount('reviews as total_reviews_count')
+            ->withAvg('reviews', 'rating')
+            ->orderByDesc('reviews_avg_rating')
             ->limit(5)
             ->get()
             ->each(function ($shop) {
-                // Tính và làm tròn trung bình
                 $avgRating = $shop->reviews_avg_rating !== null
                     ? number_format($shop->reviews_avg_rating, 1, '.', '')
                     : 0;
-    
-                // Gán vào để hiển thị
+
                 $shop->reviews_avg_rating = $avgRating;
-
-
-                // Gán vào cột thật sự trong DB và lưu lại
-                $shop->setAttribute('reviews_avg_rating', $avgRating);
                 $shop->save();
-
-                
-                
-
-    
-                // Kiểm tra like
-                
             });
-    
-        // Quán có sao tệ nhất
+
+        // Quán tệ nhất
         $worstShops = CoffeeShop::with('address')
-            ->withCount('reviews as total_reviews_count') // Đếm tất cả các đánh giá
+            ->withCount('reviews as total_reviews_count')
             ->withAvg('reviews', 'rating')
-            ->whereNotNull('reviews_avg_rating') // Lọc các quán có đánh giá thực sự
-            ->orderBy('reviews_avg_rating') // Sắp xếp theo điểm đánh giá trung bình từ thấp đến cao
-            ->limit(5) // Lấy 5 quán có điểm đánh giá thấp nhất
+            ->whereNotNull('reviews_avg_rating')
+            ->orderBy('reviews_avg_rating')
+            ->limit(5)
             ->get()
             ->each(function ($shop) {
-                // Làm tròn điểm đánh giá trung bình
                 $avgRating = $shop->reviews_avg_rating !== null
                     ? number_format($shop->reviews_avg_rating, 1, '.', '')
                     : 0;
-    
-                // Cập nhật lại điểm đánh giá sau khi làm tròn
+
                 $shop->reviews_avg_rating = $avgRating;
-
-                $shop->setAttribute('reviews_avg_rating', $avgRating);
                 $shop->save();
-
-                
-                
-
-    
-                // Kiểm tra like
-                
-
             });
-    
-        // Thông tin tổng quan
+
+        // Thống kê tổng quan
         $totalCoffeeshops = CoffeeShop::count();
         $totalUsers = User::count();
         $totalPosts = Post::count();
-    
-        // Tính số lượng người dùng theo vai trò
         $customerCount = User::where('role', 'user')->count();
         $ownerCount = User::where('role', 'owner')->count();
-    
-        // Tính số lượng bài viết theo trạng thái
         $approvedPostsCount = Post::where('status', 'published')->count();
         $unapprovedPostsCount = Post::where('status', 'draft')->count();
-    
-        // Lấy số lượng người dùng theo tháng
-        $userCounts = User::selectRaw('MONTH(created_at) as month, COUNT(*) as count')
-            ->where('role', 'user') // Lọc chỉ lấy khách hàng
-            ->groupBy('month')
-            ->orderBy('month')
-            ->pluck('count')
-            ->toArray();
-    
-        // Lấy số lượng chủ quán theo tháng
-        $ownerCounts = User::selectRaw('MONTH(created_at) as month, COUNT(*) as count')
-            ->where('role', 'owner') // Lọc chỉ lấy chủ quán
-            ->groupBy('month')
-            ->orderBy('month')
-            ->pluck('count')
-            ->toArray();
-    // Lấy admin user
-$admin = User::where('role', 'admin')->first();
-$adminAvatar = $admin?->avatar_url;
-$adminName = $admin?->full_name;
 
-        // Đảm bảo rằng mảng có đủ 7 phần tử (cho 7 tháng)
+        // Thống kê theo tháng
+        $userCounts = User::selectRaw('MONTH(created_at) as month, COUNT(*) as count')
+            ->where('role', 'user')
+            ->groupBy('month')
+            ->orderBy('month')
+            ->pluck('count')
+            ->toArray();
+
+        $ownerCounts = User::selectRaw('MONTH(created_at) as month, COUNT(*) as count')
+            ->where('role', 'owner')
+            ->groupBy('month')
+            ->orderBy('month')
+            ->pluck('count')
+            ->toArray();
+
         $userCounts = array_pad($userCounts, 7, 0);
         $ownerCounts = array_pad($ownerCounts, 7, 0);
-    // Lấy 4 người dùng mới đăng ký gần nhất
-$latestUsers = User::orderBy('created_at', 'desc')
-->take(4)
-->get();
 
-return view('backend.admin.dashboard', compact(
-    'fiveStarShops',
-    'worstShops',
-    'totalCoffeeshops',
-    'totalUsers',
-    'customerCount',
-    'ownerCount',
-    'totalPosts',
-    'approvedPostsCount',
-    'unapprovedPostsCount',
-    'userCounts',
-    'ownerCounts',
-    'latestUsers',
-    'adminAvatar', // << thêm dòng này
-    'adminName'    // << và dòng này
-));
+        // Admin info
+        $admin = User::where('role', 'admin')->first();
+        $adminAvatar = $admin?->avatar_url;
+        $adminName = $admin?->full_name;
 
+        // 4 người dùng mới nhất
+        $latestUsers = User::orderBy('created_at', 'desc')
+            ->take(4)
+            ->get();
 
+        // Feedback nổi bật
+        $featuredFeedbacks = Review::with('user','shop') // đảm bảo bảng reviews có quan hệ user
+            ->where('rating', '>=', 4)
+            ->orderByDesc('rating')
+            ->limit(3)
+            ->get();
+
+        return view('backend.admin.dashboard', compact(
+            'fiveStarShops',
+            'worstShops',
+            'totalCoffeeshops',
+            'totalUsers',
+            'customerCount',
+            'ownerCount',
+            'totalPosts',
+            'approvedPostsCount',
+            'unapprovedPostsCount',
+            'userCounts',
+            'ownerCounts',
+            'latestUsers',
+            'adminAvatar',
+            'adminName',
+            'featuredFeedbacks' // THÊM BIẾN NÀY
+        ));
     }
 }

@@ -62,6 +62,12 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->belongsToMany(Review::class, 'likes', 'user_id', 'review_id'); // Chỉ định bảng 'likes'
     }
-
+    public function updateAverageRating()
+    {
+        $average = $this->reviews()->avg('rating');
+    
+        $this->reviews_avg_rating = $average ?? 0;
+        $this->save();
+    }
 
 }

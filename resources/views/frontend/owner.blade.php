@@ -85,17 +85,8 @@
                                 <!-- Đánh giá & style -->
                                 <div class="flex items-center flex-wrap gap-2 mt-2">
                                     <!-- Sao đánh giá -->
-                                    <div class="flex text-yellow-500 text-[15px]">
-                                        @php $rating = $coffeeShop->reviews_avg_rating; @endphp
-                                        @for ($i = 1; $i <= 5; $i++)
-                                            @if ($rating >= $i)
-                                                <i class="fas fa-star text-yellow-500 text-[15px]"></i>
-                                            @elseif ($rating >= ($i - 0.5))
-                                                <i class="fas fa-star-half-alt text-yellow-500 text-[15px]"></i>
-                                            @else
-                                                <i class="far fa-star text-yellow-400 text-[15px]"></i>
-                                            @endif
-                                        @endfor
+                                    <div class="flex text-yellow-500 text-[20px]">
+                                        <x-rating :score="$coffeeShop->reviews_avg_rating ?? 0" />
                                     </div>
 
 
@@ -622,7 +613,7 @@
             <div class="d-flex align-items-center" style="font-size: 13px; color: #555;">
                 <span>{{ $review->created_at ? $review->created_at->format('d/m/Y') : 'Không có ngày' }}</span>
                 &nbsp;&nbsp;&nbsp;&nbsp;
-                <span class="like-count">{{ $review->likes_count }} lượt thích</span>
+                <span class="like-count">{{ $review->likes_count }} </span>  &ensp;lượt thích
                 &nbsp;&nbsp;&nbsp;&nbsp;
 
                 <!-- Rating sao -->
@@ -650,6 +641,7 @@
     </div>
     <h4 class="mt-5 mb-3 fw-bold" style="font-size:x-large">📌 Các quán đã lưu</h4>
 
+   
 @if(empty($savedShops))
 <p class="text-muted">Chưa có quán nào được lưu.</p>
 @else

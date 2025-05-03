@@ -46,7 +46,9 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/user/{id}', [UserController::class, 'showProfile'])->name('user');
 
 // Owner
+Route::middleware(['auth',  \App\Http\Middleware\OwnerMiddleware::class . ':owner'])->group(function () {
 Route::get('/owner/{id}', [OwnerController::class, 'owner'])->name('owner'); 
+});
 Route::get('/owner/{id}/coffeeshops', [OwnerController::class, 'showByOwner'])->name('owner.coffeeshop'); 
 Route::put('/menu/update/{id}', [OwnerController::class, 'update'])->name('menu.update'); 
 Route::get('/owner/{id}/info', [OwnerController::class, 'infor'])->name('coffeeshop.owner'); 
@@ -92,7 +94,7 @@ Route::put('/comments/{id}', [PostController::class, 'updateComment'])->middlewa
 // Route /dashboard gọi AdminController@dashboard, truyền biến đầy đủ cho view
 Route::get('/dashboard', [AdminController::class, 'dashboard'])
     ->name('dashboard')
-    ->middleware('auth');
+    ->middleware(['auth',  \App\Http\Middleware\AdminMiddleware::class . ':admin']);
 
 Route::post('/like-shop/{id}', [CoffeeShopController::class, 'like'])->name('shop.like');
 
@@ -169,7 +171,7 @@ Route::post('/coffeeshop/favorite/{shopId}', [HomeController::class, 'saveFavori
 Route::get('/post/{id}', [PostController::class, 'show'])->name('post.show');
 
 // trang thong tin
-Auth::routes(['verify' => true]);
+// Auth::routes(['verify' => true]);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
@@ -186,13 +188,13 @@ Route::middleware('auth')->group(function () {
     Route::put('password', [PasswordController::class, 'update'])->name('password.update');
 });
 
-// Route cho đăng nhập và đăng ký (dành cho người dùng chưa đăng nhập)
-Route::middleware('guest')->group(function () {
-    Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
-    Route::post('login', [AuthController::class, 'login']);
-    Route::get('register', [AuthController::class, 'showRegisterForm'])->name('register');
-    Route::post('register', [AuthController::class, 'register']);
-});
+// // Route cho đăng nhập và đăng ký (dành cho người dùng chưa đăng nhập)
+// Route::middleware('guest')->group(function () {
+//     Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
+//     Route::post('login', [AuthController::class, 'login']);
+//     Route::get('register', [AuthController::class, 'showRegisterForm'])->name('register');
+//     Route::post('register', [AuthController::class, 'register']);
+// });
 
 // Route cho những người đã đăng nhập
 Route::middleware('auth')->group(function () {

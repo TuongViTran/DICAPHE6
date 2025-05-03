@@ -182,7 +182,11 @@
         <div class="p-4 rounded shadow-sm mb-4 d-flex align-items-center justify-content-around" style="background: linear-gradient(to bottom, rgb(180, 241, 200), #c2ebfb00);">
             <!-- Cột bên trái: Ảnh đại diện + Thông tin quán -->
             <div class="d-flex flex-column align-items-center">
-                <img src="{{ asset('frontend/images/' . basename($user->avatar_url ?? 'avt.png')) }}" alt="User profile picture" class="rounded-circle mb-2" width="90" height="90" style="box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+                <div style="width: 90px; height: 90px; overflow: hidden; border-radius: 50%; box-shadow: 0 0 10px rgba(0,0,0,0.1);margin-bottom:5px;">
+                    <img src="{{ asset('frontend/images/' . basename($user->avatar_url ?? 'avt.png')) }}"
+                        alt="User profile picture"
+                        style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
                 <div class="text-left">
                 <h4 class="text-center fw-bold mb-1">{{ $user->full_name ?? 'Khách hàng' }}</h4>
                 </div>
@@ -249,19 +253,7 @@
                             <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
                             </svg> Address: {{ $cafe->address->street}}, {{ $cafe->address->district}}, {{ $cafe->address->city}}</div>
                 <div class="cafe-info"> 
-                @php
-                        $rating = $cafe->reviews_avg_rating;
-                    @endphp
-
-                    @for ($i = 1; $i <= 5; $i++)
-                        @if ($rating >= $i)
-                            <i class="fas fa-star" style="color: #FFC107;"></i> <!-- sao đầy -->
-                        @elseif ($rating >= ($i - 0.5))
-                            <i class="fas fa-star-half-alt" style="color: #FFC107;"></i> <!-- sao nửa -->
-                        @else
-                           <i class="far fa-star " style="color: #FFC107;"></i>  <!-- sao rỗng -->
-                        @endif
-                    @endfor
+                     <x-rating :score="$cafe->reviews_avg_rating ?? 0" />
                 </div>
             </div>
         @endforeach
@@ -302,7 +294,12 @@
                     <div class="ft" style="margin-top:15px">
                         <div style="max-width: 95%; word-break: break-word;">
                             <strong>{{ $review->user->full_name ?? 'Người dùng ẩn danh' }}</strong> 
-                            đang ở tại <strong>{{ $review->shop->shop_name ?? 'Người dùng ẩn danh' }}</strong>
+                            đang ở tại 
+                            <strong>
+                                <a href="{{ route('frontend.shop', ['id' => $review->shop->id]) }}">
+                                    <strong>{{ $review->shop->shop_name }}</strong>
+                                </a>
+                            </strong>
                         </div>
     
                         <div style="display:flex">

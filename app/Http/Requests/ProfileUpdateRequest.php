@@ -25,6 +25,7 @@ class ProfileUpdateRequest extends FormRequest
                 'max:255',
                 Rule::unique(User::class)->ignore($this->user()->id),
             ],
+            'status' => ['required', Rule::in(['Đang mở cửa', 'Đã đóng cửa'])], // thêm dòng này
         ];
     }
-}
+}    

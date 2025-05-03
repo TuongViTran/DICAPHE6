@@ -123,19 +123,8 @@
                 <h1 class="text-5xl font-bold" style="font-family:Futura">{{ $coffeeShop->shop_name }}</h1>
                 <div class="flex items-center mt-2">
                     <div class="flex text-yellow-500">
-                    @php
-                        $rating = $coffeeShop->reviews_avg_rating;
-                    @endphp
+                    <x-rating :score="$shop->reviews_avg_rating ?? 0" />
 
-                    @for ($i = 1; $i <= 5; $i++)
-                        @if ($rating >= $i)
-                            <i class="fas fa-star" style="color: #FFC107;"></i> <!-- sao đầy -->
-                        @elseif ($rating >= ($i - 0.5))
-                            <i class="fas fa-star-half-alt" style="color: #FFC107;"></i> <!-- sao nửa -->
-                        @else
-                        <i class="far fa-star text-yellow-400"></i>  <!-- sao rỗng -->
-                        @endif
-                    @endfor
                   
                     </div>
                         @php

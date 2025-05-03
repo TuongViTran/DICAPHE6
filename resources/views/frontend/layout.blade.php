@@ -118,7 +118,7 @@
 
                     @endif
 
-                    <li><a href="{{ route('profile') }}">chỉnh sửa thông tin</a></li>
+                    <li><a href="{{ route('profile') }}">Chỉnh sửa thông tin</a></li>
 
                     <li>
                         <a href="{{ route('logout') }}" 
