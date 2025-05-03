@@ -53,8 +53,6 @@ class AuthController extends Controller
                 $url = route('dashboard');
                 break;
             case 'owner':
-                $url = route('dangkycoffeeshop', ['id' => $user->id]);
-                break;
             case 'user':
                 $url = route('trangchu', ['id' => $user->id]);
                 break;
@@ -131,6 +129,7 @@ class AuthController extends Controller
             'phone' => $request->phone,
         ]);
 
+        // Đăng nhập người dùng ngay sau khi đăng ký
         return redirect()->route('login')->with('success', 'Đăng ký thành công. Vui lòng đăng nhập.');
 
         // Điều hướng người dùng đến trang riêng của mình
