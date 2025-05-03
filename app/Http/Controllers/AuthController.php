@@ -53,6 +53,8 @@ class AuthController extends Controller
                 $url = route('dashboard');
                 break;
             case 'owner':
+                $url = route('dangkycoffeeshop', ['id' => $user->id]);
+                break;
             case 'user':
                 $url = route('trangchu', ['id' => $user->id]);
                 break;
