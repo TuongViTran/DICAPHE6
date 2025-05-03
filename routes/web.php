@@ -118,6 +118,8 @@ Route::prefix('feed-management')->name('feed.')->group(function () {
 });
 
 // Quản lý quán cà phê
+Route::get('/register-shop', [CoffeeShopController::class, 'createCoffeeshop'])->name('register.shop'); // Hiển thị form đăng ký quán cà phê
+Route::post('/register-shop', [CoffeeShopController::class, 'storeCoffeeshop']); // Lưu quán cà phê mới
 
 Route::get('/coffeeshops', [CoffeeShopController::class, 'index'])->name('coffeeshops_management');
 Route::get('/promotions', [PromotionController::class, 'index'])->name('promotions_management');

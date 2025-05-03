@@ -7,8 +7,12 @@ use App\Models\Review;
 use App\Models\User;
 use App\Models\Style;
 use App\Models\Address;
+use App\Models\Menu;
+use App\Models\SocialNetwork;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class CoffeeShopController extends Controller
 {
@@ -217,4 +221,155 @@ class CoffeeShopController extends Controller
         $review = Review::findOrFail($id);
         return view('reviews.edit', compact('review'));
     }
+
+
+    // ================== Hiển thị form đăng ký quán ==================
+    public function createCoffeeshop()
+    {
+        return view('frontend.dangkycoffeeshop', [
+            'addresses' => \App\Models\Address::all(),
+            'styles' => \App\Models\Style::all(),
+            'socials' => \App\Models\SocialNetwork::all(),
+        ]); 
+    }
+
+    // ================== Lưu quán mới ==================
+    public function storeCoffeeshop(Request $request)
+    {
+        
+        $user = Auth::user();
+        // Kiểm tra đăng nhập
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'Bạn cần đăng nhập để đăng ký quán.');
+        }
+
+        // Validate dữ liệu từ form
+        $validated = $request->validate([
+            'shop_name' => 'required|string|max:255',
+            'phone' => 'required|regex:/^\d{1,11}$/',
+            'description' => 'required|string',
+            // 'address_id' => 'required|exists:addresses,id',
+            'styles_id' => 'required|exists:styles,id',
+            'social_network_id' => 'required|exists:social_network,id',
+            'opening_time' => 'required|date_format:H:i',
+            'closing_time' => 'required|date_format:H:i',
+            'parking' => 'required|string|max:255',
+            'wifi_password' => 'required|string|min:8|max:255',
+            'hotline' => 'required|regex:/^\d{1,11}$/',
+            'min_price' => 'required|numeric|min:0',
+            'max_price' => 'required|numeric|min:0|gt:min_price',
+            'images' => 'required|array|size:4', // Bắt buộc phải có 4 ảnh
+            'images.*' => 'image|mimes:jpeg,png,jpg|max:2048',
+            'street' => 'required|string|max:255',
+            'ward' => 'required|string|max:100',
+            'district' => 'required|string|max:100',
+            'city' => 'required|string|max:100',
+            'country' => 'required|string|max:100',
+            'postal_code' => 'nullable|string|max:20',
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
+            
+        ], [
+            'shop_name.required' => 'Tên quán là bắt buộc.',
+            'shop_name.max' => 'Tên quán không được vượt quá 255 ký tự.',
+            'phone.required' => 'Số điện thoại là bắt buộc.',
+            'phone.regex' => 'Số điện thoại không hợp lệ.',
+            'description.required' => 'Mô tả là bắt buộc.',
+            // 'address_id.required' => 'Địa chỉ là bắt buộc.',
+            // 'address_id.exists' => 'Địa chỉ không tồn tại.',
+            'styles_id.required' => 'Phong cách là bắt buộc.',
+            'styles_id.exists' => 'Phong cách không tồn tại.',
+            'social_network_id.required' => 'Mạng xã hội là bắt buộc.',
+            'social_network_id.exists' => 'Mạng xã hội không tồn tại.',
+            'opening_time.required' => 'Giờ mở cửa là bắt buộc.',
+            'opening_time.date_format' => 'Giờ mở cửa không đúng định dạng (HH:mm).',
+            'closing_time.required' => 'Giờ đóng cửa là bắt buộc.',
+            'closing_time.date_format' => 'Giờ đóng cửa không đúng định dạng (HH:mm).',
+            'parking.required' => 'Thông tin bãi đỗ xe là bắt buộc.',
+            'wifi_password.required' => 'Mật khẩu wifi là bắt buộc.',
+            'wifi_password.min' => 'Mật khẩu wifi phải có ít nhất 8 ký tự.',
+            'hotline.required' => 'Hotline là bắt buộc.',
+            'hotline.regex' => 'Hotline không hợp lệ.',
+            'min_price.required' => 'Giá thấp nhất là bắt buộc.',
+            'min_price.numeric' => 'Giá thấp nhất phải là số.',
+            'max_price.required' => 'Giá cao nhất là bắt buộc.',
+            'max_price.numeric' => 'Giá cao nhất phải là số.',
+            'max_price.gt' => 'Giá tối đa phải lớn hơn giá tối thiểu.',
+            'images.required' => 'Vui lòng tải lên 4 ảnh.',
+            'images.size' => 'Phải chọn đúng 4 ảnh.',
+            'images.*.image' => 'Tệp tải lên phải là hình ảnh.',
+            'images.*.mimes' => 'Ảnh phải có định dạng: jpeg, png, jpg.',
+            'images.*.max' => 'Ảnh không được vượt quá 2MB.',
+
+            'street.required' => 'Đường là trường bắt buộc.',
+            'street.string' => 'Đường phải là chuỗi ký tự.',
+            'street.max' => 'Đường không được vượt quá 255 ký tự.',
+            
+            'ward.required' => 'Phường là trường bắt buộc.',
+            'ward.string' => 'Phường phải là chuỗi ký tự.',
+            'ward.max' => 'Phường không được vượt quá 100 ký tự.',
+            
+            'district.required' => 'Quận là trường bắt buộc.',
+            'district.string' => 'Quận phải là chuỗi ký tự.',
+            'district.max' => 'Quận không được vượt quá 100 ký tự.',
+            
+            'city.required' => 'Thành phố là trường bắt buộc.',
+            'city.string' => 'Thành phố phải là chuỗi ký tự.',
+            'city.max' => 'Thành phố không được vượt quá 100 ký tự.',
+            
+            'country.required' => 'Quốc gia là trường bắt buộc.',
+            'country.string' => 'Quốc gia phải là chuỗi ký tự.',
+            'country.max' => 'Quốc gia không được vượt quá 100 ký tự.',
+            
+            'postal_code.max' => 'Mã bưu điện không được vượt quá 20 ký tự.',
+            
+        ]);
+
+        // Xử lý ảnh (tối đa 4 ảnh)
+        $imageNames = [];
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $index => $image) {
+                $imageName = time() . "_{$index}_" . $image->getClientOriginalName();
+                $image->move(public_path('frontend/images'), $imageName); // lưu vật lý
+                $imageNames[] = $imageName; // chỉ lưu tên
+            }
+        }
+        // Tạo địa chỉ mới
+        $address = Address::create([
+            'street' => $request->street,
+            'ward' => $request->ward,
+            'district' => $request->district,
+            'city' => $request->city,
+            'country' => $request->country,
+            'postal_code' => $request->postal_code,
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
+        ]);
+        $address_id = $address->id;
+
+        // Tạo bản ghi mới
+        CoffeeShop::create([
+            'shop_name' => $validated['shop_name'],
+            'phone' => $validated['phone'] ?? null,
+            'description' => $validated['description'] ?? null,
+            'address_id' => $address_id,
+            'styles_id' => $validated['styles_id'],
+            'social_network_id' => $validated['social_network_id'],
+            'user_id' => Auth::id(),
+            'opening_time' => $validated['opening_time'] ?? null,
+            'closing_time' => $validated['closing_time'] ?? null,
+            'parking' => $validated['parking'] ?? null,
+            'wifi_password' => $validated['wifi_password'] ?? null,
+            'hotline' => $validated['hotline'] ?? null,
+            'min_price' => $validated['min_price'] ?? null,
+            'max_price' => $validated['max_price'] ?? null,
+            'cover_image' => $imageNames[0],
+            'image_1' => $imageNames[1],
+            'image_2' => $imageNames[2],
+            'image_3' => $imageNames[3],
+        ]); 
+
+        return redirect()->route('owner', ['id' => $user->id])->with('success', 'Đăng ký quán thành công!');
+    }
+
 }

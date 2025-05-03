@@ -354,15 +354,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                      <!-- Nút yêu thích -->
-                                        <div class="flex items-center mt-2 text-black text-base">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" 
-                                                stroke-width="1.5" stroke="red" class="w-5 h-5 mr-1">
-                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                    d="M21.752 6.744a5.754 5.754 0 00-9.01-1.308L12 6.34l-.742-.904a5.754 5.754 0 00-9.01 1.308 6.196 6.196 0 001.282 7.684l7.042 6.442a1.5 1.5 0 002.036 0l7.042-6.442a6.196 6.196 0 001.282-7.684z" />
-                                            </svg>
-                                            <span>Đã thích (3,3K)</span>
-                                        </div>
                                 </div>
                               
                             </div>
@@ -499,16 +490,16 @@
                         </p>
 
                         <div class="d-flex gap-2">
-    <form action="{{ route('posts.destroy', [ 'postId' => $post->id]) }}" method="POST" onsubmit="return confirm('Bạn có chắc muốn xóa bài viết này?');" class="d-inline-flex align-items-center">
-        @csrf
-        @method('DELETE')
-        <button type="submit" class="btn btn-danger btn-sm d-inline-flex align-items-center">❌ Xóa</button>
-    </form>
+                                <form action="{{ route('posts.destroy', [ 'postId' => $post->id]) }}" method="POST" onsubmit="return confirm('Bạn có chắc muốn xóa bài viết này?');" class="d-inline-flex align-items-center">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-sm d-inline-flex align-items-center" style="height: 30px;">❌ Xóa</button>
+                                </form>
 
-    <!-- Nút mở modal -->
-    <button type="button" class="btn btn-warning btn-sm text-white d-inline-flex align-items-center" data-bs-toggle="modal" data-bs-target="#editPostModal{{ $post->id }}">
-        ✏️ Chỉnh sửa
-    </button>
+                                <!-- Nút mở modal -->
+                                <button type="button" class="btn btn-warning btn-sm text-white d-inline-flex align-items-center" style="height: 30px;" data-bs-toggle="modal" data-bs-target="#editPostModal{{ $post->id }}">
+                                    ✏️ Chỉnh sửa
+                                </button>
 
                             <!-- Modal chỉnh sửa -->
                             <div class="modal fade" id="editPostModal{{ $post->id }}" tabindex="-1" aria-labelledby="editPostLabel{{ $post->id }}" aria-hidden="true">
