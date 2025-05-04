@@ -405,11 +405,11 @@
                               <textarea class="form-control"  name="content" rows="6" required>{{ $review->content }}</textarea>
 
                               <!-- Ảnh đánh giá (nếu muốn cho phép sửa ảnh) -->
-                              <label class="form-label mt-2">Thay ảnh (nếu cần):</label>
+                              <!-- <label class="form-label mt-2">Thay ảnh (nếu cần):</label>
                               <input type="file" class="form-control" name="img_url" accept="image/*">
                               @error('img_url')
                                 <span class="text-danger">{{ $message }}</span>
-                              @enderror
+                              @enderror -->
 
                               <!-- Ngày đánh giá -->
                               <p class="mt-2 text-muted"><i class="bi bi-calendar"></i> Đã tạo: {{ $review->created_at->format('d/m/Y') }}</p>
