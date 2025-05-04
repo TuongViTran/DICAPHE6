@@ -9,7 +9,6 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\CoffeeShopController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\PromotionController;
 use App\Http\Controllers\CafeManagementController;
 use App\Http\Controllers\OwnerController;
 use App\Http\Middleware\RoleMiddleware;
@@ -127,7 +126,7 @@ Route::get('/register-shop', [CoffeeShopController::class, 'createCoffeeshop'])-
 Route::post('/register-shop', [CoffeeShopController::class, 'storeCoffeeshop']); // Lưu quán cà phê mới
 
 Route::get('/coffeeshops', [CoffeeShopController::class, 'index'])->name('coffeeshops_management');
-Route::get('/promotions', [PromotionController::class, 'index'])->name('promotions_management');
+
 Route::resource('cafes', CafeManagementController::class);
 Route::get('/cafes_management', [CafeManagementController::class, 'index'])->name('cafes_management');
 
@@ -137,8 +136,6 @@ Route::get('/coffeeshops/{coffeeshop}/edit', [CoffeeShopController::class, 'edit
 Route::put('/coffeeshops/{coffeeshop}', [CoffeeShopController::class, 'update'])->name('coffeeshop.update');
 Route::delete('/coffeeshops/{coffeeshop}', [CoffeeShopController::class, 'destroy'])->name('coffeeshop.destroy');
 
-// Quản lý khuyến mãi
-Route::get('/promotions', [PromotionController::class, 'index'])->name('promotions_management');
 
 // Điều hướng trang cá nhân đến trang chỉnh sửa
 Route::middleware(['auth'])->group(function () {

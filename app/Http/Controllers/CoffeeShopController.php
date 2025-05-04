@@ -8,7 +8,6 @@ use App\Models\User;
 use App\Models\Style;
 use App\Models\Address;
 use App\Models\Menu;
-use App\Models\SocialNetwork;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -229,7 +228,6 @@ class CoffeeShopController extends Controller
         return view('frontend.dangkycoffeeshop', [
             'addresses' => \App\Models\Address::all(),
             'styles' => \App\Models\Style::all(),
-            'socials' => \App\Models\SocialNetwork::all(),
         ]); 
     }
 
@@ -250,7 +248,6 @@ class CoffeeShopController extends Controller
             'description' => 'required|string',
             // 'address_id' => 'required|exists:addresses,id',
             'styles_id' => 'required|exists:styles,id',
-            'social_network_id' => 'required|exists:social_network,id',
             'opening_time' => 'required|date_format:H:i',
             'closing_time' => 'required|date_format:H:i',
             'parking' => 'required|string|max:255',
@@ -280,8 +277,6 @@ class CoffeeShopController extends Controller
             // 'address_id.exists' => 'Địa chỉ không tồn tại.',
             'styles_id.required' => 'Phong cách là bắt buộc.',
             'styles_id.exists' => 'Phong cách không tồn tại.',
-            'social_network_id.required' => 'Mạng xã hội là bắt buộc.',
-            'social_network_id.exists' => 'Mạng xã hội không tồn tại.',
             'opening_time.required' => 'Giờ mở cửa là bắt buộc.',
             'opening_time.date_format' => 'Giờ mở cửa không đúng định dạng (HH:mm).',
             'closing_time.required' => 'Giờ đóng cửa là bắt buộc.',
@@ -362,7 +357,6 @@ class CoffeeShopController extends Controller
             'description' => $validated['description'] ?? null,
             'address_id' => $address_id,
             'styles_id' => $validated['styles_id'],
-            'social_network_id' => $validated['social_network_id'],
             'user_id' => Auth::id(),
             'opening_time' => $validated['opening_time'] ?? null,
             'closing_time' => $validated['closing_time'] ?? null,

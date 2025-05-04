@@ -52,18 +52,6 @@
             </div>
 
             <div>
-                <label for="social_network_id" class="block font-medium">Mạng xã hội</label>
-                <select name="social_network_id" id="social_network_id" value="{{ old('social_network_id') }}"  class="w-full border rounded px-3 py-2">
-                    @foreach ($socials as $social)
-                        <option value="{{ $social->id }}">{{ $social->platform }}</option>
-                    @endforeach
-                </select>
-                @error('social_network_id')
-                <p class="text-red-500 text-sm">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <div>
                 <label for="hotline" class="block font-medium">Hotline</label>
                 <input type="text" name="hotline" id="hotline" value="{{ old('hotline') }}" class="w-full border rounded px-3 py-2" >
                 @error('hotline')
