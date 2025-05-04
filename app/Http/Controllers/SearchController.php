@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Style;
 use Illuminate\Support\Facades\DB;
 use App\Models\CoffeeShop;
+use App\Models\RecentSearch;
+
 
 
 class SearchController extends Controller
@@ -131,6 +133,18 @@ class SearchController extends Controller
                 $shop->distance = round($shop->distance, 2);
             }
         }
+        // ✅ Thêm tại đây:
+        RecentSearch::create([
+            'user_id'      => auth()->check() ? auth()->id() : null,
+            'keyword'      => $request->keyword,
+            'style_id'     => is_array($request->style) ? ($request->style[0] ?? null) : $request->style,
+            'min_price'    => null,
+            'max_price'    => null,
+            'latitude'     => $latitude,
+            'longitude'    => $longitude,
+            'distance' => (is_array($distanceRanges) && count($distanceRanges) > 0) ? max($distanceRanges) : null,
+            'result_count' => $coffeeShops->count(),
+        ]);
 
         return view('frontend.search-result', compact('coffeeShops', 'styles',));
     }
