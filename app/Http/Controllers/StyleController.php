@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Style;
+use App\Models\CoffeeShop; // Điều chỉnh không gian tên nếu cần
 
 class StyleController extends Controller
 {
@@ -46,10 +47,9 @@ class StyleController extends Controller
 
     public function show($id)
     {
-        $style = Style::findOrFail($id);
-        return view('backend.admin.styles.show', compact('style'));
+        $coffeeShops = CoffeeShop::where('styles_id', $id)->get();
+        return view('backend.admin.styles.show', compact('coffeeShops'));
     }
-
     public function edit($id)
     {
         $style = Style::findOrFail($id);
