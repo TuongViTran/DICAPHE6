@@ -153,7 +153,12 @@
                 <br>
                 <div class="mt-2" id="tt1">
                     <div>
-                         <img src="{{ asset('frontend/images/c1.jpg') }}" style="width:80px; height:80px; border-radius:50%;margin-top:5px;margin-left:20px" class="shadow-lg"alt="">
+                    <img src="{{ asset('frontend/images/' . $coffeeShop->user->avatar) }}"
+     style="width:80px; height:80px; border-radius:50%; margin-top:5px; margin-left:20px"
+     class="shadow-lg"
+     alt="User Avatar"
+     onerror="this.onerror=null; this.src='{{ asset('frontend/images/avt.png') }}';">
+
                     </div>
                     <div class="tt2" >
                         <div>
