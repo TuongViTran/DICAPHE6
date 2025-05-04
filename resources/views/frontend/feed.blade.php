@@ -103,7 +103,7 @@
       color: #4b5563;
     }
     .review-scroll-container {
-    max-height: 2000px;
+    max-height: 1250px;
     overflow-y: auto;
     scrollbar-width: none; /* Firefox */
     margin-bottom: 50px
@@ -251,7 +251,7 @@
                 </div>
             </div>
             
-            <!-- Mã khuyến mãi -->
+            <!-- Mã khuyến mãi
             <div class="card mb-3">
                 <div class="card-header bg-light"><strong>Thu thập mã khuyến mãi</strong></div>
                 <div class="card-body">
@@ -260,7 +260,7 @@
 
 
                 </div>
-            </div>
+            </div> -->
             
             <img src="{{ asset('frontend/images/anhdep.jpg') }}" alt="">
 
