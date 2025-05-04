@@ -18,6 +18,11 @@ class OwnerController extends Controller
     {
         // Lấy coffeeShop của chủ quán có ID = $id
         $coffeeShop = CoffeeShop::where('user_id', $id)->first();
+        
+        if (!$coffeeShop) {
+            return redirect()->route('register.shop'); // <-- Thêm dòng này
+        }
+
         $posts = Post::with('user') // Lấy bài viết cùng user tạo bài viết đó
             // ->where('status', 'Published')
             ->where('user_id', $id)
@@ -156,16 +161,6 @@ class OwnerController extends Controller
     
             return redirect()->back()->with('success', 'Cập nhật thông tin quán thành công!');
         }
-
-        
-        
-      
-
-
-
-
-     
-    
 
 }
 

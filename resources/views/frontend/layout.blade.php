@@ -97,18 +97,17 @@
             </span>
 
             @php
-                $avatarFile = Auth::user()->avatar_url;
-                $defaultAvatar = Auth::user()->gender === 'male' 
+            $defaultAvatar = Auth::user()->avatar 
+                ? asset(Auth::user()->avatar) 
+                : (Auth::user()->gender === 'male' 
                     ? asset('frontend/images/default_avatar.jpg') 
-                    : asset('frontend/images/default_avatar1.jpg');
-
-                $avatarPath = $avatarFile 
-                    ? asset('frontend/images/' . basename($avatarFile)) 
-                    : $defaultAvatar;
-            @endphp
-
-            <img src="{{ $avatarPath }}" alt="Avatar" class="user-avatar" id="avatar">
+                    : asset('frontend/images/default_avatar1.jpg'));
+        @endphp
+        
+        <img src="{{ $defaultAvatar }}" alt="Avatar" class="user-avatar" id="avatar">
+        
             <span class="user-name">{{ Auth::user()->full_name }}</span>
+            
             <ul class="dropdown-menu" id="dropdown-menu">
                 @if(Auth::check())
                     @if(Auth::user()->role === 'owner')
