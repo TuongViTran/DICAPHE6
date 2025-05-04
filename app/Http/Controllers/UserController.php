@@ -85,53 +85,58 @@ class UserController extends Controller
     return view('backend.admin.latest_users', compact('latestUsers'));
 }
 
-   public function update(Request $request, User $user)
-   {
-       $user = Auth::user();
-       // Xác thực dữ liệu
-       dd($request->all());
-       
-       $request->validate([
-           'full_name' => 'required|string|max:255',
-           'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
-           'phone' => 'nullable|string|max:15',
-           'avatar' => 'nullable|string', // Chỉ cần xác thực là chuỗi
-           'gender' => 'nullable|in:male,female,other',
-           'role' => 'required|in:admin,owner,user',
-       ]);
-   
-       // Cập nhật thông tin người dùng
-       $user->full_name = $request->full_name;
-       $user->email = $request->email;
-       $user->phone = $request->phone;
-       $user->gender = $request->gender;
-       $user->role = $request->role;
-   
-       // Xử lý ảnh đại diện nếu có
-       if ($request->has('avatar') && $request->avatar) {
-           // Xóa ảnh cũ nếu có
-           if ($user->avatar_url) {
-               Storage::disk('public')->delete($user->avatar_url);
-           }
-           // Cập nhật tên file ảnh đại diện mới
-           $user->avatar_url = $request->avatar; // Lưu tên file ảnh mới
-       }
-   
-       // Lưu thay đổi vào cơ sở dữ liệu
-       $user->save();
-   
-       return redirect()->route('user.management')->with('success', 'Người dùng đã được cập nhật thành công.');
-   }
-    // Xóa người dùng
-    public function destroy(User $user)
-    {
-        // Xóa ảnh đại diện nếu có
+public function update(Request $request, User $user)
+{
+    // Xác thực dữ liệu
+    $request->validate([
+        'full_name' => 'required|string|max:255',
+        'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+        'phone' => 'nullable|string|max:15',
+        'avatar' => 'nullable|string', // Chỉ xác thực là chuỗi URL hoặc path
+        'gender' => 'nullable|in:male,female,other',
+        'role' => 'required|in:admin,owner,user',
+    ]);
+
+    // Cập nhật thông tin người dùng
+    $user->full_name = $request->full_name;
+    $user->email = $request->email;
+    $user->phone = $request->phone;
+    $user->gender = $request->gender;
+    $user->role = $request->role;
+
+    // Cập nhật avatar nếu có
+    if ($request->has('avatar') && $request->avatar) {
         if ($user->avatar_url) {
             Storage::disk('public')->delete($user->avatar_url);
         }
-        $user->delete();
-        return redirect()->route('user.management')->with('success', 'Người dùng đã được xóa thành công.');
+        $user->avatar_url = $request->avatar;
     }
+
+    $user->save();
+
+    return redirect()->route('user.management')->with('success', 'Người dùng đã được cập nhật thành công.');
+}
+public function destroy(User $user)
+{
+    // Tắt kiểm tra ràng buộc khóa ngoại tạm thời (nếu cần)
+    \DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+
+    // Xóa các bản ghi liên quan trong bảng favoriteshop (nếu có)
+    \DB::table('favoriteshop')->where('user_id', $user->id)->delete();
+
+    // Xóa ảnh đại diện nếu có
+    if ($user->avatar_url) {
+        Storage::disk('public')->delete($user->avatar_url);
+    }
+
+    // Xóa người dùng
+    $user->delete();
+
+    // Bật lại kiểm tra ràng buộc khóa ngoại
+    \DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
+    return redirect()->route('user.management')->with('success', 'Người dùng đã được xóa thành công.');
+}
 
     // Hiển thị thông tin người dùng
     public function show(User $user)

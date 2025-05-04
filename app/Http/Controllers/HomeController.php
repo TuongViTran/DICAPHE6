@@ -69,7 +69,7 @@ class HomeController extends Controller
         
         // Lấy danh sách các quán có rating 5 sao
         $fiveStarShops = CoffeeShop::with('address')
-        ->where('reviews_avg_rating',  '>=', 4.5)
+        ->where('reviews_avg_rating',  '>=', 5.0)
         ->get()
         ->each(function ($shop) {
             $shop->liked = false;

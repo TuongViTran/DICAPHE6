@@ -83,7 +83,7 @@ class AdminController extends Controller
             ->get();
 
         // Feedback nổi bật
-        $featuredFeedbacks = Review::with('user','shop') // đảm bảo bảng reviews có quan hệ user
+        $featuredFeedbacks = Review::with('user','shop') 
             ->where('rating', '>=', 4)
             ->orderByDesc('rating')
             ->limit(3)
@@ -104,7 +104,7 @@ class AdminController extends Controller
             'latestUsers',
             'adminAvatar',
             'adminName',
-            'featuredFeedbacks' // THÊM BIẾN NÀY
+            'featuredFeedbacks' 
         ));
     }
 }
