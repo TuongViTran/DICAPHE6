@@ -20,10 +20,9 @@
     <aside class="w-64 bg-white shadow-lg flex flex-col justify-between h-screen sticky top-0 p-6">
         <div>
             <div class="mb-10 text-center">
-                <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                <a>
                     <img src="{{ asset('backend/img/Icon (admin)/Logo.svg') }}" alt="Logo" class="mx-auto w-32">
-                </a>
-                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">@csrf</form>
+                </a>              
             </div>
             
             <nav>
