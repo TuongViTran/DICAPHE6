@@ -43,11 +43,6 @@
                         </a>
                     </li>
                     <li class="mb-4">
-                    <a href="{{ route('promotions_management') }}" class="flex items-center text-gray-600 p-3 rounded-lg hover:bg-gray-200 transition">
-    <i class="fas fa-tags mr-3"></i> Quản lý khuyến mãi
-</a>
-                    </li>
-                    <li class="mb-4">
                     <a href="{{ route('search_management') }}" class="flex items-center text-gray-600 p-3 rounded-lg hover:bg-gray-200 transition">
                             <i class="fas fa-search mr-3"></i> Quản lý tìm kiếm
                         </a>

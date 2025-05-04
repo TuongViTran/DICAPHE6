@@ -144,14 +144,14 @@ class DatabaseSeeder extends Seeder
         // 4. Seed bảng addresses
         DB::table('addresses')->insert([
             [ // Dưới 1km
-                'street'      => '01 Nguyễn Văn Thoại',
-                'ward'        => 'Hòa Thuận Tây',
-                'district'    => 'Hải Châu',
+                'street'      => '703 Âu Cơ',
+                'ward'        => 'Hòa Khánh Bắc',
+                'district'    => 'Liên Chiểu',
                 'city'        => 'Đà Nẵng',
                 'postal_code' => '550000',
                 'country'     => 'Vietnam',
-                'latitude'    => 16.472000,
-                'longitude'   => 107.561000,
+                'latitude'    => 16.078861340698975,
+                'longitude'   => 108.12719055414928,
                 'created_at'  => now(),
                 'updated_at'  => now(),
             ],
@@ -489,7 +489,7 @@ class DatabaseSeeder extends Seeder
             ['user_id' => 2, 'shop_id' => 2, 'saved_at' => now(), 'created_at' => now(), 'updated_at' => now()],
         ]);
 
-        DB::table('recentsearch')->insert([
+        DB::table('recentsearches')->insert([
             ['user_id' => 1, 'search_keyword' => 'Cà phê ngon gần đây', 'searched_at' => now(), 'created_at' => now(), 'updated_at' => now()],
             ['user_id' => 2, 'search_keyword' => 'Quán cà phê yên tĩnh', 'searched_at' => now(), 'created_at' => now(), 'updated_at' => now()],
         ]);
