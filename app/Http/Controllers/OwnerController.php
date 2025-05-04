@@ -16,8 +16,19 @@ use App\Models\Review;
 class OwnerController extends Controller
 {  public function owner($id)
     {
+        $user = auth()->user();
+         // Nếu không phải chủ quán hoặc ID không khớp, từ chối truy cập
+        if (!$user || $user->role !== 'owner' || $user->id != $id) {
+            abort(403, 'Không có quyền truy cập.');
+        }
         // Lấy coffeeShop của chủ quán có ID = $id
         $coffeeShop = CoffeeShop::where('user_id', $id)->first();
+        // Kiểm tra nếu chủ quán chưa đăng ký quán
+        if (!$coffeeShop) {
+            return redirect()->route('register.shop')
+                ->with('warning', 'Bạn chưa đăng ký quán. Vui lòng hoàn tất thông tin quán để tiếp tục.');
+        }
+
         $posts = Post::with('user') // Lấy bài viết cùng user tạo bài viết đó
             // ->where('status', 'Published')
             ->where('user_id', $id)
@@ -34,7 +45,7 @@ class OwnerController extends Controller
         ->get();
     
           // Lấy các quán đã lưu của user
-          $user = auth()->user();
+        //   $user = auth()->user();
           $savedShops = [];
           
           if ($user) {
@@ -156,16 +167,6 @@ class OwnerController extends Controller
     
             return redirect()->back()->with('success', 'Cập nhật thông tin quán thành công!');
         }
-
-        
-        
-      
-
-
-
-
-     
-    
 
 }
 

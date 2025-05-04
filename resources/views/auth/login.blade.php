@@ -79,6 +79,9 @@
                         <p class="text-red-500 text-xs italic mt-2">{{ $message }}</p>
                     @enderror
                 </div>
+                <div class="flex items-center justify-between mb-6">
+                    <a class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" href="{{ route('password.request') }}">Quên mật khẩu ?</a>
+                </div>
 
                 <div id="error-message" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 text-center"></div>
 

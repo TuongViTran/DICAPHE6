@@ -136,6 +136,7 @@
                 </div>
 
                 <!-- Ảnh đại diện -->
+
                 <div class="mb-4">
     <label class="block text-gray-700 font-semibold mb-2">Chọn ảnh đại diện</label>
     <div class="flex flex-wrap">
@@ -154,6 +155,8 @@
     </div>
     <input type="hidden" name="avatar" id="selected_avatar" value="{{ old('avatar') }}">
 </div>
+
+
 
                 <!-- Loại tài khoản -->
                 <div class="mb-4">
