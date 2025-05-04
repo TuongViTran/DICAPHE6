@@ -260,6 +260,7 @@ class CoffeeShopController extends Controller
             'max_price' => 'required|numeric|min:0|gt:min_price',
             'images' => 'required|array|size:4', // Bắt buộc phải có 4 ảnh
             'images.*' => 'image|mimes:jpeg,png,jpg|max:2048',
+            'menu_image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
             'street' => 'required|string|max:255',
             'ward' => 'required|string|max:100',
             'district' => 'required|string|max:100',
@@ -300,6 +301,10 @@ class CoffeeShopController extends Controller
             'images.*.image' => 'Tệp tải lên phải là hình ảnh.',
             'images.*.mimes' => 'Ảnh phải có định dạng: jpeg, png, jpg.',
             'images.*.max' => 'Ảnh không được vượt quá 2MB.',
+            'menu_image.required' => 'Vui lòng chọn ảnh thực đơn.',
+            'menu_image.image' => 'Tệp tải lên phải là hình ảnh.',
+            'menu_image.mimes' => 'Ảnh thực đơn phải có định dạng jpeg, png hoặc jpg.',
+            'menu_image.max' => 'Ảnh thực đơn không được vượt quá 2MB.',
 
             'street.required' => 'Đường là trường bắt buộc.',
             'street.string' => 'Đường phải là chuỗi ký tự.',
@@ -334,6 +339,9 @@ class CoffeeShopController extends Controller
                 $imageNames[] = $imageName; // chỉ lưu tên
             }
         }
+
+        
+
         // Tạo địa chỉ mới
         $address = Address::create([
             'street' => $request->street,
@@ -348,7 +356,7 @@ class CoffeeShopController extends Controller
         $address_id = $address->id;
 
         // Tạo bản ghi mới
-        CoffeeShop::create([
+        $coffeeShop = CoffeeShop::create([
             'shop_name' => $validated['shop_name'],
             'phone' => $validated['phone'] ?? null,
             'description' => $validated['description'] ?? null,
@@ -368,6 +376,21 @@ class CoffeeShopController extends Controller
             'image_2' => $imageNames[2],
             'image_3' => $imageNames[3],
         ]); 
+
+        // xử lí ảnh menu
+        if ($request->hasFile('menu_image')) {
+            $menuImage = $request->file('menu_image');
+            $menuImageName = time() . '_' . $menuImage->getClientOriginalName();
+            $menuImage->move(public_path('frontend/images'), $menuImageName);
+        
+            // Lưu đường dẫn vào DB
+            Menu::create([
+                'shop_id' => $coffeeShop->id,
+                'image_url' => $menuImageName,
+                'item_name' => 'Menu quán',
+                'price' => 30000,
+            ]);
+        }
 
         return redirect()->route('owner', ['id' => $user->id])->with('success', 'Đăng ký quán thành công!');
     }

@@ -32,7 +32,8 @@ class Coffeeshop extends Model
         'cover_image', 
         'image_1', 
         'image_2', 
-        'image_3'
+        'image_3',
+        'social_network_id'
         // Thêm các trường khác nếu có!
     ];
 
