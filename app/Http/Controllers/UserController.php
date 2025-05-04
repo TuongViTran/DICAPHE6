@@ -116,16 +116,27 @@ public function update(Request $request, User $user)
 
     return redirect()->route('user.management')->with('success', 'Người dùng đã được cập nhật thành công.');
 }
-    // Xóa người dùng
-    public function destroy(User $user)
-    {
-        // Xóa ảnh đại diện nếu có
-        if ($user->avatar_url) {
-            Storage::disk('public')->delete($user->avatar_url);
-        }
-        $user->delete();
-        return redirect()->route('user.management')->with('success', 'Người dùng đã được xóa thành công.');
+public function destroy(User $user)
+{
+    // Tắt kiểm tra ràng buộc khóa ngoại tạm thời (nếu cần)
+    \DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+
+    // Xóa các bản ghi liên quan trong bảng favoriteshop (nếu có)
+    \DB::table('favoriteshop')->where('user_id', $user->id)->delete();
+
+    // Xóa ảnh đại diện nếu có
+    if ($user->avatar_url) {
+        Storage::disk('public')->delete($user->avatar_url);
     }
+
+    // Xóa người dùng
+    $user->delete();
+
+    // Bật lại kiểm tra ràng buộc khóa ngoại
+    \DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
+    return redirect()->route('user.management')->with('success', 'Người dùng đã được xóa thành công.');
+}
 
     // Hiển thị thông tin người dùng
     public function show(User $user)

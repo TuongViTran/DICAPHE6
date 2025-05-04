@@ -88,40 +88,37 @@
 
        <!-- Kiểm tra trạng thái đăng nhập -->
         
-    <div class="auth-buttons">
-      @auth
-      
+       <div class="auth-buttons">
+    @auth
         <div class="user-menu" id="user-menu">
             <span class="user-role {{ Auth::user()->role === 'owner' ? 'owner-role' : 'customer-role' }}">
                 {{ Auth::user()->role === 'owner' ? 'Chủ Quán' : 'Khách Hàng' }}
             </span>
 
-            @php
-            $defaultAvatar = Auth::user()->avatar 
-                ? asset(Auth::user()->avatar) 
-                : (Auth::user()->gender === 'male' 
-                    ? asset('frontend/images/default_avatar.jpg') 
-                    : asset('frontend/images/default_avatar1.jpg'));
-        @endphp
-        
-        <img src="{{ $defaultAvatar }}" alt="Avatar" class="user-avatar" id="avatar">
-        
+
+            <img src="{{ asset('frontend/images/' . basename(Auth::user()->avatar_url ?? 'frontend/images/avt.png')) }}"
+     alt="Avatar" 
+     class="user-avatar" 
+     id="avatar"
+     onerror="this.onerror=null; this.src='{{ asset('frontend/images/avt.png') }}';">
+
+                 
+
             <span class="user-name">{{ Auth::user()->full_name }}</span>
             
             <ul class="dropdown-menu" id="dropdown-menu">
                 @if(Auth::check())
                     @if(Auth::user()->role === 'owner')
-                         <li><a href="{{ route('owner', ['id' => Auth::user()->id]) }}">Trang chủ quán</a></li>
+                        <li><a href="{{ route('owner', ['id' => Auth::user()->id]) }}">Trang chủ quán</a></li>
                     @else
-                          <li><a href="{{ route('user', ['id' => Auth::user()->id]) }}">Trang cá nhân</a></li>
-
+                        <li><a href="{{ route('user', ['id' => Auth::user()->id]) }}">Trang cá nhân</a></li>
                     @endif
 
                     <li><a href="{{ route('profile') }}">Chỉnh sửa thông tin</a></li>
 
                     <li>
                         <a href="{{ route('logout') }}" 
-                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                           onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                             Đăng xuất
                         </a>
                     </li>

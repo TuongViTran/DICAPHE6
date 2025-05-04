@@ -182,15 +182,16 @@
         <div class="p-4 rounded shadow-sm mb-4 d-flex align-items-center justify-content-around" style="background: linear-gradient(to bottom, rgb(180, 241, 200), #c2ebfb00);">
             <!-- Cột bên trái: Ảnh đại diện + Thông tin quán -->
             <div class="d-flex flex-column align-items-center">
-                <div style="width: 90px; height: 90px; overflow: hidden; border-radius: 50%; box-shadow: 0 0 10px rgba(0,0,0,0.1);margin-bottom:5px;">
-                    <img src="{{ asset('frontend/images/' . basename($user->avatar_url ?? 'avt.png')) }}"
-                        alt="User profile picture"
-                        style="width: 100%; height: 100%; object-fit: cover;">
-                </div>
-                <div class="text-left">
-                <h4 class="text-center fw-bold mb-1">{{ $user->full_name ?? 'Khách hàng' }}</h4>
-                </div>
-            </div>
+    <div style="width: 90px; height: 90px; overflow: hidden; border-radius: 50%; box-shadow: 0 0 10px rgba(0,0,0,0.1); margin-bottom:5px;">
+        <img src="{{ asset('frontend/images/' . basename($user->avatar_url ?? 'frontend/images/avt.png')) }}" 
+             alt="Ảnh hồ sơ người dùng" 
+             style="width: 100%; height: 100%; object-fit: cover;"
+             onerror="this.onerror=null; this.src='{{ asset('frontend/images/avt.png') }}';">
+    </div>
+    <div class="text-left">
+        <h4 class="text-center fw-bold mb-1">{{ $user->full_name ?? 'Khách hàng' }}</h4>
+    </div>
+</div>
 
             
             <div class="bg-white p-3 rounded shadow-sm text-center d-flex gap-4 justify-content-around" style="min-width: 500px;">

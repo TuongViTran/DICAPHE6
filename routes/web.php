@@ -135,6 +135,8 @@ Route::post('/coffeeshops', [CoffeeShopController::class, 'store'])->name('coffe
 Route::get('/coffeeshops/{coffeeshop}/edit', [CoffeeShopController::class, 'edit'])->name('coffeeshop.edit');
 Route::put('/coffeeshops/{coffeeshop}', [CoffeeShopController::class, 'update'])->name('coffeeshop.update');
 Route::delete('/coffeeshops/{coffeeshop}', [CoffeeShopController::class, 'destroy'])->name('coffeeshop.destroy');
+// Quản lí tìm kiếm : 
+Route::get('/admin/search-management', [AdminController::class, 'searchManagement'])->name('search_management');
 
 
 // Điều hướng trang cá nhân đến trang chỉnh sửa
