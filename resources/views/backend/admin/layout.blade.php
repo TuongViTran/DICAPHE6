@@ -76,11 +76,7 @@
             </nav>
         </div>
 
-        <div class="mt-10">
-            <a href="{{ route('register') }}" class="flex items-center justify-center p-3 rounded-lg text-red-600 hover:bg-red-100">
-                <i class="fas fa-sign-out-alt mr-3"></i> Đăng xuất
-            </a>
-        </div>
+
     </aside>
 
     <!-- Main Content -->
