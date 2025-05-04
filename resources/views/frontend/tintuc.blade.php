@@ -78,7 +78,7 @@
                 style="width: 100%; height: 100%; object-fit: cover;">
             </div>
             <div class="ms-3">
-            <h6 class="fw-bold mb-1">{{ $post->title }}</h6>
+            <h6 class="fw-bold text-xl mb-1">{{ $post->title }}</h6>
             <p class="text-muted small mb-1">
                 {{ \Carbon\Carbon::parse($post->created_at)->format('H:i d/m/Y') }} | 
                 Tác giả: {{ $post->user->full_name ?? 'Ẩn danh' }}

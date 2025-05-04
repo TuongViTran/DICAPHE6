@@ -137,7 +137,7 @@
                 </div>
 
                 <!-- Ảnh đại diện -->
-                <div class="mb-4">
+                <!-- <div class="mb-4">
                     <label for="avatar_url" class="block text-gray-700 font-semibold mb-2">Ảnh đại diện</label>
                     <input 
                         id="avatar_url" 
@@ -148,7 +148,7 @@
                     @error('avatar_url')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
-                </div>
+                </div> -->
 
                 <!-- Loại tài khoản -->
                 <div class="mb-4">

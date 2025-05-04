@@ -1,7 +1,7 @@
 @extends('frontend.layout')
 @section('title', 'Đăng ký quán cà phê')
 @section('content')
-@if ($errors->any())
+<!-- @if ($errors->any())
     <div class="alert alert-danger">
         <ul>
             @foreach ($errors->all() as $error)
@@ -9,6 +9,11 @@
             @endforeach
         </ul>
     </div>
+@endif -->
+@if(session('warning'))
+    <script>
+        alert("{{ session('warning') }}");
+    </script>
 @endif
 <div class="max-w-4xl mx-auto mt-10 bg-white p-6 rounded shadow">
     <h2 class="text-2xl font-bold mb-6">Đăng ký quán cà phê</h2>
@@ -137,32 +142,55 @@
             @enderror
         </div>
 
+            
+        {{-- Ảnh menu --}}
+        <div class="mt-6">
+            <label for="menu_image" class="block font-medium">Ảnh thực đơn (menu):</label>
+            <input type="file" name="menu_image" id="menu_image" class="w-full border rounded px-3 py-2" accept="image/*">
+            <p class="text-red-500 text-sm" id="error-menu_image"></p>
+        </div>
+        @error('menu_image')
+            <p class="text-red-500 text-sm">{{ $message }}</p>
+        @enderror
+
         {{-- Địa chỉ --}}
-        <div class="grid grid-cols-2 gap-4 mt-4 mb-4">
-            <input name="street" placeholder="Số nhà, tên đường" class="border px-3 py-2 rounded" >
-            @error('street')
-            <p class="text-red-500 text-sm">{{ $message }}</p>
-            @enderror
-            <input name="ward" placeholder="Phường/xã" class="border px-3 py-2 rounded" >
-            @error('ward')
-            <p class="text-red-500 text-sm">{{ $message }}</p>
-            @enderror
-            <input name="district" placeholder="Quận/huyện" class="border px-3 py-2 rounded" >
-            @error('district')
-            <p class="text-red-500 text-sm">{{ $message }}</p>
-            @enderror
-            <input name="city" placeholder="Tỉnh/thành phố" class="border px-3 py-2 rounded" >
-            @error('city')
-            <p class="text-red-500 text-sm">{{ $message }}</p>
-            @enderror
-            <input name="country" placeholder="Quốc gia" value="Vietnam" class="border px-3 py-2 rounded" >
-            @error('count')
-            <p class="text-red-500 text-sm">{{ $message }}</p>
-            @enderror
-            <input name="postal_code" placeholder="Mã bưu điện" class="border px-3 py-2 rounded" >
-            @error('postal_code')
-            <p class="text-red-500 text-sm">{{ $message }}</p>
-            @enderror
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+            <div>
+                <input name="street" placeholder="Số nhà, tên đường" value="{{ old('street') }}" class="w-full border rounded px-3 py-2" >
+                @error('street')
+                <p class="text-red-500 text-sm">{{ $message }}</p>
+                @enderror
+            </div>
+            <div>
+                <input name="ward" placeholder="Phường/xã" value="{{ old('ward') }}" class="w-full border rounded px-3 py-2" >
+                @error('ward')
+                <p class="text-red-500 text-sm">{{ $message }}</p>
+                @enderror
+            </div>
+            <div>
+                <input name="district" placeholder="Quận/huyện" value="{{ old('district') }}" class="w-full border rounded px-3 py-2" >
+                @error('district')
+                <p class="text-red-500 text-sm">{{ $message }}</p>
+                @enderror
+            </div>
+            <div>
+                <input name="city" placeholder="Tỉnh/thành phố" value="{{ old('city') }}" class="w-full border rounded px-3 py-2" >
+                @error('city')
+                <p class="text-red-500 text-sm">{{ $message }}</p>
+                @enderror
+            </div>
+            <div>
+                <input name="country" placeholder="Quốc gia" value="Vietnam" class="w-full border rounded px-3 py-2" >
+                @error('count')
+                <p class="text-red-500 text-sm">{{ $message }}</p>
+                @enderror
+            </div>
+            <div>
+                <input name="postal_code" placeholder="Mã bưu điện" value="{{ old('postal_code') }}" class=" w-full border px-3 py-2 rounded" >
+                @error('postal_code')
+                <p class="text-red-500 text-sm">{{ $message }}</p>
+                @enderror
+            </div>
         </div>
 
         {{-- Tọa độ (ẩn) --}}
