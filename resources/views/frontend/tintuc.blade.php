@@ -22,7 +22,7 @@
       </div>
       <!-- Các bài viết nhỏ -->
       <div class="row mt-4">
-        @foreach($posts->skip(1)->take(3) as $post)
+        @foreach($posts->shuffle()->take(3) as $post)
           <div class="col-md-4 mb-4">
             <div class="custom-card">
             <a href="{{ route('posts.show', $post->id) }}" class="text-decoration-none text-dark">
