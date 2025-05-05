@@ -44,7 +44,7 @@
                 <h3 class="text-lg font-bold tracking-wide mb-1">Tổng bài viết</h3>
                 <div class="flex flex-col">
                     <span class="text-4xl font-extrabold">{{ $totalPosts }}</span>
-                    <small>Đã duyệt: {{ $approvedPostsCount }} | Chưa duyệt: {{ $unapprovedPostsCount }}</small>
+                    
                 </div>
             </div>
         </div>
@@ -55,7 +55,7 @@
 <!-- Biểu đồ -->
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
     <div class="col-span-2 bg-white p-6 rounded-2xl shadow-lg">
-        <h3 class="text-lg font-bold mb-4 text-gray-700">📈 Lượng người dùng:</h3>
+        <h3 class="text-lg font-bold mb-4 text-gray-700">📈Biểu đồ tăng trưởng tài khoản</h3>
         <canvas id="userChart" height="110"></canvas>
     </div>
 
@@ -73,9 +73,12 @@
             @forelse ($displayedUsers as $user)
             <li class="flex justify-between items-center">
                 <div class="flex items-center space-x-3">
-                    <img src="{{ $user->avatar_url ? asset('frontend/images/' . basename($user->avatar_url)) : asset('frontend/images/avt.png') }}" 
-                         onerror="this.src='{{ asset('frontend/images/avt.png') }}'" 
-                         class="w-12 h-12 rounded-full border border-gray-300 shadow-md object-cover" alt="{{ $user->full_name }}">
+                <img 
+                                    src="{{ asset('storage/uploads/avatars/' . basename($user->avatar_url)) }}"
+                                    onerror="this.onerror=null; this.src='{{ asset('frontend/images/avt.png') }}';"
+                                    alt="Avatar" 
+                                    style="width: 10%; height: 10%; object-fit: cover;"
+                                >
                     <div>
                         <p class="font-bold text-gray-800">{{ $user->full_name }}</p>
                         <p class="text-xs text-green-500 flex items-center gap-1">
@@ -230,9 +233,12 @@
     <ul class="space-y-5">
         @foreach($featuredFeedbacks as $feedback)
         <li class="flex items-start space-x-3">
-    <img src="{{ $feedback->user->avatar_url ? asset('frontend/images/' . basename($feedback->user->avatar_url)) : asset('frontend/images/avt.png') }}" 
-         onerror="this.src='{{ asset('frontend/images/avt.png') }}'"
-         class="w-10 h-10 rounded-full object-cover border shadow-md" alt="{{ $feedback->user->full_name }}">
+        <img 
+                                    src="{{ asset('storage/uploads/avatars/' . basename($user->avatar_url)) }}"
+                                    onerror="this.onerror=null; this.src='{{ asset('frontend/images/avt.png') }}';"
+                                    alt="Avatar" 
+                                    style="width: 10%; height: 10%; object-fit: cover;"
+                                >
     <div class="flex-1">
         <p class="font-semibold text-gray-800">{{ $feedback->user->full_name }}</p>
         
@@ -266,36 +272,37 @@
 
 <!-- Script Chart -->
 <script>
-    const ctx = document.getElementById('userChart').getContext('2d');
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7'],
-            datasets: [
-                {
-                    label: 'Khách hàng',
-                    data: [{{ implode(',', $userCounts) }}],
-                    backgroundColor: '#4ec7a7'
-                },
-                {
-                    label: 'Chủ quán',
-                    data: [30, 40, 35, 50, 45, 60, 55],
-                    backgroundColor: '#f5c41d'
-                }
-            ]
-        },
-        options: {
-            animation: {
-                duration: 2000,
-                easing: 'easeInOutElastic'
+const ctx = document.getElementById('userChart').getContext('2d');
+new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ['Biểu đồ',],
+        datasets: [
+            {
+                label: 'Khách hàng',
+                data: [{{ implode(',', $userCounts) }}], // Dữ liệu động cho số lượng khách hàng trong tháng
+                backgroundColor: '#4ec7a7'
             },
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
+            {
+                label: 'Chủ quán',
+                data: [{{ implode(',', $ownerCounts) }}], // Dữ liệu động cho số lượng chủ quán trong tháng
+                backgroundColor: '#f5c41d'
+            }
+        ]
+    },
+    options: {
+        animation: {
+            duration: 2000,
+            easing: 'easeInOutElastic'
+        },
+        scales: {
+            y: {
+                beginAtZero: true
             }
         }
-    });
+    }
+});
+
 </script>
 
 @endsection
