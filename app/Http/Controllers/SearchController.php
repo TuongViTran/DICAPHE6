@@ -16,16 +16,16 @@ class SearchController extends Controller
     {
         $styles = Style::all();
     
-        $latitude = $request->input('user_latitude', 16.4724736);
-        $longitude = $request->input('user_longitude', 107.56096);
+        $latitude = $request->input('user_latitude', 16.052597851703318);
+        $longitude = $request->input('user_longitude', 108.16862472923815);
         
         if ((!$latitude || !$longitude) && auth()->check() && auth()->user()->address) {
-            $latitude = auth()->user()->address->latitude ?? 16.4724736;
-            $longitude = auth()->user()->address->longitude ?? 107.56096;
+            $latitude = auth()->user()->address->latitude ?? 16.052597851703318;
+            $longitude = auth()->user()->address->longitude ?? 108.16862472923815;
         }
     
-        $latitude = $latitude ?: 16.4724736;
-        $longitude = $longitude ?: 107.56096;
+        $latitude = $latitude ?: 16.052597851703318;
+        $longitude = $longitude ?: 108.16862472923815;
 
         // Công thức có alias -> dùng cho SELECT
             $distanceFormula = "

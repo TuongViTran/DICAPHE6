@@ -229,22 +229,22 @@
         }
 
         upload() {
-            return this.loader.file.then(file => {
+            return this.loader.file.then(file => {    // ảnh được chọn
                 return new Promise((resolve, reject) => {
                     const data = new FormData();
-                    data.append('upload', file);
-                    data.append('_token', '{{ csrf_token() }}');
+                    data.append('upload', file);   //upload là key mà backend Laravel đang dùng ($request->file('upload')).
+                    data.append('_token', '{{ csrf_token() }}'); 
 
-                    fetch("{{ route('ckeditor.upload') }}", {
+                    fetch("{{ route('ckeditor.upload') }}", { //Gửi ảnh lên server bằng fetch thông qua route ckeditor.upload.
                         method: "POST",
                         body: data
                     })
                     .then(response => response.json())
                     .then(result => {
                         if (result.url) {
-                            resolve({ default: result.url });
+                            resolve({ default: result.url }); // Nếu upload thành công: resolve với { default: 'URL ảnh' }.
                         } else {
-                            reject(result.error.message);
+                            reject(result.error.message); // Nếu có lỗi xảy ra: reject với thông báo lỗi.
                         }
                     })
                     .catch(error => {
@@ -266,7 +266,7 @@
         };
     }
 
-    document.querySelectorAll('.ckeditor').forEach(el => {
+    document.querySelectorAll('.ckeditor').forEach(el => { // Chọn textarea có class ckeditor
     ClassicEditor
         .create(el, {
             extraPlugins: [MyCustomUploadAdapterPlugin]

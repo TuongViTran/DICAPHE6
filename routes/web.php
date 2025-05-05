@@ -65,6 +65,7 @@ Route::get('/owner/reviews/{shopId}', [OwnerController::class, 'showShopReviews'
 // Search 
 Route::get('/search', [SearchController::class, 'search'])->name('search.result');
 Route::get('/autocomplete', [SearchController::class, 'autocomplete']);
+Route::post('/search', [SearchController::class, 'search'])->name('search');
 
 
 
