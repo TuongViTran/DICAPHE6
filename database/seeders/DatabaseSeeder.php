@@ -490,8 +490,8 @@ class DatabaseSeeder extends Seeder
         ]);
 
         DB::table('recentsearches')->insert([
-            ['user_id' => 1, 'search_keyword' => 'Cà phê ngon gần đây', 'searched_at' => now(), 'created_at' => now(), 'updated_at' => now()],
-            ['user_id' => 2, 'search_keyword' => 'Quán cà phê yên tĩnh', 'searched_at' => now(), 'created_at' => now(), 'updated_at' => now()],
+            ['user_id' => 1, 'keyword' => 'Cà phê ngon gần đây', 'created_at' => now(), 'updated_at' => now()],
+            ['user_id' => 2, 'keyword' => 'Quán cà phê yên tĩnh', 'created_at' => now(), 'updated_at' => now()],
         ]);
       
         DB::table('notification')->insert([

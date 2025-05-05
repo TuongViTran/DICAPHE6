@@ -145,15 +145,16 @@
         @endphp
         @foreach ($images as $image)
             <div class="relative mr-2 mb-2">
-                <img src="{{ asset('frontend/images/' . $image) }}" 
-                     onerror="this.onerror=null; this.src='{{ asset('frontend/images/avt.png') }}';"
-                     class="w-20 h-20 rounded-full cursor-pointer select-avatar border-2 border-transparent hover:border-yellow-500 transition duration-200" 
-                     data-image="{{ $image }}" 
-                     alt="Avatar">
+                <input type="radio" id="avatar_{{ $loop->index }}" name="avatar" value="{{ $image }}" class="hidden" {{ old('avatar') == $image ? 'checked' : '' }}>
+                <label for="avatar_{{ $loop->index }}">
+                    <img src="{{ asset('frontend/images/' . $image) }}" 
+                         onerror="this.onerror=null; this.src='{{ asset('frontend/images/avt.png') }}';"
+                         class="w-20 h-20 rounded-full cursor-pointer border-2 border-transparent hover:border-yellow-500 transition duration-200" 
+                         alt="Avatar">
+                </label>
             </div>
         @endforeach
     </div>
-    <input type="hidden" name="avatar" id="selected_avatar" value="{{ old('avatar') }}">
 </div>
 
 
@@ -217,6 +218,19 @@
             </div>
         </div>
     </div>
+    <style>
+    /* Viền cho ảnh đã chọn */
+    input[type="radio"]:checked + label img {
+        border-color: yellow; /* Màu viền khi chọn ảnh */
+        border-width: 2px;
+    }
+
+    /* Viền mặc định cho ảnh chưa được chọn */
+    label img {
+        border-color: transparent;
+        border-width: 2px;
+    }
+</style>
 
     <script>
     document.addEventListener('DOMContentLoaded', function () {
