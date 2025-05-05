@@ -94,12 +94,14 @@
                 {{ Auth::user()->role === 'owner' ? 'Chủ Quán' : 'Khách Hàng' }}
             </span>
 
-            <img src="{{ asset('frontend/images/' . basename(Auth::user()->avatar_url ?? 'frontend/images/avt.png')) }}"
-     alt="Avatar" 
-     class="user-avatar" 
-     id="avatar"
-     onerror="this.onerror=null; this.src='{{ asset('frontend/images/avt.png') }}';">
+            <img 
+            src="{{ asset('storage/uploads/avatars/' . basename(Auth::user()->avatar_url)) }}"
+            alt="Avatar"
+            class="user-avatar"
+            id="avatar"
+            onerror="this.onerror=null; this.src='{{ asset('storage/uploads/avatars/default-avatar.png') }}';">
 
+     
                  
             <span class="user-name">{{ Auth::user()->full_name }}</span>
             <ul class="dropdown-menu" id="dropdown-menu">
