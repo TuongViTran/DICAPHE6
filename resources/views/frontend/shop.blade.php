@@ -153,6 +153,7 @@
                 <br>
                 <div class="mt-2" id="tt1">
 
+
                 @if ($shop->user && $shop->user->avatar_url)
     <img src="{{ asset('storage/uploads/avatars/' . basename($shop->user->avatar_url)) }}"
          onerror="this.onerror=null; this.src='{{ asset('frontend/images/avt.png') }}';"
@@ -165,6 +166,8 @@
          class="shadow-lg"
          alt="Avatar mặc định">
 @endif
+
+
 
 
                     <div class="tt2" >
