@@ -64,7 +64,7 @@
                         </a>
                     </li>
                     <li class="mt-6">
-                        <a href="{{ route('register') }}" class="flex items-center text-red-600 p-3 rounded-lg hover:bg-red-100 transition">
+                        <a href="{{ route('login') }}" class="flex items-center text-red-600 p-3 rounded-lg hover:bg-red-100 transition">
                             <i class="fas fa-sign-out-alt mr-3"></i> Đăng xuất
                         </a>
                     </li>
