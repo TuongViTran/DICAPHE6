@@ -148,10 +148,10 @@ class CoffeeShopController extends Controller
     {
         // Xóa các bản ghi liên quan trong bảng favoriteshop
         \DB::table('favoriteshop')->where('shop_id', $coffeeshop->id)->delete();
-    
+        
         // Xóa các bản ghi liên quan trong bảng review
         \DB::table('review')->where('shop_id', $coffeeshop->id)->delete();
-    
+        
         // Xóa ảnh
         foreach (['cover_image', 'image_1', 'image_2', 'image_3'] as $imgField) {
             if ($coffeeshop->$imgField && file_exists(public_path('frontend/images/' . $coffeeshop->$imgField))) {
@@ -162,8 +162,13 @@ class CoffeeShopController extends Controller
         // Xóa quán cà phê
         $coffeeshop->delete();
     
-        return redirect()->route('coffeeshops_management')->with('success', 'Đã xóa quán cà phê và dữ liệu liên quan.');
+        // Cập nhật lại danh sách quán
+        $shops = CoffeeShop::with('reviews')->get();
+    
+        // Trả về trang quản lý quán cà phê với thông báo thành công
+        return redirect()->route('coffeeshops_management', compact('shops'))->with('success', 'Đã xóa quán cà phê và dữ liệu liên quan.');
     }
+    
     
     // =============== Chi tiết ===============
     public function show($id)
