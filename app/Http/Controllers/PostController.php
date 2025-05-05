@@ -223,6 +223,7 @@ class PostController extends Controller
 
         return view('frontend.post', compact('post', 'cmts','editingComment', 'news_tin'));
     }
+    
     public function storeComment(Request $request, $postId)
 {
     $request->validate([
