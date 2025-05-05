@@ -85,8 +85,11 @@
                             <!-- Cột phải: Thông tin -->
                             <div class="md:w-1/2">
                                 <!-- Tên quán -->
-                                <h1 class="text-2xl font-bold font-[Futura] mb-2">{{ $coffeeShop->shop_name }}</h1>
 
+                                <a href="{{ url('/shop/' . $coffeeShop->id) }}" class="text-dark text-decoration-none">
+                                    <h1 class="text-2xl font-bold font-[Futura] mb-2">{{ $coffeeShop->shop_name }}</h1>
+                                </a>
+                                
                                 <!-- Đánh giá & style -->
                                 <div class="flex items-center flex-wrap gap-2 mt-2">
                                     <!-- Sao đánh giá -->
@@ -248,78 +251,148 @@
                                                         <!-- Tên quán -->
                                                         <div class="mb-3">
                                                             <label for="shop_name" class="form-label">Tên Quán</label>
-                                                            <input type="text" class="form-control" id="shop_name" name="shop_name" value="{{ $coffeeShop->shop_name }}">
+                                                            <input type="text"
+                                                                class="form-control @error('shop_name') is-invalid @enderror"
+                                                                id="shop_name"
+                                                                name="shop_name"
+                                                                value="{{ old('shop_name', $coffeeShop->shop_name) }}">
+                                                            @error('shop_name')
+                                                                <div class="invalid-feedback">{{ $message }}</div>
+                                                            @enderror
                                                         </div>
 
                                                         <!-- Trạng thái -->
                                                         <div class="mb-3">
                                                             <label for="status" class="form-label">Trạng Thái</label>
-                                                            <select class="form-select" id="status" name="status">
-                                                                <option value="Đang mở cửa" {{ $coffeeShop->status == 'Đang mở cửa' ? 'selected' : '' }}>Mở cửa</option>
-                                                                <option value="Đã đóng cửa" {{ $coffeeShop->status == 'Đã đóng cửa' ? 'selected' : '' }}>Đóng cửa</option>
+                                                            <select class="form-select @error('status') is-invalid @enderror" id="status" name="status">
+                                                                <option value="Đang mở cửa" {{ old('status', $coffeeShop->status) == 'Đang mở cửa' ? 'selected' : '' }}>Mở cửa</option>
+                                                                <option value="Đã đóng cửa" {{ old('status', $coffeeShop->status) == 'Đã đóng cửa' ? 'selected' : '' }}>Đóng cửa</option>
                                                             </select>
+                                                            @error('status')
+                                                                <div class="invalid-feedback">{{ $message }}</div>
+                                                            @enderror
                                                         </div>
 
                                                         <!-- Số điện thoại -->
                                                         <div class="mb-3">
                                                             <label for="phone" class="form-label">Số điện thoại</label>
-                                                            <input type="text" class="form-control" id="phone" name="phone" value="{{ $coffeeShop->phone }}" required>
-                                                        </div>
+                                                            <input type="text" 
+                                                                class="form-control @error('phone') is-invalid @enderror" 
+                                                                id="phone" 
+                                                                name="phone" 
+                                                                value="{{ old('phone', $coffeeShop->phone) }}" 
+                                                                required>
+                                                            @error('phone')
+                                                                <div class="invalid-feedback">{{ $message }}</div>
+                                                            @enderror
+                                                        </div>                                                     
 
                                                         <!-- Mô tả -->
                                                         <div class="mb-3">
                                                             <label for="description" class="form-label">Mô tả</label>
-                                                            <textarea class="form-control" rows="5" id="description" name="description">{{ $coffeeShop->description }}</textarea>
-                                                        </div>
+                                                            <textarea class="form-control @error('description') is-invalid @enderror"
+                                                                    rows="5"
+                                                                    id="description"
+                                                                    name="description">{{ old('description', $coffeeShop->description) }}</textarea>
+                                                            @error('description')
+                                                                <div class="invalid-feedback">{{ $message }}</div>
+                                                            @enderror
+                                                        </div>  
 
                                                         <!-- Giờ mở cửa & đóng cửa -->
                                                         <div class="row">
-                                                            <div class="col-md-6">
+                                                            <div class="col-md-6 mb-3">
                                                                 <label for="opening_time" class="form-label">Giờ mở cửa</label>
-                                                                <input type="time" class="form-control" id="opening_time" name="opening_time" value="{{ substr($coffeeShop->opening_time, 0, 5) }}" required>
+                                                                <input type="time"
+                                                                    class="form-control @error('opening_time') is-invalid @enderror"
+                                                                    id="opening_time"
+                                                                    name="opening_time"
+                                                                    value="{{ old('opening_time', substr($coffeeShop->opening_time, 0, 5)) }}">
+                                                                @error('opening_time')
+                                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                                @enderror
                                                             </div>
-                                                            <div class="col-md-6">
+                                                            <div class="col-md-6 mb-3">
                                                                 <label for="closing_time" class="form-label">Giờ đóng cửa</label>
-                                                                <input type="time" class="form-control" id="closing_time" name="closing_time" value="{{ substr($coffeeShop->closing_time, 0, 5) }}" required>
+                                                                <input type="time"
+                                                                    class="form-control @error('closing_time') is-invalid @enderror"
+                                                                    id="closing_time"
+                                                                    name="closing_time"
+                                                                    value="{{ old('closing_time', substr($coffeeShop->closing_time, 0, 5)) }}">
+                                                                @error('closing_time')
+                                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                                @enderror
                                                             </div>
                                                         </div>
+
 
                                                         <div class="row">
-                                                            <!-- Giá tối thiểu -->
-                                                            <div class="col-md-6">
-                                                                <label for="min_price" class="form-label">Giá nhỏ nhất</label>
-                                                                <input type="number" class="form-control" id="min_price" name="min_price" value="{{ $coffeeShop->min_price }}" required>
-                                                            </div>
-
-                                                            <!-- Giá tối đa -->
-                                                            <div class="col-md-6">
-                                                                <label for="max_price" class="form-label">Giá cao nhất</label>
-                                                                <input type="number" class="form-control" id="max_price" name="max_price" value="{{ $coffeeShop->max_price }}" required>
-                                                            </div>
+                                                        <!-- Giá tối thiểu -->
+                                                        <div class="col-md-6 mb-3">
+                                                            <label for="min_price" class="form-label">Giá nhỏ nhất</label>
+                                                            <input type="number"
+                                                                class="form-control @error('min_price') is-invalid @enderror"
+                                                                id="min_price"
+                                                                name="min_price"
+                                                                value="{{ old('min_price', $coffeeShop->min_price) }}">
+                                                            @error('min_price')
+                                                                <div class="invalid-feedback">{{ $message }}</div>
+                                                            @enderror
                                                         </div>
+
+                                                        <!-- Giá tối đa -->
+                                                        <div class="col-md-6 mb-3">
+                                                            <label for="max_price" class="form-label">Giá cao nhất</label>
+                                                            <input type="number"
+                                                                class="form-control @error('max_price') is-invalid @enderror"
+                                                                id="max_price"
+                                                                name="max_price"
+                                                                value="{{ old('max_price', $coffeeShop->max_price) }}">
+                                                            @error('max_price')
+                                                                <div class="invalid-feedback">{{ $message }}</div>
+                                                            @enderror
+                                                        </div>
+                                                    </div>
+
 
                                                         <!-- Hình ảnh -->
                                                         @foreach(['cover_image', 'image_1', 'image_2', 'image_3'] as $img)
-                                                        <div class="mb-3">
-                                                            <label for="{{ $img }}" class="form-label">Hình ảnh {{ ucfirst(str_replace('_', ' ', $img)) }}</label>
-                                                            <input type="file" class="form-control" id="{{ $img }}" name="{{ $img }}">
-                                                            @if(!empty($coffeeShop->$img))
-                                                                <img src="{{ asset('frontend/images/' . $coffeeShop->$img) }}" class="img-thumbnail mt-2" width="100">
-                                                            @endif
-                                                        </div>
+                                                            <div class="mb-3">
+                                                                <label for="{{ $img }}" class="form-label">Hình ảnh {{ ucfirst(str_replace('_', ' ', $img)) }}</label>
+                                                                <input type="file"
+                                                                    class="form-control @error($img) is-invalid @enderror"
+                                                                    id="{{ $img }}"
+                                                                    name="{{ $img }}">
+
+                                                                @error($img)
+                                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                                @enderror
+
+                                                                @if(!empty($coffeeShop->$img))
+                                                                    <img src="{{ asset('frontend/images/' . $coffeeShop->$img) }}" class="img-thumbnail mt-2" width="100">
+                                                                @endif
+                                                            </div>
                                                         @endforeach
+
 
                                                         <!-- Địa chỉ -->
                                                         <div class="mb-3">
                                                             <label for="address" class="form-label">Địa chỉ</label>
-                                                            <input type="text" class="form-control" id="address" name="address"
-                                                                value="{{ implode(', ', array_filter([ 
-                                                                    optional($coffeeShop->address)->street,
-                                                                    optional($coffeeShop->address)->ward,
-                                                                    optional($coffeeShop->address)->district,
-                                                                    optional($coffeeShop->address)->city,
-                                                                    optional($coffeeShop->address)->country
-                                                                ])) }}" required>
+                                                            <input type="text"
+                                                                class="form-control @error('address') is-invalid @enderror"
+                                                                id="address"
+                                                                name="address"
+                                                                value="{{ old('address') ?? implode(', ', array_filter([ 
+                                                                        optional($coffeeShop->address)->street,
+                                                                        optional($coffeeShop->address)->ward,
+                                                                        optional($coffeeShop->address)->district,
+                                                                        optional($coffeeShop->address)->city,
+                                                                        optional($coffeeShop->address)->country
+                                                                    ])) }}"
+                                                                required>
+                                                            @error('address')
+                                                                <div class="invalid-feedback">{{ $message }}</div>
+                                                            @enderror
                                                         </div>
 
                                                         <!-- Thêm script để kích hoạt Google Places Autocomplete -->
@@ -359,6 +432,14 @@
                                             </div>
                                         </div>
                                     </div>
+                                    @if (session('openEditModal'))
+                                        <script>
+                                            document.addEventListener('DOMContentLoaded', function () {
+                                                var editModal = new bootstrap.Modal(document.getElementById('editModal'));
+                                                editModal.show();
+                                            });
+                                        </script>
+                                    @endif
                                 </div>
                               
                             </div>

@@ -197,17 +197,17 @@
 <script>
 const form = document.getElementById('registerForm');
 form.addEventListener('submit', function (e) {
-    e.preventDefault();
+    e.preventDefault(); // Tránh form gửi đi ngay, để có thời gian gọi API lấy tọa độ.
 
-    const street = document.querySelector('input[name="street"]').value;
+    const street = document.querySelector('input[name="street"]').value; 
     const ward = document.querySelector('input[name="ward"]').value;
     const district = document.querySelector('input[name="district"]').value;
     const city = document.querySelector('input[name="city"]').value;
     const country = document.querySelector('input[name="country"]').value;
-    const fullAddress = `${street}, ${ward}, ${district}, ${city}, ${country}`;
-    const encoded = encodeURIComponent(fullAddress);
+    const fullAddress = `${street}, ${ward}, ${district}, ${city}, ${country}`;  // Ghép các trường địa chỉ lại thành chuỗi đầy đủ.
+    const encoded = encodeURIComponent(fullAddress); // Mã hóa địa chỉ để sử dụng trong URL.
 
-    fetch(`https://nominatim.openstreetmap.org/search?q=${encoded}&format=json`, {
+    fetch(`https://nominatim.openstreetmap.org/search?q=${encoded}&format=json`, { //Gửi request đến OpenStreetMap API
             headers: {
                 'Accept': 'application/json',
                 'User-Agent': 'YourAppName/1.0 (tungocminh18@gmail.com)',

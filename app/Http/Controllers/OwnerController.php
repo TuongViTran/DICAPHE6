@@ -6,12 +6,12 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Menu;
 use App\Models\CoffeeShop;
-use App\Models\SocialNetwork;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Address;
 use App\Models\Shop;
 use App\Models\Post;
 use App\Models\Review;
+use Illuminate\Support\Facades\Validator;
 
 class OwnerController extends Controller
 {  public function owner($id)
@@ -60,6 +60,7 @@ class OwnerController extends Controller
           return view('frontend.owner', compact('coffeeShop', 'posts', 'reviews', 'postCount', 'reviewCount', 'savedShops', 'saveCount', 'user'));
     }
     
+    // Cập nhật menu
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -76,7 +77,7 @@ class OwnerController extends Controller
 
             // Lưu ảnh mới vào thư mục public/frontend/images/
             $file = $request->file('menu_image');
-            $filename = time() . '_' . $file->getClientOriginalName();
+            $filename = time() . '_' . $file->getClientOriginalName(); //tạo tên ảnh bằng thời gian hiện tại với tên gốc để không bị trùng
             $file->move(public_path('frontend/images/'), $filename);
 
             // Cập nhật đường dẫn ảnh trong DB
@@ -106,21 +107,74 @@ class OwnerController extends Controller
         public function updateinfor(Request $request, $id)
         {
             // Validate dữ liệu
-            $request->validate([
+            $validator = Validator::make($request->all(), [
                 'shop_name' => 'required|string|max:255',
                 'status' => 'required|string',
-                'phone' => 'required|string|max:15',
-                'description' => 'nullable|string',
+                'phone' => 'required|regex:/^\d{1,11}$/',
+                'description' => 'required|string',
                 'opening_time' => ['required', 'regex:/^\d{2}:\d{2}(:\d{2})?$/'], 
                 'closing_time' => ['required', 'regex:/^\d{2}:\d{2}(:\d{2})?$/'],
                 'min_price' => 'required|numeric|min:0',
-                'max_price' => 'nullable|numeric|min:0',
+                'max_price' => 'required|numeric|min:0|gt:min_price',
                 'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
                 'image_1' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
                 'image_2' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
                 'image_3' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
                 'address' => 'required|string|max:255',
+            ], [
+                'shop_name.required' => 'Vui lòng nhập tên quán.',
+                'shop_name.max' => 'Tên quán không được vượt quá 255 ký tự.',
+        
+                'status.required' => 'Vui lòng chọn trạng thái.',
+        
+                'phone.required' => 'Vui lòng nhập số điện thoại.',
+                'phone.regex' => 'Số điện thoại không hợp lệ.',
+        
+                'description.required' => 'Vui lòng nhập mô tả.',
+        
+                'opening_time.required' => 'Vui lòng nhập giờ mở cửa.',
+                'opening_time.regex' => 'Định dạng giờ mở cửa không hợp lệ (hh:mm).',
+        
+                'closing_time.required' => 'Vui lòng nhập giờ đóng cửa.',
+                'closing_time.regex' => 'Định dạng giờ đóng cửa không hợp lệ (hh:mm).',
+        
+                'min_price.required' => 'Vui lòng nhập giá nhỏ nhất.',
+                'min_price.numeric' => 'Giá nhỏ nhất phải là số.',
+                'min_price.min' => 'Giá nhỏ nhất phải lớn hơn hoặc bằng 0.',
+        
+                'max_price.required' => 'Vui lòng nhập giá lớn nhất.',
+                'max_price.numeric' => 'Giá lớn nhất phải là số.',
+                'max_price.min' => 'Giá lớn nhất phải lớn hơn hoặc bằng 0.',
+                'max_price.gt' => 'Giá lớn nhất phải lớn hơn giá nhỏ nhất.',
+        
+                'cover_image.image' => 'Tệp phải là ảnh.',
+                'cover_image.mimes' => 'Ảnh phải có định dạng jpeg, png, jpg hoặc gif.',
+                'cover_image.max' => 'Ảnh không được vượt quá 2MB.',
+        
+                'image_1.image' => 'Tệp phải là ảnh.',
+                'image_1.mimes' => 'Ảnh phải có định dạng jpeg, png, jpg hoặc gif.',
+                'image_1.max' => 'Ảnh không được vượt quá 2MB.',
+        
+
+                'image_2.image' => 'Tệp phải là ảnh.',
+                'image_2.mimes' => 'Ảnh phải có định dạng jpeg, png, jpg hoặc gif.',
+                'image_2.max' => 'Ảnh không được vượt quá 2MB.',
+        
+                'image_3.image' => 'Tệp phải là ảnh.',
+                'image_3.mimes' => 'Ảnh phải có định dạng jpeg, png, jpg hoặc gif.',
+                'image_3.max' => 'Ảnh không được vượt quá 2MB.',
+        
+                'address.required' => 'Vui lòng nhập địa chỉ.',
+                'address.max' => 'Địa chỉ không được vượt quá 255 ký tự.',
             ]);
+
+            // kiểm tra lỗi validate
+            if ($validator->fails()) {
+                return redirect()->back()
+                    ->withErrors($validator)
+                    ->withInput()
+                    ->with('openEditModal', true); // FLAG để mở đúng modal
+            }
 
             $coffeeShop = CoffeeShop::with('user')->find($id);
 
