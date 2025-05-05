@@ -18,19 +18,20 @@ class UserController extends Controller
 {
     
     public function index(Request $request)
-{
-    // Lấy giá trị tìm kiếm từ request
-    $search = $request->input('search');
-
-    // Lấy danh sách người dùng, có thể thêm điều kiện tìm kiếm
-    $users = User::withCount('posts')
-        ->when($search, function ($query, $search) {
-            return $query->where('full_name', 'like', '%' . $search . '%');
-        })
-        ->paginate(40); 
-
-    return view('backend.admin.user_management', compact('users'));
-}
+    {
+        $search = $request->input('search');
+    
+        $users = User::withCount('posts')
+            ->when($search, function ($query, $search) {
+                return $query->where('full_name', 'like', '%' . $search . '%');
+            })
+            ->orderByRaw("FIELD(role, 'admin') DESC") // Ưu tiên admin lên đầu
+            ->orderBy('created_at', 'desc')           // Mới đăng ký ở dưới admin
+            ->paginate(40); 
+    
+        return view('backend.admin.user_management', compact('users'));
+    }
+    
 
     // Hiển thị form thêm mới người dùng
     public function create()

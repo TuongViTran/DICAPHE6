@@ -488,7 +488,21 @@
                         <div class="row">
                             <div class="col-md-3">
                                 <div class="card_nearme-avatar text-center mt-2">
-                                    <img src="{{ $shop->avatar_url ?? asset('frontend/images/default_avatar.jpg') }}" class="avatar-img" alt="Avatar">
+                                @if ($shop->user && $shop->user->avatar_url)
+                                <img src="{{ asset('storage/uploads/avatars/' . basename($shop->user->avatar_url)) }}"
+     onerror="this.onerror=null; this.src='{{ asset('frontend/images/avt.png') }}';"
+     style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; box-shadow: 0 2px 8px rgba(0,0,0,0.15);"
+     class="shadow-lg ms-3"
+     alt="Avatar chủ quán">
+
+
+@else
+<img src="{{ asset('frontend/images/avt.png') }}"
+     style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin-top: 5px;"
+     class="shadow-lg"
+     alt="Avatar mặc định">
+
+@endif
                                 </div>
                             </div>
                             <div class="col-md-9">

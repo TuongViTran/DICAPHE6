@@ -135,10 +135,10 @@
 
 
 <div style="width: 60px; height: 60px; border-radius: 50%; overflow: hidden; margin-left: 12px; margin-top: 5px; flex-shrink: 0;">
-    <img src="{{ $avatarUrl }}"
-         onerror="this.onerror=null; this.src='{{ asset('frontend/images/avt.png') }}';"
-         style="width: 100%; height: 100%; object-fit: cover; display: block;"
-         alt="Avatar chủ quán">
+<img src="{{ asset('storage/uploads/avatars/' . basename($review->user->avatar_url ?? 'avt.png')) }}"
+     onerror="this.onerror=null; this.src='{{ asset('frontend/images/avt.png') }}';"
+     width="60" height="60" alt="Avatar"
+     style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; box-shadow: 0 2px 8px rgba(0,0,0,0.15); margin-right: 15px;">
 </div>
 
     

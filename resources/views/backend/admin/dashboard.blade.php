@@ -87,10 +87,11 @@
                         <p class="text-[10px] text-gray-400">{{ $user->created_at->format('d/m/Y - H:i') }}</p>
                     </div>
                 </div>
-                <span class="px-3 py-1 rounded-full text-xs font-semibold
-                    {{ $user->role === 'user' ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700' }}">
-                    {{ $user->role === 'user' ? 'Khách hàng' : 'Chủ quán' }}
-                </span>
+                <span class="px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap
+    {{ $user->role === 'user' ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700' }}">
+    {{ $user->role === 'user' ? 'Khách hàng' : 'Chủ quán' }}
+</span>
+
             </li>
             @empty
             <li class="text-center text-gray-500">Chưa có người dùng mới.</li>
