@@ -260,10 +260,20 @@
                                     <!-- Thông tin chi tiết -->
                                     <div class="row">
                                           <div class="col-md-3">
-                                                <!-- Avatar quán -->
-                                                <div class="card_nearme-avatar text-center mt-2">
-                                                    <img src="{{ asset('frontend/images/' . basename($shop->user->avatar_url)) }}" class="avatar-img" alt="Avatar">
-                                                </div>
+                                              
+                                          @php
+    $avatarUrl = $shop->user && $shop->user->avatar_url
+        ? asset('storage/uploads/avatars/' . basename($shop->user->avatar_url))
+        : asset('frontend/images/avt.png');
+@endphp
+<div style="width: 60px; height: 60px; border-radius: 50%; overflow: hidden; margin-left: 12px; margin-top: 5px; flex-shrink: 0;">
+    <img src="{{ $avatarUrl }}"
+         onerror="this.onerror=null; this.src='{{ asset('frontend/images/avt.png') }}';"
+         style="width: 100%; height: 100%; object-fit: cover; display: block;"
+         alt="Avatar chủ quán">
+</div>
+
+
                                           </div>
                                           <div class="col-md-9">
                                           <p class="card_nearme-text mb-1">
@@ -331,7 +341,22 @@
                                           <div class="col-md-3">
                                                 <!-- Avatar quán -->
                                                 <div class="card_nearme-avatar text-center mt-2">
-                                                    <img src="{{ $shop->avatar_url ?? asset('frontend/images/default_avatar.jpg') }}" class="avatar-img" alt="Avatar">
+                                               
+                                                @php
+    $avatarUrl = $shop->user && $shop->user->avatar_url
+        ? asset('storage/uploads/avatars/' . basename($shop->user->avatar_url))
+        : asset('frontend/images/avt.png');
+@endphp
+
+<div style="width: 60px; height: 60px; border-radius: 50%; overflow: hidden; margin-left: 12px; margin-top: 5px; flex-shrink: 0;">
+    <img src="{{ $avatarUrl }}"
+         onerror="this.onerror=null; this.src='{{ asset('frontend/images/avt.png') }}';"
+         style="width: 100%; height: 100%; object-fit: cover; display: block;"
+         alt="Avatar chủ quán">
+</div>
+
+
+
                                                 </div>
                                           </div>
                                           <div class="col-md-9">

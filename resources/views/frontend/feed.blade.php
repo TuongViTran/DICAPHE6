@@ -126,14 +126,21 @@
             <div class="card mb-1 p-3" style="border:none">
                 <div class="d-flex align-items-center">
                     <!-- Avatar người dùng -->
-                    <img src="{{ asset('frontend/images/' . basename($review->user->avatar_url)) }}"
+                    @php
+    $shop = $review->shop ?? null;
+    $avatarUrl = $shop && $shop->user && $shop->user->avatar_url
+        ? asset('storage/uploads/avatars/' . basename($shop->user->avatar_url))
+        : asset('frontend/images/avt.png');
+@endphp
+
+
+<div style="width: 60px; height: 60px; border-radius: 50%; overflow: hidden; margin-left: 12px; margin-top: 5px; flex-shrink: 0;">
+    <img src="{{ $avatarUrl }}"
          onerror="this.onerror=null; this.src='{{ asset('frontend/images/avt.png') }}';"
-         width="60" height="60" alt="Avatar"
-         style="border-radius: 50%; box-shadow: 0 2px 8px rgba(0,0,0,0.15); object-fit: cover; margin-right:15px">
-    
-    
-    
-    
+         style="width: 100%; height: 100%; object-fit: cover; display: block;"
+         alt="Avatar chủ quán">
+</div>
+
     
                     <div style="margin-top:15px">
                         <strong>{{ $review->user->full_name ?? 'Người dùng ẩn danh' }}</strong>

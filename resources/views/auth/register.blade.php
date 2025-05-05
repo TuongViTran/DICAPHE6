@@ -24,7 +24,7 @@
             <h1 class="text-2xl font-bold mb-4 text-center">
                 Xin chào! Chúng tôi hỗ trợ tìm kiếm quán cà phê
             </h1>
-            <img src="{{ asset('frontend/images/img_dn.png') }}" class="w-64 h-64" alt="Hình ảnh đăng nhập">
+            <img src="{{ asset('frontend/images/img_dn.png') }}"  class="w-64 h-64" alt="Hình ảnh đăng nhập">
         </div>
 
         <!-- Right Panel - Registration Form -->
@@ -83,8 +83,9 @@
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
-                           <!-- Số điện thoại -->
-                           <div class="mb-4">
+
+                <!-- Số điện thoại -->
+                <div class="mb-4">
                     <label class="block text-gray-700 font-semibold mb-2" for="phone">Số điện thoại</label>
                     <div class="relative">
                         <input 
@@ -136,27 +137,18 @@
                 </div>
 
                 <!-- Ảnh đại diện -->
-
                 <div class="mb-4">
-    <label class="block text-gray-700 font-semibold mb-2">Chọn ảnh đại diện</label>
-    <div class="flex flex-wrap">
-        @php
-            $images = ['c1.jpg', 'c2.jpg', 'c3.jpg', 'c4.jpg', 'c5.jpg', 'c6.jpg'];
-        @endphp
-        @foreach ($images as $image)
-            <div class="relative mr-2 mb-2">
-                <img src="{{ asset('frontend/images/' . $image) }}" 
-                     onerror="this.onerror=null; this.src='{{ asset('frontend/images/avt.png') }}';"
-                     class="w-20 h-20 rounded-full cursor-pointer select-avatar border-2 border-transparent hover:border-yellow-500 transition duration-200" 
-                     data-image="{{ $image }}" 
-                     alt="Avatar">
-            </div>
-        @endforeach
-    </div>
-    <input type="hidden" name="avatar" id="selected_avatar" value="{{ old('avatar') }}">
-</div>
-
-
+                    <label for="avatar_url" class="block text-gray-700 font-semibold mb-2">Ảnh đại diện</label>
+                    <input 
+                        id="avatar_url" 
+                        type="file" 
+                        name="avatar_url" 
+                        accept="image/*" 
+                        class="block w-full px-4 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-yellow-500 @error('avatar_url') border-red-500 @enderror">
+                    @error('avatar_url')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
 
                 <!-- Loại tài khoản -->
                 <div class="mb-4">
@@ -172,8 +164,9 @@
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
-                    <!-- Giới tính -->
-                    <div class="mb-4">
+
+                <!-- Giới tính -->
+                <div class="mb-4">
                     <label class="block text-gray-700 font-semibold mb-2">Giới tính</label>
                     <div class="flex">
                         <label class="mr-4">
@@ -217,23 +210,60 @@
             </div>
         </div>
     </div>
+</body>
 
-    <script>
+<script>
     document.addEventListener('DOMContentLoaded', function () {
-        const avatars = document.querySelectorAll('.select-avatar');
-        const selectedAvatarInput = document.getElementById('selected_avatar');
+        const form = document.getElementById('registerForm');
 
-        avatars.forEach(avatar => {
-            avatar.addEventListener('click', function () {
-                // Cập nhật giá trị của input ẩn
-                selectedAvatarInput.value = this.getAttribute('data-image');
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault(); // Ngăn reload trang
 
-                // Cập nhật hình ảnh đại diện đã chọn
-                avatars.forEach(a => a.classList.remove('border-yellow-500'));
-                this.classList.add('border-yellow-500');
-            });
+            // Xóa hết lỗi cũ
+            document.querySelectorAll('.text-red-500.text-sm.mt-1').forEach(el => el.remove());
+            document.querySelectorAll('input, select').forEach(el => el.classList.remove('border-red-500'));
+
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json',
+                    },
+                    body: formData,
+                });
+
+                if (!response.ok) {
+                    if (response.status === 422) { // Validation lỗi
+                        const data = await response.json();
+                        const errors = data.errors;
+
+                        for (const field in errors) {
+                            const input = document.querySelector(`[name="${field}"]`);
+                            if (input) {
+                                input.classList.add('border-red-500');
+                                const errorEl = document.createElement('p');
+                                errorEl.className = 'text-red-500 text-sm mt-1';
+                                errorEl.innerText = errors[field][0];
+                                input.parentNode.appendChild(errorEl);
+                            }
+                        }
+                    } else {
+                        alert('Có lỗi xảy ra, vui lòng thử lại sau!');
+                    }
+                } else {
+                    // Thành công: bạn có thể redirect hoặc thông báo ở đây
+                    alert('Đăng ký thành công!');
+                    window.location.href = "{{ route('login') }}"; // Redirect về trang đăng nhập
+                }
+            } catch (error) {
+                console.error('Lỗi kết nối:', error);
+                alert('Không thể kết nối tới server!');
+            }
         });
     });
 </script>
-</body>
+
 </html>

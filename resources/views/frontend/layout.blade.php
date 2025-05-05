@@ -89,54 +89,48 @@
        <!-- Kiểm tra trạng thái đăng nhập -->
         
        <div class="auth-buttons">
-    @auth
-        <div class="user-menu" id="user-menu">
-            <span class="user-role {{ Auth::user()->role === 'owner' ? 'owner-role' : 'customer-role' }}">
-                {{ Auth::user()->role === 'owner' ? 'Chủ Quán' : 'Khách Hàng' }}
-            </span>
+       @auth
+    <div class="user-menu" id="user-menu">
+        <span class="user-role {{ Auth::user()->role === 'owner' ? 'owner-role' : 'customer-role' }}">
+            {{ Auth::user()->role === 'owner' ? 'Chủ Quán' : 'Khách Hàng' }}
+        </span>
 
+        <img 
+            src="{{ asset('storage/uploads/avatars/' . basename(Auth::user()->avatar_url)) }}"
+            alt="Avatar"
+            class="user-avatar"
+            id="avatar"
+            onerror="this.onerror=null; this.src='{{ asset('storage/uploads/avatars/default-avatar.png') }}';">
 
-            <img src="{{ asset('frontend/images/' . basename(Auth::user()->avatar_url ?? 'frontend/images/avt.png')) }}"
-     alt="Avatar" 
-     class="user-avatar" 
-     id="avatar"
-     onerror="this.onerror=null; this.src='{{ asset('frontend/images/avt.png') }}';">
+        <span class="user-name">{{ Auth::user()->full_name }}</span>
 
-                 
+        <ul class="dropdown-menu" id="dropdown-menu">
+            @if(Auth::user()->role === 'owner')
+                <li><a href="{{ route('owner', ['id' => Auth::user()->id]) }}">Trang chủ quán</a></li>
+            @else
+                <li><a href="{{ route('user', ['id' => Auth::user()->id]) }}">Trang cá nhân</a></li>
+            @endif
 
-            <span class="user-name">{{ Auth::user()->full_name }}</span>
-            
-            <ul class="dropdown-menu" id="dropdown-menu">
-                @if(Auth::check())
-                    @if(Auth::user()->role === 'owner')
-                        <li><a href="{{ route('owner', ['id' => Auth::user()->id]) }}">Trang chủ quán</a></li>
-                    @else
-                        <li><a href="{{ route('user', ['id' => Auth::user()->id]) }}">Trang cá nhân</a></li>
-                    @endif
+            <li><a href="{{ route('profile') }}">Chỉnh sửa thông tin</a></li>
+            <li>
+                <a href="{{ route('logout') }}" 
+                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    Đăng xuất
+                </a>
+            </li>
+        </ul>
+    </div>
 
-                    <li><a href="{{ route('profile') }}">Chỉnh sửa thông tin</a></li>
-
-                    <li>
-                        <a href="{{ route('logout') }}" 
-                           onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                            Đăng xuất
-                        </a>
-                    </li>
-                @else
-                    <li><a href="{{ route('login') }}">Đăng nhập</a></li>
-                @endif
-            </ul>
-        </div>
 
         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
             @csrf
         </form>
     @else
-        <!-- Nếu chưa đăng nhập -->
         <a href="{{ route('login') }}" class="btn btn-primary">Đăng nhập</a>
         <a href="{{ route('register') }}" class="btn btn-outline">Đăng ký</a>
     @endauth
 </div>
+
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {

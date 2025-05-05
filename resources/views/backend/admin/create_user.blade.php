@@ -6,7 +6,8 @@
 
 @section('content')
     <div class="container mx-auto p-6">
-        <form action="{{ route('user.store') }}" method="POST" class="bg-white p-6 rounded-lg shadow-md">
+    <form action="{{ route('user.store') }}" method="POST" enctype="multipart/form-data" class="bg-white p-6 rounded-lg shadow-md">
+
             @csrf
             <h2 class="text-xl font-bold mb-4 text-gray-800">Thông tin người dùng</h2>
 
@@ -19,26 +20,17 @@
                     </ul>
                 </div>
             @endif
-            <div class="mb-4 flex items-center">
-                <label class="block text-sm font-bold mb-2 mr-4">Ảnh đại diện</label>
-                <button type="button" id="edit-avatar" class="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition duration-200">Chọn ảnh đại diện</button>
-                <img id="selected-avatar" src="" alt="Selected Avatar" class="ml-4 w-20 h-20 rounded-full hidden" />
-            </div>
+          
 
-            <div id="avatar-selection" class="hidden mb-4">
-                <label class="block text-sm font-bold mb-2">Chọn ảnh đại diện mới</label>
-                <div class="flex flex-wrap">
-                    @php
-                        $images = ['c1.jpg', 'c2.jpg', 'c3.jpg', 'c4.jpg', 'c5.jpg', 'c6.jpg']; // Thay thế bằng danh sách ảnh thực tế trong thư mục
-                    @endphp
-                    @foreach ($images as $image)
-                        <div class="relative mr-2 mb-2">
-                            <img src="{{ asset('frontend/images/' . $image) }}" alt="Avatar" class="w-20 h-20 rounded-full cursor-pointer select-avatar transition-transform duration-200 transform hover:scale-110" data-image="{{ $image }}">
-                        </div>
-                    @endforeach
-                </div>
-                <input type="hidden" name="avatar" id="selected_avatar" value="{{ old('avatar') }}">
-            </div>
+            <div class="mb-4">
+    <label class="block text-sm font-medium mb-1">Ảnh đại diện</label>
+    <input type="file" name="avatar" class="block w-full text-sm text-gray-700 border border-gray-300 rounded p-2" accept="image/*">
+    @error('avatar')
+        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+    @enderror
+</div>
+
+
             <div class="mb-4">
                 <label for="full_name" class="block text-sm font-bold mb-2">Họ và tên</label>
                 <input type="text" name="full_name" id="full_name" value="{{ old('full_name') }}" class="border border-gray-300 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Nhập họ và tên" required>
@@ -84,16 +76,7 @@
                 </select>
             </div>
 
-            <div class="mb-4">
-                <label for="latitude" class="block text-sm font-bold mb-2">Vĩ độ</label>
-                <input type="text" name="latitude" id="latitude" value="{{ old('latitude') }}" class="border border-gray-300 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Nhập vĩ độ">
-            </div>
-
-            <div class="mb-4">
-                <label for="longitude" class="block text-sm font-bold mb-2">Kinh độ</label>
-                <input type="text" name="longitude" id="longitude" value="{{ old('longitude') }}" class="border border-gray-300 rounded p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Nhập kinh độ">
-            </div>
-
+         
             <div class="flex items-center justify-between">
                 <button type="submit" class="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition duration-200">Thêm mới</button>
             </div>
@@ -102,10 +85,14 @@
 
     <script>
         // JavaScript để xử lý việc hiển thị và chọn ảnh đại diện
-        document.getElementById('edit-avatar').addEventListener('click', function() {
-            const avatarSelection = document.getElementById('avatar-selection');
-            avatarSelection.classList.toggle('hidden'); // Hiện hoặc ẩn danh sách ảnh
-        });
+        document.getElementById('avatar').addEventListener('change', function(event) {
+        const [file] = event.target.files;
+        if (file) {
+            const preview = document.getElementById('avatar-preview');
+            preview.src = URL.createObjectURL(file);
+            preview.classList.remove('hidden');
+        }
+    });
 
         document.querySelectorAll('.select-avatar').forEach(function(img) {
             img.addEventListener('click', function() {

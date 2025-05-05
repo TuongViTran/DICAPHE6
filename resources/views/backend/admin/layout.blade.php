@@ -72,7 +72,8 @@
                     </div>
                     <div class="flex items-center space-x-2">
                         <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-yellow-400">
-                            <img src="{{ $adminAvatar ? asset('frontend/images/' . basename($adminAvatar)) : asset('frontend/images/avt.png') }}" alt="Admin Avatar" class="object-cover w-full h-full">
+                        <img src="{{ $adminAvatar ? asset('storage/uploads/avatars/' . basename($adminAvatar)) : asset('frontend/images/avt.png') }}" alt="Admin Avatar" class="object-cover w-full h-full">
+
                         </div>
                         <span class="font-semibold text-gray-700">{{ $adminName ?? 'Admin' }}</span>
                     </div>

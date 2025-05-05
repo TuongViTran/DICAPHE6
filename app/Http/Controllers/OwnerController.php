@@ -57,7 +57,7 @@ class OwnerController extends Controller
           ->count();
       
 
-        return view('frontend.owner', compact('coffeeShop','posts', 'reviews', 'postCount', 'reviewCount','savedShops','saveCount'));
+          return view('frontend.owner', compact('coffeeShop', 'posts', 'reviews', 'postCount', 'reviewCount', 'savedShops', 'saveCount', 'user'));
     }
     
     public function update(Request $request, $id)
