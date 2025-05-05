@@ -179,9 +179,9 @@
          </div>
      </div>
    <div class=" styles row mt-4">
-    <div class="style col-md-3">
+    <div class="style col-md-3" >
         <a href="{{ route('style.show', 1) }}" class="card-link">
-            <div class="style_card">
+            <div class="style_card" style="margin-top:-8px">
                 <img src="{{asset('frontend/images/tt.svg') }}" alt="Truyển Thống">
             </div>
         </a>
@@ -212,7 +212,7 @@
    <div class="container_nearmes">
     <div class="content_nearme" >
           <img src="{{ asset('frontend/images/icon_ganday.svg') }}" alt="icon" class="icon">
-          <h2>Gợi ý các quán gần đây</h2>
+          <h2>Các quán mới nhất</h2>
         </div>
           <div class="row">
                   @foreach($shops as $shop)

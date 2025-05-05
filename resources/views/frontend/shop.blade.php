@@ -153,11 +153,7 @@
                 <br>
                 <div class="mt-2" id="tt1">
                     <div>
-                    <img src="{{ asset('frontend/images/' . basename(Auth::user()->avatar_url ?? 'avt.png')) }}"
-     style="width:80px; height:80px; border-radius:50%; margin-top:5px; margin-left:20px"
-     class="shadow-lg"
-     alt="User Avatar"
-     onerror="this.onerror=null; this.src='{{ asset('frontend/images/avt.png') }}';">
+                    <img src="{{ $coffeeShop->user->avatar_url ?? asset('frontend/images/default_avatar.jpg') }}" class="avatar-img" alt="Avatar">
 
 
                     </div>
