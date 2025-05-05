@@ -27,7 +27,7 @@ class UserController extends Controller
         ->when($search, function ($query, $search) {
             return $query->where('full_name', 'like', '%' . $search . '%');
         })
-        ->paginate(10); // Phân trang 10 người dùng mỗi trang
+        ->paginate(40); 
 
     return view('backend.admin.user_management', compact('users'));
 }
@@ -45,7 +45,7 @@ class UserController extends Controller
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:8|confirmed',
             'phone' => 'nullable|string|max:15',
-            'avatar' => 'required|string', // Kiểm tra trường avatar
+            'avatar' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Kiểm tra ảnh
             'gender' => 'nullable|in:male,female,other',
             'latitude' => 'nullable|numeric',
             'longitude' => 'nullable|numeric',
@@ -57,16 +57,26 @@ class UserController extends Controller
         $user->email = $request->email;
         $user->password = bcrypt($request->password); // Mã hóa mật khẩu
         $user->phone = $request->phone;
-        $user->avatar_url = $request->avatar; // Lưu tên file ảnh vào cột avatar_url
         $user->gender = $request->gender;
         $user->latitude = $request->latitude;
         $user->longitude = $request->longitude;
+    
+        // Xử lý ảnh đại diện nếu có upload
+        if ($request->hasFile('avatar')) {
+            $avatar = $request->file('avatar');
+            $filename = uniqid('avatar_') . '.' . $avatar->getClientOriginalExtension();
+            // Lưu ảnh vào thư mục uploads/avatars
+            $path = $avatar->storeAs('uploads/avatars', $filename, 'public');
+            // Lưu đường dẫn vào DB
+            $user->avatar_url = $path;
+        }
     
         // Lưu người dùng vào cơ sở dữ liệu
         $user->save();
     
         return redirect()->route('user.management')->with('success', 'Người dùng đã được thêm thành công.');
     }
+    
     // Hiển thị form chỉnh sửa người dùng
     public function edit(User $user)
     {
@@ -92,7 +102,7 @@ public function update(Request $request, User $user)
         'full_name' => 'required|string|max:255',
         'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
         'phone' => 'nullable|string|max:15',
-        'avatar' => 'nullable|string', // Chỉ xác thực là chuỗi URL hoặc path
+        'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Kiểm tra ảnh nếu có
         'gender' => 'nullable|in:male,female,other',
         'role' => 'required|in:admin,owner,user',
     ]);
@@ -105,37 +115,50 @@ public function update(Request $request, User $user)
     $user->role = $request->role;
 
     // Cập nhật avatar nếu có
-    if ($request->has('avatar') && $request->avatar) {
-        if ($user->avatar_url) {
+    if ($request->hasFile('avatar')) {
+        // Xóa ảnh cũ nếu có
+        if ($user->avatar_url && Storage::disk('public')->exists($user->avatar_url)) {
             Storage::disk('public')->delete($user->avatar_url);
         }
-        $user->avatar_url = $request->avatar;
+
+        // Lưu ảnh mới
+        $avatar = $request->file('avatar');
+        $filename = uniqid('avatar_') . '.' . $avatar->getClientOriginalExtension();
+        $path = $avatar->storeAs('uploads/avatars', $filename, 'public');
+        $user->avatar_url = $path;
     }
 
     $user->save();
 
     return redirect()->route('user.management')->with('success', 'Người dùng đã được cập nhật thành công.');
 }
+
 public function destroy(User $user)
 {
     // Tắt kiểm tra ràng buộc khóa ngoại tạm thời (nếu cần)
     \DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
-    // Xóa các bản ghi liên quan trong bảng favoriteshop (nếu có)
-    \DB::table('favoriteshop')->where('user_id', $user->id)->delete();
+    try {
+        // Xóa các bản ghi liên quan trong bảng favoriteshop (nếu có)
+        \DB::table('favoriteshop')->where('user_id', $user->id)->delete();
 
-    // Xóa ảnh đại diện nếu có
-    if ($user->avatar_url) {
-        Storage::disk('public')->delete($user->avatar_url);
+        // Xóa ảnh đại diện nếu có
+        if ($user->avatar_url && Storage::disk('public')->exists($user->avatar_url)) {
+            Storage::disk('public')->delete($user->avatar_url);
+        }
+
+        // Xóa người dùng
+        $user->delete();
+
+        // Thông báo thành công
+        \DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        return redirect()->route('user.management')->with('success', 'Người dùng đã được xóa thành công.');
+
+    } catch (\Exception $e) {
+        // Nếu có lỗi, bật lại kiểm tra khóa ngoại và thông báo lỗi
+        \DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        return redirect()->route('user.management')->with('error', 'Có lỗi xảy ra trong quá trình xóa người dùng. Vui lòng thử lại.');
     }
-
-    // Xóa người dùng
-    $user->delete();
-
-    // Bật lại kiểm tra ràng buộc khóa ngoại
-    \DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-
-    return redirect()->route('user.management')->with('success', 'Người dùng đã được xóa thành công.');
 }
 
     // Hiển thị thông tin người dùng
@@ -156,39 +179,41 @@ public function destroy(User $user)
     public function updateProfile(Request $request)
     {
         $user = Auth::user(); // Lấy thông tin người dùng hiện tại
-
+    
         $request->validate([
             'full_name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
             'phone' => 'nullable|string|max:15',
-            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'gender' => 'nullable|in:male,female,other', // Xác thực giới tính
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Kiểm tra ảnh nếu có upload
+            'gender' => 'nullable|in:male,female,other',
         ]);
-
-        // Cập nhật thông tin người dùng
+    
+        // Cập nhật thông tin cơ bản
         $user->full_name = $request->full_name;
         $user->email = $request->email;
         $user->phone = $request->phone;
-        $user->gender = $request->gender; // Cập nhật giới tính
-
-        // Xử lý ảnh đại diện nếu có
+        $user->gender = $request->gender;
+    
+        // Xử lý ảnh đại diện nếu có upload
         if ($request->hasFile('avatar')) {
             // Xóa ảnh cũ nếu có
-            if ($user->avatar_url) {
+            if ($user->avatar_url && Storage::disk('public')->exists($user->avatar_url)) {
                 Storage::disk('public')->delete($user->avatar_url);
             }
-            // Lưu tên file mà không có đường dẫn
-            $user->avatar_url = $request->file('avatar')->getClientOriginalName();
-            $request->file('avatar')->storeAs('', $user->avatar_url, 'public'); // Lưu ảnh vào thư mục mà không có đường dẫn
+    
+            // Lưu ảnh mới
+            $avatar = $request->file('avatar');
+            $filename = uniqid('avatar_') . '.' . $avatar->getClientOriginalExtension();
+            $path = $avatar->storeAs('uploads/avatars', $filename, 'public');
+            $user->avatar_url = $path;
         }
-
-        // Lưu thay đổi vào cơ sở dữ liệu
+    
         $user->save();
-
+    
         return redirect()->route('profile.edit')->with('success', 'Cập nhật hồ sơ thành công.');
     }
-
-
+    
+    
    // Hiển thị thông tin người dùng trên frontend
 public function showProfile($id)
 {

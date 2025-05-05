@@ -229,6 +229,7 @@ Route::get('verify-email/{id}/{hash}', VerifyEmailController::class)
 Route::post('email/verification-notification', [EmailVerificationNotificationController::class, 'store'])
     ->middleware('throttle:6,1')
     ->name('verification.send');
+    
 Route::get('/styles', [StyleController::class, 'index'])->name('styles.index'); // Hiển thị danh sách phong cách
 Route::get('/styles/create', [StyleController::class, 'create'])->name('styles.create'); // Hiển thị form thêm phong cách
 Route::post('/styles', [StyleController::class, 'store'])->name('styles.store'); // Lưu phong cách mới

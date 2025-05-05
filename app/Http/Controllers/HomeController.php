@@ -44,7 +44,12 @@ class HomeController extends Controller
         // Lấy bài viết cho slider (5 bài gần đây nhất)
         $sliderPosts = $posts->take(5);
 
+    
+      // Lấy 4 quán cà phê mới nhất kèm địa chỉ, style, và trạng thái like
+
+
        // Lấy 4 quán cà phê mới nhất kèm địa chỉ, style, và trạng thái like
+
         $shops = CoffeeShop::with('address', 'style')
         ->orderBy('created_at', 'desc') // Sắp xếp theo thời gian tạo mới nhất
         ->take(4)

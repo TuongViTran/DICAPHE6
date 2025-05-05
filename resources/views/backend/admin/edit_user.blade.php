@@ -10,31 +10,27 @@
     @method('PUT')
 
     <div class="mb-4">
-        <label class="block text-sm font-bold mb-2">Ảnh đại diện hiện tại</label>
-        @if ($user->avatar_url)
-            <img src="{{ asset('frontend/images/' . basename($user->avatar_url)) }}"
-                onerror="this.onerror=null; this.src='{{ asset('frontend/images/avt.png') }}';"
-                width="80" height="80" alt="Avatar" class="current-avatar rounded-full">
-        @else
-            <p class="mt-2">Chưa có ảnh đại diện.</p>
-        @endif
-        <button type="button" id="edit-avatar" class="mt-2 bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition duration-200">Sửa ảnh</button>
-    </div>
+    <label class="block text-sm font-bold mb-2">Ảnh đại diện hiện tại</label>
+    @if ($user->avatar_url)
+        <img src="{{ asset('storage/uploads/avatars/' . basename($user->avatar_url)) }}"
+             onerror="this.onerror=null; this.src='{{ asset('frontend/images/avt.png') }}';"
+             alt="Avatar"
+             class="current-avatar w-20 h-20 rounded-full object-cover border border-gray-300 shadow-sm">
+    @else
+        <p class="mt-2">Chưa có ảnh đại diện.</p>
+    @endif
 
-    <div id="avatar-selection" class="hidden mb-4">
-        <label class="block text-sm font-bold mb-2">Chọn ảnh đại diện mới</label>
-        <div class="flex flex-wrap">
-            @php
-                $images = ['c1.jpg', 'c2.jpg', 'c3.jpg', 'c4.jpg', 'c5.jpg', 'c6.jpg'];
-            @endphp
-            @foreach ($images as $image)
-                <div class="relative mr-2 mb-2">
-                    <img src="{{ asset('frontend/images/' . $image) }}" alt="Avatar" class="w-20 h-20 rounded-full cursor-pointer select-avatar" data-image="{{ $image }}">
-                </div>
-            @endforeach
-        </div>
-        <input type="hidden" name="avatar" id="selected_avatar" value="{{ old('avatar', $user->avatar_url) }}">
-    </div>
+    <button type="button" id="edit-avatar" class="mt-2 bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition duration-200">Sửa ảnh</button>
+</div>
+
+
+<div id="avatar-selection" class="hidden mb-4">
+    <label class="block text-sm font-bold mb-2">Chọn ảnh đại diện mới</label>
+    <input type="file" name="avatar" id="avatar" accept="image/*" class="border border-gray-300 rounded p-2 w-full">
+    <p class="text-sm text-gray-500 mt-2">Chọn file ảnh từ máy tính của bạn.</p>
+</div>
+
+ 
     <div class="mb-4">
         <label for="full_name" class="block text-sm font-bold mb-2">Họ và tên</label>
         <input type="text" name="full_name" id="full_name" value="{{ old('full_name', $user->full_name) }}" class="border border-gray-300 rounded p-2 w-full" required>
@@ -73,28 +69,31 @@
 </form>
 
 <script>
-    document.getElementById('edit-avatar').addEventListener('click', function () {
-        const avatarSelection = document.getElementById('avatar-selection');
-        avatarSelection.classList.toggle('hidden');
-    });
+   document.getElementById('edit-avatar').addEventListener('click', function () {
+    const avatarSelection = document.getElementById('avatar-selection');
+    avatarSelection.classList.toggle('hidden');
+});
 
-    document.querySelectorAll('.select-avatar').forEach(function (img) {
-        img.addEventListener('click', function () {
-            const selectedImage = this.getAttribute('data-image');
-            document.getElementById('selected_avatar').value = selectedImage;
-
+document.getElementById('avatar').addEventListener('change', function (e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function (event) {
             // Cập nhật ảnh hiển thị
             let currentAvatar = document.querySelector('.current-avatar');
             if (currentAvatar) {
-                currentAvatar.src = this.src;
+                currentAvatar.src = event.target.result;
             } else {
                 currentAvatar = document.createElement('img');
-                currentAvatar.src = this.src;
+                currentAvatar.src = event.target.result;
                 currentAvatar.alt = "User Avatar";
                 currentAvatar.className = "mt-2 rounded-full w-20 h-20 current-avatar";
                 document.querySelector('#avatar-selection').insertAdjacentElement('beforebegin', currentAvatar);
             }
-        });
-    });
+        };
+        reader.readAsDataURL(file); // Đọc file ảnh và chuyển đổi sang base64
+    }
+});
+
 </script>
 @endsection

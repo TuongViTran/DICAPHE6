@@ -17,7 +17,12 @@
         <div class="p-4 rounded shadow-sm mb-4 d-flex align-items-center justify-content-around" style="background: linear-gradient(to bottom,rgb(241, 215, 180), #fbc2eb00);">
             <!-- Cột bên trái: Ảnh đại diện + Thông tin quán -->
             <div class="d-flex flex-column align-items-center">
-                <img src="{{ asset('frontend/images/' . basename($coffeeShop->user->avatar_url ?? 'avt.png')) }}"  alt="User profile picture" class="rounded-circle mb-2" width="90" height="90" style="box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+            <img src="{{ asset('storage/uploads/avatars/' . basename($coffeeShop->user->avatar_url ?? 'avt.png')) }}"
+     alt="User profile picture"
+     class="rounded-circle mb-2"
+     width="90"
+     height="90"
+     style="width: 90px; height: 90px; object-fit: cover; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
                 
                 <div class="text-left">
                     <h4 class="text-center fw-bold mb-1">Chủ quán: {{ $coffeeShop->user->full_name }}</h4>
@@ -672,10 +677,14 @@
 @endphp  
         <div class="d-flex align-items-start gap-3 mb-4">
         <!-- Avatar -->
-        <img src="{{ asset('frontend/images/' . basename($review->user->avatar_url)) }}"
-            onerror="this.onerror=null; this.src='{{ asset('frontend/images/avt.png') }}';"
-            width="40" height="40" alt="Avatar"
-            style="border-radius: 50%; object-fit: cover; box-shadow: 0 2px 8px rgba(0,0,0,0.15);">
+        <img 
+    src="{{ asset('storage/uploads/avatars/' . basename($review->user->avatar_url ?? '')) }}"
+    onerror="this.onerror=null; this.src='{{ asset('frontend/images/avt.png') }}';"
+    alt="Avatar" 
+    style="width: 60px; height: 60px; object-fit: cover; border-radius: 50%;"
+/>
+
+
 
         <!-- Nội dung đánh giá -->
         <div class="flex-grow-1" style="line-height: 1.4; position: relative;">

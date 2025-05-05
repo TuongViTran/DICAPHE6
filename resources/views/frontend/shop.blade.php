@@ -152,15 +152,24 @@
                 </div>
                 <br>
                 <div class="mt-2" id="tt1">
-                    <div>
-                    <img src="{{ asset('frontend/images/' . basename(Auth::user()->avatar_url ?? 'avt.png')) }}"
-     style="width:80px; height:80px; border-radius:50%; margin-top:5px; margin-left:20px"
-     class="shadow-lg"
-     alt="User Avatar"
-     onerror="this.onerror=null; this.src='{{ asset('frontend/images/avt.png') }}';">
 
 
-                    </div>
+                @if ($shop->user && $shop->user->avatar_url)
+    <img src="{{ asset('storage/uploads/avatars/' . basename($shop->user->avatar_url)) }}"
+         onerror="this.onerror=null; this.src='{{ asset('frontend/images/avt.png') }}';"
+         style="width:80px; height:80px; border-radius:50%; margin-top:5px; margin-left:20px"
+         class="shadow-lg"
+         alt="Avatar chủ quán">
+@else
+    <img src="{{ asset('frontend/images/avt.png') }}"
+         style="width:80px; height:80px; border-radius:50%; margin-top:5px; margin-left:20px"
+         class="shadow-lg"
+         alt="Avatar mặc định">
+@endif
+
+
+
+
                     <div class="tt2" >
                         <div>
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-door-open-fill" viewBox="0 0 16 16">
@@ -375,8 +384,11 @@
     <div class=" pt-2" x-data="{ expanded: false }" style="margin-bottom:10px">
         <div class="flex justify-between relative">
             <div class="flex items-center">
-                <img src="{{ asset('frontend/images/' . basename($review->user->avatar_url)) }}"
-                  class="rounded-full object-cover shadow-md" width="60" height="60" alt="Avatar">
+            <img src="{{ asset('storage/uploads/avatars/' . basename($review->user->avatar_url ?? 'avt.png')) }}"
+     onerror="this.onerror=null; this.src='{{ asset('frontend/images/avt.png') }}';"
+     width="60" height="60" alt="Avatar"
+     style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; box-shadow: 0 2px 8px rgba(0,0,0,0.15); margin-right: 15px; transform: translateX(-5px);">
+
                 <div class="ml-3" style="margin-left:30px">
                 <div class="f justify-between items-start" >
                     <p class="mb-1" style="font-size: 14px;">

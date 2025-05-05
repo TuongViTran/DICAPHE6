@@ -154,7 +154,8 @@
                     <tr class="hover:bg-red-50">
                         <td class="py-2">{{ $loop->iteration }}</td>
                         <td class="py-2 font-semibold">{{ $shop->shop_name }}</td>
-                        <td class="py-2">{{ $shop->owner->full_name }}</td>
+                        <td class="py-2">{{ isset($shop->owner) ? $shop->owner->full_name : 'Không xác định' }}</td>
+
                         <td class="py-2">{{ number_format($shop->total_reviews_count) }}</td>
                         <td class="py-2 px-2">
                                 <x-rating :score="$shop->reviews_avg_rating" />

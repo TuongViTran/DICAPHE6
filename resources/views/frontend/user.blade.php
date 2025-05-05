@@ -179,15 +179,18 @@
 
 @section('content')
 <div class="container mt-4">
-        <div class="p-4 rounded shadow-sm mb-4 d-flex align-items-center justify-content-around" style="background: linear-gradient(to bottom, rgb(180, 241, 200), #c2ebfb00);">
-            <!-- Cột bên trái: Ảnh đại diện + Thông tin quán -->
-            <div class="d-flex flex-column align-items-center">
-    <div style="width: 90px; height: 90px; overflow: hidden; border-radius: 50%; box-shadow: 0 0 10px rgba(0,0,0,0.1); margin-bottom:5px;">
-        <img src="{{ asset('frontend/images/' . basename($user->avatar_url ?? 'frontend/images/avt.png')) }}" 
-             alt="Ảnh hồ sơ người dùng" 
-             style="width: 100%; height: 100%; object-fit: cover;"
-             onerror="this.onerror=null; this.src='{{ asset('frontend/images/avt.png') }}';">
-    </div>
+    <div class="p-4 rounded shadow-sm mb-4 d-flex align-items-center justify-content-around" style="background: linear-gradient(to bottom, rgb(180, 241, 200), #c2ebfb00);">
+        <!-- Cột bên trái: Ảnh đại diện + Thông tin quán -->
+        <div class="d-flex flex-column align-items-center">
+            <div style="width: 90px; height: 90px; overflow: hidden; border-radius: 50%; box-shadow: 0 0 10px rgba(0,0,0,0.1); margin-bottom:5px;">
+                <img 
+                    src="{{ asset('storage/uploads/avatars/' . basename($user->avatar_url)) }}" 
+                    alt="Ảnh hồ sơ người dùng" 
+                    style="width: 100%; height: 100%; object-fit: cover;" 
+                    onerror="this.onerror=null; this.src='{{ asset('storage/uploads/avatars/default-avatar.png') }}';">
+            </div>
+
+
     <div class="text-left">
         <h4 class="text-center fw-bold mb-1">{{ $user->full_name ?? 'Khách hàng' }}</h4>
     </div>
@@ -287,10 +290,11 @@
                 <div class="d-flex align-items-center">
                     <!-- Avatar người dùng -->
                      
-                    <img src="{{ asset('frontend/images/' . basename($review->user->avatar_url)) }}"
-         onerror="this.onerror=null; this.src='{{ asset('frontend/images/avt.png') }}';"
-         width="60" height="60" alt="Avatar"
-         style="border-radius: 50%; box-shadow: 0 2px 8px rgba(0,0,0,0.15); object-fit: cover; margin-right:15px">
+                    <img src="{{ asset('storage/uploads/avatars/' . basename($review->user->avatar_url ?? 'avt.png')) }}"
+     onerror="this.onerror=null; this.src='{{ asset('frontend/images/avt.png') }}';"
+     width="60" height="60" alt="Avatar"
+     style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; box-shadow: 0 2px 8px rgba(0,0,0,0.15); margin-right: 15px;">
+
 
                     <div class="ft" style="margin-top:15px">
                         <div style="max-width: 95%; word-break: break-word;">

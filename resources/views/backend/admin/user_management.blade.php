@@ -5,6 +5,14 @@
 @section('header', 'Quản lý người dùng')
 
 @section('content')
+    <!-- Thông báo thành công -->
+    @if (session('success'))
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert" id="success-message">
+            <strong class="font-bold">Thành công! </strong>
+            <span class="block sm:inline">{{ session('success') }}</span>
+        </div>
+    @endif
+
     <div class="flex justify-between items-center mb-6">
         <div class="flex items-center">
             <a href="{{ route('user.create') }}" class="bg-white border border-blue-500 text-blue-500 p-2 rounded ml-4">
@@ -36,13 +44,15 @@
                     <tr class="hover:bg-gray-50 transition duration-200 ease-in-out">
                         <td class="py-2 px-4 border-b text-center">{{ $k + 1 }}</td>
                         <td class="py-2 px-4 border-b text-center">
-
-                
-    <img src="{{ asset('frontend/images/' . basename($user->avatar_url)) }}" 
-
-     onerror="this.onerror=null; this.src='{{ asset('frontend/images/avt.png') }}';"
-     width="50" height="50" alt="Avatar">
-</td>
+                            <div style="width: 50px; height: 50px; overflow: hidden; border-radius: 50%; margin: auto;">
+                                <img 
+                                    src="{{ asset('storage/uploads/avatars/' . basename($user->avatar_url)) }}"
+                                    onerror="this.onerror=null; this.src='{{ asset('frontend/images/avt.png') }}';"
+                                    alt="Avatar" 
+                                    style="width: 100%; height: 100%; object-fit: cover;"
+                                >
+                            </div>
+                        </td>
                         <td class="py-2 px-4 border-b text-center">{{ $user->full_name }}</td>
                         <td class="py-2 px-4 border-b text-center">{{ $user->email }}</td>
                         <td class="py-2 px-4 border-b text-center">{{ $user->phone }}</td>
@@ -60,18 +70,23 @@
                         </td>
                         <td class="py-2 px-4 border-b text-center">
                             <div class="flex justify-center items-center space-x-2">
+                                {{-- Nút Sửa --}}
                                 <a href="{{ route('user.edit', $user) }}" class="text-yellow-500 flex items-center">
                                     <img src="{{ asset('backend/img/Icon (admin)/Sửa.svg') }}" alt="Edit" class="w-7 h-7">
                                 </a>
-                                <form action="{{ route('user.destroy', $user) }}" method="POST" style="display:inline;">
+
+                                {{-- Nút Xóa với xác nhận --}}
+                                <form action="{{ route('user.destroy', $user) }}" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn xóa người dùng này không?');">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="text-red-500 flex items-center">
                                         <img src="{{ asset('backend/img/Icon (admin)/Xóa.svg') }}" alt="Delete" class="w-7 h-7">
                                     </button>
                                 </form>
+
+                                {{-- Nút Xem chi tiết --}}
                                 <a href="{{ route('user.show', $user) }}" class="text-blue-500 flex items-center">
-                                <img src="{{ asset('backend/img/Icon (admin)/Mở rộng.svg') }}" alt="View" class="w-7 h-7">
+                                    <img src="{{ asset('backend/img/Icon (admin)/Mở rộng.svg') }}" alt="View" class="w-7 h-7">
                                 </a>
                             </div>
                         </td>
@@ -84,4 +99,17 @@
             </tbody>
         </table>
     </div>
+@endsection
+
+@section('scripts')
+    <script>
+      
+        setTimeout(function() {
+            const successMessage = document.getElementById('success-message');
+            
+            if (successMessage) {
+                successMessage.style.display = 'none';
+            }
+        }, 5000); 
+    </script>
 @endsection
