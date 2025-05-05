@@ -7,6 +7,8 @@ use App\Models\CoffeeShop;
 use App\Models\User;
 use App\Models\Post;
 use App\Models\Review; // << THÊM DÒNG NÀY
+use App\Models\RecentSearch;
+
 
 class AdminController extends Controller
 {
@@ -26,6 +28,7 @@ class AdminController extends Controller
 
                 $shop->reviews_avg_rating = $avgRating;
                 $shop->save();
+
             });
 
         // Quán tệ nhất
@@ -43,6 +46,14 @@ class AdminController extends Controller
 
                 $shop->reviews_avg_rating = $avgRating;
                 $shop->save();
+
+
+                
+                
+
+    
+                // Kiểm tra like
+
             });
 
         // Thống kê tổng quan
@@ -89,6 +100,7 @@ class AdminController extends Controller
             ->limit(3)
             ->get();
 
+
         return view('backend.admin.dashboard', compact(
             'fiveStarShops',
             'worstShops',
@@ -107,4 +119,16 @@ class AdminController extends Controller
             'featuredFeedbacks' 
         ));
     }
+
+    public function searchManagement()
+{
+    $searches = RecentSearch::with(['user', 'style'])
+        ->orderBy('created_at', 'desc')
+        ->paginate(10); // Phân trang 10 kết quả mỗi trang
+
+    return view('backend.admin.search_management', [
+        'searches' => $searches
+    ]);
 }
+}
+

@@ -21,68 +21,71 @@ class DatabaseSeeder extends Seeder
                 'role' => 'owner',
                 'gender' => 'male',
                 'phone' => '0912345678',
-                'avatar_url' => 'c1.jpg',
+                'avatar_url' => 'uploads/avatars/avatar_68185840e03ec.jpg',
                 'remember_token' => Str::random(100),
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'full_name' => 'owner2',
-                'email' => 'owner2@gmailcom',
+                'email' => 'owner2@gmail.com',
                 'password' => bcrypt('12345678'),
                 'role' => 'owner',
                 'gender' => 'male',
                 'phone' => '0934567890',
-               'avatar_url' => 'c2.jpg',
+                'avatar_url' => 'uploads/avatars/avatar_68185836990b2.jpg',
                 'remember_token' => Str::random(100),
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            [  'full_name' => 'owner3',
-                'email' => 'owner3@gmailcom',
+            [
+                'full_name' => 'owner3',
+                'email' => 'owner3@gmail.com',
                 'password' => bcrypt('12345678'),
                 'role' => 'owner',
                 'gender' => 'male',
                 'phone' => '0934567890',
-               'avatar_url' => 'c3.jpg',
+                'avatar_url' => 'uploads/avatars/avatar_6818581622a17.jpg',
                 'remember_token' => Str::random(100),
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            [  'full_name' => 'owner4',
-                'email' => 'owner4@gmailcom',
+            [
+                'full_name' => 'owner4',
+                'email' => 'owner4@gmail.com',
                 'password' => bcrypt('12345678'),
                 'role' => 'owner',
                 'gender' => 'male',
                 'phone' => '0934567890',
-                'avatar_url' => 'c4.jpg',
+                'avatar_url' => 'uploads/avatars/avatar_68185807831e7.jpg',
                 'remember_token' => Str::random(100),
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            [  'full_name' => 'owner5',
-                'email' => 'owner5@gmailcom',
+            [
+                'full_name' => 'owner5',
+                'email' => 'owner5@gmail.com',
                 'password' => bcrypt('12345678'),
                 'role' => 'owner',
                 'gender' => 'male',
                 'phone' => '0934567890',
-                'avatar_url' => 'c5.jpg',
+                'avatar_url' => 'uploads/avatars/avatar_6818579ac6489.jpg',
                 'remember_token' => Str::random(100),
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            [  'full_name' => 'owner6',
-                'email' => 'owner6@gmailcom',
+            [
+                'full_name' => 'owner6',
+                'email' => 'owner6@gmail.com',
                 'password' => bcrypt('12345678'),
                 'role' => 'owner',
                 'gender' => 'female',
                 'phone' => '0934567890',
-                'avatar_url' => 'c6.jpg',
+                'avatar_url' => 'uploads/avatars/avatar_681857cba5e80.jpg',
                 'remember_token' => Str::random(100),
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-                
             [
                 'full_name' => 'admin1',
                 'email' => 'admin1@gmail.com',
@@ -90,7 +93,7 @@ class DatabaseSeeder extends Seeder
                 'role' => 'admin',
                 'gender' => 'male',
                 'phone' => '0923456789',
-                'avatar_url' => 'a1.jpg',
+                'avatar_url' => 'uploads/avatars/avatar_6818577899b0a.jpg',
                 'remember_token' => Str::random(100),
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -102,18 +105,18 @@ class DatabaseSeeder extends Seeder
                 'role' => 'user',
                 'gender' => 'male',
                 'phone' => '0934567890',
-                'avatar_url' =>'u1.jpg' ,
+                'avatar_url' =>'uploads/avatars/avatar_681857daa1673.jpg',
                 'remember_token' => Str::random(100),
                 'created_at' => now(),
                 'updated_at' => now(),
             ]
         ]);
-
+        
         // 2. Seed bảng social_network
-        DB::table('social_network')->insert([
-            [ 'platform' => 'Facebook', 'url' => 'https://www.facebook.com/', 'created_at' => now()],
-            [ 'platform' => 'Instagram', 'url' => 'https://www.instagram.com/', 'created_at' => now()],
-        ]);
+        // DB::table('social_network')->insert([
+        //     [ 'platform' => 'Facebook', 'url' => 'https://www.facebook.com/', 'created_at' => now()],
+        //     [ 'platform' => 'Instagram', 'url' => 'https://www.instagram.com/', 'created_at' => now()],
+        // ]);
 
         // 3. Seed bảng styles
         DB::table('styles')->insert([
@@ -144,14 +147,14 @@ class DatabaseSeeder extends Seeder
         // 4. Seed bảng addresses
         DB::table('addresses')->insert([
             [ // Dưới 1km
-                'street'      => '01 Nguyễn Văn Thoại',
-                'ward'        => 'Hòa Thuận Tây',
-                'district'    => 'Hải Châu',
+                'street'      => '703 Âu Cơ',
+                'ward'        => 'Hòa Khánh Bắc',
+                'district'    => 'Liên Chiểu',
                 'city'        => 'Đà Nẵng',
                 'postal_code' => '550000',
                 'country'     => 'Vietnam',
-                'latitude'    => 16.472000,
-                'longitude'   => 107.561000,
+                'latitude'    => 16.078861340698975,
+                'longitude'   => 108.12719055414928,
                 'created_at'  => now(),
                 'updated_at'  => now(),
             ],
@@ -224,7 +227,7 @@ class DatabaseSeeder extends Seeder
                 'min_price' =>25,
                 'max_price' => 40,
                 'styles_id' => 1,
-                'social_network_id' => 1,
+                // 'social_network_id' => 1,
                 'cover_image' =>'q1_cover.jpg',
                 'image_1' => 'q1_image1.jpg',
                 'image_2' => 'q1_image2.jpg',
@@ -249,7 +252,7 @@ class DatabaseSeeder extends Seeder
                 'min_price' => 30,
                 'max_price' => 45,
                 'styles_id' => 1,
-                'social_network_id' => 2,
+                // 'social_network_id' => 2,
                 'cover_image' =>'q2_cover.jpg',
                 'image_1' => 'q2_image1.jpg',
                 'image_2' => 'q2_image2.jpg',
@@ -274,7 +277,7 @@ class DatabaseSeeder extends Seeder
                 'min_price' => 50,
                 'max_price' => 65,
                 'styles_id' => 2,
-                'social_network_id' => 2,
+                // 'social_network_id' => 2,
                 'cover_image' =>'q3_cover.jpg',
                 'image_1' => 'q3_image1.jpg',
                 'image_2' => 'q3_image2.jpg',
@@ -299,7 +302,7 @@ class DatabaseSeeder extends Seeder
                 'min_price' => 55,
                 'max_price' => 70,
                 'styles_id' => 1,
-                'social_network_id' => 1,
+                // 'social_network_id' => 1,
                 'cover_image' =>'q4_cover.jpg',
                 'image_1' => 'q4_image1.jpg',
                 'image_2' => 'q4_image2.jpg',
@@ -324,7 +327,7 @@ class DatabaseSeeder extends Seeder
                 'min_price' => 55,
                 'max_price' => 70,
                 'styles_id' => 3,
-                'social_network_id' => 1,
+                // 'social_network_id' => 1,
                 'cover_image' =>'q5_cover.jpg',
                 'image_1' => 'q5_image1.jpg',
                 'image_2' => 'q5_image2.jpg',
@@ -349,7 +352,7 @@ class DatabaseSeeder extends Seeder
                 'min_price' => 75,
                 'max_price' => 79,
                 'styles_id' => 4,
-                'social_network_id' => 1,
+                // 'social_network_id' => 1,
                 'cover_image' =>'q6_cover.jpg',
                 'image_1' => 'q6_image1.jpg',
                 'image_2' => 'q6_image2.jpg',
@@ -371,25 +374,25 @@ class DatabaseSeeder extends Seeder
             ['shop_id' => 6, 'item_name' => 'Menu6', 'image_url' => 'menu6.jpg', 'price' => 50000, 'description' => 'Bánh mì kẹp thịt thơm ngon, hấp dẫn.', 'status' => 'Available', 'created_at' => now(), 'updated_at' => now()],
         ]);
 
-        DB::table('event')->insert([
-            ['shop_id' => 1, 'event_name' => 'Đêm nhạc Acoustic', 'description' => 'Thưởng thức âm nhạc sống động với ban nhạc trẻ.', 'event_date' => now()->addDays(5), 'location' => 'Cà Phê Sáng', 'created_at' => now(), 'updated_at' => now()],
-            ['shop_id' => 2, 'event_name' => 'Workshop Pha Chế', 'description' => 'Học cách pha chế cà phê chuyên nghiệp.', 'event_date' => now()->addDays(10), 'location' => 'Cafe Phố', 'created_at' => now(), 'updated_at' => now()],
-        ]);
+        // DB::table('event')->insert([
+        //     ['shop_id' => 1, 'event_name' => 'Đêm nhạc Acoustic', 'description' => 'Thưởng thức âm nhạc sống động với ban nhạc trẻ.', 'event_date' => now()->addDays(5), 'location' => 'Cà Phê Sáng', 'created_at' => now(), 'updated_at' => now()],
+        //     ['shop_id' => 2, 'event_name' => 'Workshop Pha Chế', 'description' => 'Học cách pha chế cà phê chuyên nghiệp.', 'event_date' => now()->addDays(10), 'location' => 'Cafe Phố', 'created_at' => now(), 'updated_at' => now()],
+        // ]);
 
-        DB::table('tablereservation')->insert([
-            ['user_id' => 1, 'shop_id' => 1, 'event_id' => 1, 'number_of_people' => 2, 'reservation_time' => now()->addDays(5), 'table_location' => 'Góc nhỏ', 'special_request' => 'Không', 'price' => 50000, 'status' => 'Confirmed', 'created_at' => now(), 'updated_at' => now()],
-            ['user_id' => 2, 'shop_id' => 2, 'event_id' => 2, 'number_of_people' => 4, 'reservation_time' => now()->addDays(10), 'table_location' => 'Góc yên tĩnh', 'special_request' => 'Không', 'price' => 70000, 'status' => 'Pending', 'created_at' => now(), 'updated_at' => now()],
-        ]);
+        // DB::table('tablereservation')->insert([
+        //     ['user_id' => 1, 'shop_id' => 1, 'event_id' => 1, 'number_of_people' => 2, 'reservation_time' => now()->addDays(5), 'table_location' => 'Góc nhỏ', 'special_request' => 'Không', 'price' => 50000, 'status' => 'Confirmed', 'created_at' => now(), 'updated_at' => now()],
+        //     ['user_id' => 2, 'shop_id' => 2, 'event_id' => 2, 'number_of_people' => 4, 'reservation_time' => now()->addDays(10), 'table_location' => 'Góc yên tĩnh', 'special_request' => 'Không', 'price' => 70000, 'status' => 'Pending', 'created_at' => now(), 'updated_at' => now()],
+        // ]);
 
         DB::table('review')->insert([
             ['user_id' => 1, 'shop_id' => 1, 'rating' => 5, 'content' => 'Quán đẹp, nhân viên thân thiện.','img_url'=>'https://example.com/images/cafe_pho_1.jpg', 'created_at' => now(), 'updated_at' => now()],
             ['user_id' => 2, 'shop_id' => 2, 'rating' => 4, 'content' => 'Không gian quán đẹp, giá cả hợp lý.','img_url'=>'https://example.com/images/cafe_pho_2.jpg', 'created_at' => now(), 'updated_at' => now()],
         ]);
 
-        DB::table('promotion')->insert([
-            ['shop_id' => 1, 'title' => 'Giảm 20% cho sinh viên', 'description' => 'Ưu đãi đặc biệt cho sinh viên khi mang theo thẻ.', 'discount_percent' => 20.00, 'discount_amount' => 10000, 'start_date' => now(), 'end_date' => now()->addDays(7), 'created_at' => now(), 'updated_at' => now()],
-            ['shop_id' => 2, 'title' => 'Mua 2 tặng 1', 'description' => 'Mua hai ly bất kỳ, nhận ngay một ly miễn phí.', 'discount_percent' => 33.33, 'discount_amount' => 35000, 'start_date' => now(), 'end_date' => now()->addDays(10), 'created_at' => now(), 'updated_at' => now()],
-        ]);
+        // DB::table('promotion')->insert([
+        //     ['shop_id' => 1, 'title' => 'Giảm 20% cho sinh viên', 'description' => 'Ưu đãi đặc biệt cho sinh viên khi mang theo thẻ.', 'discount_percent' => 20.00, 'discount_amount' => 10000, 'start_date' => now(), 'end_date' => now()->addDays(7), 'created_at' => now(), 'updated_at' => now()],
+        //     ['shop_id' => 2, 'title' => 'Mua 2 tặng 1', 'description' => 'Mua hai ly bất kỳ, nhận ngay một ly miễn phí.', 'discount_percent' => 33.33, 'discount_amount' => 35000, 'start_date' => now(), 'end_date' => now()->addDays(10), 'created_at' => now(), 'updated_at' => now()],
+        // ]);
         DB::table('post')->insert([
             [
                 'user_id' => 1,
@@ -489,20 +492,25 @@ class DatabaseSeeder extends Seeder
             ['user_id' => 2, 'shop_id' => 2, 'saved_at' => now(), 'created_at' => now(), 'updated_at' => now()],
         ]);
 
-        DB::table('recentsearch')->insert([
-            ['user_id' => 1, 'search_keyword' => 'Cà phê ngon gần đây', 'searched_at' => now(), 'created_at' => now(), 'updated_at' => now()],
-            ['user_id' => 2, 'search_keyword' => 'Quán cà phê yên tĩnh', 'searched_at' => now(), 'created_at' => now(), 'updated_at' => now()],
+        DB::table('recentsearches')->insert([
+            ['user_id' => 1, 'keyword' => 'Cà phê ngon gần đây', 'created_at' => now(), 'updated_at' => now()],
+            ['user_id' => 2, 'keyword' => 'Quán cà phê yên tĩnh', 'created_at' => now(), 'updated_at' => now()],
         ]);
       
         DB::table('notification')->insert([
             ['user_id' => 1, 'type' => 'order', 'message' => 'Đơn hàng của bạn đã được xác nhận.', 'is_read' => false, 'created_at' => now(), 'updated_at' => now()],
             ['user_id' => 2, 'type' => 'promotion', 'message' => 'Bạn có khuyến mãi mới từ quán yêu thích.', 'is_read' => false, 'created_at' => now(), 'updated_at' => now()],
         ]);
-        DB::table('likes')->upsert([
-            ['user_id' => 1, 'coffeeshop_id' => 3, 'created_at' => now(), 'updated_at' => now()],
-            ['user_id' => 2, 'coffeeshop_id' => 2, 'created_at' => now(), 'updated_at' => now()],
-            ['user_id' => 1, 'coffeeshop_id' => 3, 'created_at' => now(), 'updated_at' => now()],
-        ], ['user_id', 'coffeeshop_id']);
+        DB::table('likes')->upsert(
+            [
+                ['user_id' => 1, 'review_id' => 1, 'created_at' => now(), 'updated_at' => now()],
+                ['user_id' => 2, 'review_id' => 2, 'created_at' => now(), 'updated_at' => now()],
+                ['user_id' => 1, 'review_id' => 1, 'created_at' => now(), 'updated_at' => now()],
+            ],
+            ['user_id', 'review_id'], 
+            ['created_at', 'updated_at'] 
+        );
+        
         
 
     }

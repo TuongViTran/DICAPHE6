@@ -1,7 +1,7 @@
 @extends('backend.admin.layout')
 
 @section('content')
-<div class="container mx-auto p-4">
+<!-- <div class="container mx-auto p-4">
     <h1 class="text-2xl font-bold mb-4">Quản lý tìm kiếm quán cà phê</h1>
 
     <form action="{{ route('cafes.index') }}" method="GET" class="mb-4">
@@ -67,5 +67,5 @@
             </table>
         @endif
     </div>
-</div>
+</div> -->
 @endsection

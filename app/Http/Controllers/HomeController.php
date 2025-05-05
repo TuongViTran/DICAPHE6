@@ -43,8 +43,13 @@ class HomeController extends Controller
     
         // Lấy bài viết cho slider (5 bài gần đây nhất)
         $sliderPosts = $posts->take(5);
+
     
       // Lấy 4 quán cà phê mới nhất kèm địa chỉ, style, và trạng thái like
+
+
+       // Lấy 4 quán cà phê mới nhất kèm địa chỉ, style, và trạng thái like
+
         $shops = CoffeeShop::with('address', 'style')
         ->orderBy('created_at', 'desc') // Sắp xếp theo thời gian tạo mới nhất
         ->take(4)
@@ -70,7 +75,7 @@ class HomeController extends Controller
         
         // Lấy danh sách các quán có rating 5 sao
         $fiveStarShops = CoffeeShop::with('address')
-        ->where('reviews_avg_rating',  '>=', 5.0)
+        ->where('reviews_avg_rating',  '>=', 4.6)
         ->get()
         ->each(function ($shop) {
             $shop->liked = false;

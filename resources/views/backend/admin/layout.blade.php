@@ -26,23 +26,53 @@
             </div>
             
             <nav>
-                <ul class="space-y-4">
-                    <li><a href="{{ url('/dashboard') }}" class="flex items-center p-3 rounded-lg text-blue-600 bg-blue-100 hover:bg-blue-200"><i class="fas fa-tachometer-alt mr-3"></i> Dashboard</a></li>
-                    <li><a href="{{ route('user.management') }}" class="flex items-center p-3 rounded-lg text-gray-600 hover:bg-gray-200"><i class="fas fa-users mr-3"></i> Quản lý người dùng</a></li>
-                    <li><a href="{{ route('coffeeshops_management') }}" class="flex items-center p-3 rounded-lg text-gray-600 hover:bg-gray-200"><i class="fas fa-store mr-3"></i> Quản lý quán</a></li>
-                    <li><a href="{{ route('cafes_management') }}" class="flex items-center p-3 rounded-lg text-gray-600 hover:bg-gray-200"><i class="fas fa-search mr-3"></i> Quản lý tìm kiếm</a></li>
-                    <li><a href="{{ route('styles.index') }}" class="flex items-center p-3 rounded-lg text-gray-600 hover:bg-gray-200"><i class="fas fa-paint-brush mr-3"></i> Quản lý phong cách</a></li>
-                    <li><a href="{{ route('feed.index') }}" class="flex items-center p-3 rounded-lg text-gray-600 hover:bg-gray-200"><i class="fas fa-rss mr-3"></i> Quản lý feed</a></li>
-                    <li><a href="#" class="flex items-center p-3 rounded-lg text-gray-600 hover:bg-gray-200"><i class="fas fa-cog mr-3"></i> Cài đặt</a></li>
+                <ul>
+                    <li class="mb-4">
+                    <a href="{{ url('/dashboard') }}" class="flex items-center text-blue-500 bg-blue-100 p-3 rounded-lg hover:bg-blue-200 transition">
+                            <i class="fas fa-tachometer-alt mr-3"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="mb-4">
+                    <a href="{{ route('user.management') }}" class="flex items-center text-gray-600 p-3 rounded-lg hover:bg-gray-200 transition">
+                            <i class="fas fa-users mr-3"></i> Quản lý người dùng
+                        </a>
+                    </li>
+                    <li class="mb-4">
+                    <a href="{{ route('coffeeshops_management') }}" class="flex items-center text-gray-600 p-3 rounded-lg hover:bg-gray-200 transition">
+                            <i class="fas fa-file-alt mr-3"></i> Quản lý quán 
+                        </a>
+                    </li>
+                    <li class="mb-4">
+                    <a href="{{ route('search_management') }}" class="flex items-center text-gray-600 p-3 rounded-lg hover:bg-gray-200 transition">
+                            <i class="fas fa-search mr-3"></i> Quản lý tìm kiếm
+                        </a>
+                    </li>
+                    <li class="mb-4">
+                    <a href="{{ route('styles.index') }}" class="flex items-center text-gray-600 p-3 rounded-lg hover:bg-gray-200 transition">
+    <i class="fas fa-paint-brush mr-3"></i> Quản lý phong cách
+</a>
+
+                    </li>
+                    <li class="mb-4">
+                        <a href="{{ route('feed.index') }}" class="flex items-center text-gray-600 p-3 rounded-lg hover:bg-gray-200 transition">
+                            <i class="fas fa-rss mr-3"></i> Quản lý feed
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center text-gray-600 p-3 rounded-lg hover:bg-gray-200 transition">
+                            <i class="fas fa-cog mr-3"></i> Cài đặt
+                        </a>
+                    </li>
+                    <li class="mt-6">
+                        <a href="{{ route('register') }}" class="flex items-center text-red-600 p-3 rounded-lg hover:bg-red-100 transition">
+                            <i class="fas fa-sign-out-alt mr-3"></i> Đăng xuất
+                        </a>
+                    </li>
                 </ul>
             </nav>
         </div>
 
-        <div class="mt-10">
-            <a href="{{ route('register') }}" class="flex items-center justify-center p-3 rounded-lg text-red-600 hover:bg-red-100">
-                <i class="fas fa-sign-out-alt mr-3"></i> Đăng xuất
-            </a>
-        </div>
+
     </aside>
 
     <!-- Main Content -->

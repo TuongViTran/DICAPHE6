@@ -34,8 +34,7 @@ return new class extends Migration
             // 3. Khóa ngoại liên kết với bảng styles
             $table->foreignId('styles_id')->constrained('styles')->onDelete('cascade');
     
-            // 4. Khóa ngoại liên kết với bảng social_network
-            $table->foreignId('social_network_id')->constrained('social_network')->onDelete('cascade');
+
     
             // Ảnh: 1 ảnh bìa và 3 ảnh chi tiết
             $table->text('cover_image', 1000)->nullable();

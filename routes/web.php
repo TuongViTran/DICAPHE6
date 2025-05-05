@@ -56,7 +56,7 @@ Route::get('/owner/{id}', [OwnerController::class, 'owner'])->name('owner');
 });
 Route::get('/owner/{id}/coffeeshops', [OwnerController::class, 'showByOwner'])->name('owner.coffeeshop'); 
 Route::put('/menu/update/{id}', [OwnerController::class, 'update'])->name('menu.update'); 
-Route::get('/owner/{id}/info', [OwnerController::class, 'infor'])->name('coffeeshop.owner'); 
+Route::get('/owner/{id}/info', [OwnerController::class, 'infor'])->name('coffeeshop.owner');
 Route::put('/owner/update/{id}', [OwnerController::class, 'updateinfor'])->name('owner.updateinfor'); 
 Route::post('/reviews', [ReviewController::class, 'store'])->name('review.store');
 Route::get('/owner/reviews/{shopId}', [OwnerController::class, 'showShopReviews'])->name('owner.reviews.byshop');
@@ -107,7 +107,7 @@ Route::post('/like-shop/{id}', [CoffeeShopController::class, 'like'])->name('sho
 Route::prefix('user-management')->name('user.')->group(function () {
     Route::get('/', [UserController::class, 'index'])->name('management'); // Hiển thị danh sách người dùng
     Route::get('/create', [UserController::class, 'create'])->name('create'); // Hiển thị form thêm mới người dùng
-    Route::post('/', [UserController::class, 'store'])->name('store'); // Lưu người dùng mới 
+    Route::post('/', [UserController::class, 'store'])->name('store'); // Lưu người dùng mới
     Route::get('/{user}/edit', [UserController::class, 'edit'])->name('edit'); // Hiển thị form chỉnh sửa người dùng
     Route::put('/{user}', [UserController::class, 'update'])->name('update'); // Cập nhật người dùng
     Route::delete('/{user}', [UserController::class, 'destroy'])->name('destroy'); // Xóa người dùng
@@ -136,6 +136,8 @@ Route::post('/coffeeshops', [CoffeeShopController::class, 'store'])->name('coffe
 Route::get('/coffeeshops/{coffeeshop}/edit', [CoffeeShopController::class, 'edit'])->name('coffeeshop.edit');
 Route::put('/coffeeshops/{coffeeshop}', [CoffeeShopController::class, 'update'])->name('coffeeshop.update');
 Route::delete('/coffeeshops/{coffeeshop}', [CoffeeShopController::class, 'destroy'])->name('coffeeshop.destroy');
+// Quản lí tìm kiếm : 
+Route::get('/admin/search-management', [AdminController::class, 'searchManagement'])->name('search_management');
 
 // Quản lý khuyến mãi
 Route::get('/promotions', [PromotionController::class, 'index'])->name('promotions_management');
@@ -226,9 +228,7 @@ Route::get('verify-email/{id}/{hash}', VerifyEmailController::class)
 Route::post('email/verification-notification', [EmailVerificationNotificationController::class, 'store'])
     ->middleware('throttle:6,1')
     ->name('verification.send');
-// Nếu bạn có file auth.php, có thể require ở đây
-// require __DIR__.'/auth.php';
-// Định nghĩa các route riêng lẻ
+    
 Route::get('/styles', [StyleController::class, 'index'])->name('styles.index'); // Hiển thị danh sách phong cách
 Route::get('/styles/create', [StyleController::class, 'create'])->name('styles.create'); // Hiển thị form thêm phong cách
 Route::post('/styles', [StyleController::class, 'store'])->name('styles.store'); // Lưu phong cách mới

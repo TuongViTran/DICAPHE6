@@ -138,6 +138,7 @@
 
                 <!-- Ảnh đại diện -->
                 <div class="mb-4">
+
                     <label for="avatar_url" class="block text-gray-700 font-semibold mb-2">Ảnh đại diện</label>
                     <input 
                         id="avatar_url" 
@@ -149,6 +150,7 @@
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
+
 
                 <!-- Loại tài khoản -->
                 <div class="mb-4">
@@ -210,7 +212,23 @@
             </div>
         </div>
     </div>
+<<<<<<< HEAD
 </body>
+=======
+    <style>
+    /* Viền cho ảnh đã chọn */
+    input[type="radio"]:checked + label img {
+        border-color: yellow; /* Màu viền khi chọn ảnh */
+        border-width: 2px;
+    }
+
+    /* Viền mặc định cho ảnh chưa được chọn */
+    label img {
+        border-color: transparent;
+        border-width: 2px;
+    }
+</style>
+>>>>>>> 2379e5432885bcf84d597f05d5b669ac9970a02e
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
