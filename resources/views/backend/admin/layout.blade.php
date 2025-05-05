@@ -64,9 +64,13 @@
                         </a>
                     </li>
                     <li class="mt-6">
-                        <a href="{{ route('login') }}" class="flex items-center text-red-600 p-3 rounded-lg hover:bg-red-100 transition">
+                        <a href="{{ route('logout') }}" class="flex items-center text-red-600 p-3 rounded-lg hover:bg-red-100 transition"
+                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                             <i class="fas fa-sign-out-alt mr-3"></i> Đăng xuất
                         </a>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                            @csrf
+                        </form>
                     </li>
                 </ul>
             </nav>

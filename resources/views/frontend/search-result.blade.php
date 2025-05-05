@@ -160,17 +160,7 @@
                                                     </ul>
 
                                         </div>
-                                        {{-- Avatar chủ quán --}}
-                                            <div class="d-flex align-items-center mt-3">
-                                                @php
-                                                    $avatar = $shop->user_avatar_url ?? 'default_avatar.jpg';
-                                                    $fullName = $shop->user_full_name ?? 'Chủ quán';
-                                                @endphp
-                                                <img src="{{ asset('frontend/images/' . $avatar) }}"
-                                                    class="rounded-circle me-2"
-                                                    width="50" height="50" alt="Chủ quán">
-                                                <span class="text-lg">{{ $fullName }}</span>
-                                            </div>
+                                        
 
 
                                     </div>
